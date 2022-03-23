@@ -84,7 +84,7 @@ def parse_args(args=None):
         "and an Nvidia Ampere GPU.",
     )
     parser.add_argument("--cpu", action="store_true", help="If passed, will train on the CPU.")
-    parser.add_argument("--output", type=Path, default="images", help="Name of the directory to dump generated images during training.")
+    parser.add_argument("--output", type=Path, default=Path("./output"), help="Name of the directory to dump generated images during training.")
     parser.add_argument(
         "--push_to_hub",
         action="store_true",
@@ -184,6 +184,11 @@ def training_function(config, args):
     #  Training
     # ----------
 
+    # Directory to save generated images during training
+    output_directory = args.output
+    if not output_directory.exists():
+        output_directory.mkdir(parents=True)
+    
     # Training Loop
 
     # Lists to keep track of progress
@@ -273,7 +278,7 @@ def training_function(config, args):
             if (iters % 500 == 0) or ((epoch == args.num_epochs - 1) and (i == len(dataloader) - 1)):
                 with torch.no_grad():
                     fake = netG(fixed_noise).detach().cpu()
-                save_image(fake.data[:25], "images/%d.png" % i, nrow=5, normalize=True)
+                save_image(fake.data[:25], args.output/f"iter_{i}.png", nrow=5, normalize=True)
 
             iters += 1
 
