@@ -1,4 +1,10 @@
-# HugGAN Sprint Contribution Guide
+# HugGAN Sprint
+
+![Banner](assets/huggan_banner.png?raw=true "Banner")
+
+_**Timeline**: April 4th, 2020 - April 17th, 2020_
+
+---
 
 Welcome to HugGAN Sprint! The goal of this sprint is to add more GANs and GAN-based demos to the Hugging Face Hub 🤗.
 
