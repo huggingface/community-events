@@ -18,11 +18,11 @@ To join:
 
 ## Table of Contents
 
-- [Important dates](##important-dates)
-- [How to install relevant libraries](##how-to-install-relevant-libraries)
-- [General workflow](##general-workflow)
-- [Submissions](##submissions)
-- [Links to check out](##links-to-check-out)
+- [Important dates](#important-dates)
+- [How to install relevant libraries](#how-to-install-relevant-libraries)
+- [General workflow](#general-workflow)
+- [Submissions](#submissions)
+- [Links to check out](#links-to-check-out)
 
 ## Important dates
 
@@ -94,12 +94,14 @@ In the former case, you can easily load a dataset as follows:
 ```python
 from datasets import load_dataset
 
+# a general one
 dataset = load_dataset("mnist")
+
+# one that's part of the huggan organization
+dataset = load_dataset("huggan/edges2shoes")
 ```
 
-Be sure to also check out the datasets that are part of the `huggan` [organization](https://huggingface.co/huggan).
-
-In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan) by leveraging the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
+In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). For this, we'll leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
 
 First, load your image dataset as a `Dataset` object:
 
