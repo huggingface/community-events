@@ -1,6 +1,6 @@
 # DCGAN
 
-An implementation of [DCGAN](https://arxiv.org/abs/1511.06434), leveraging the [HuggingFace](hf.co) ecosystem for processing data and pushing the model to the hub.
+An implementation of [DCGAN](https://arxiv.org/abs/1511.06434), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
 
 To train the model with the default parameters (5 epochs, 64x64 images, etc.) on MNIST, simply do:
 
@@ -20,7 +20,7 @@ python train.py --dataset cifar-10
 
 You can of course also train on your own images. For this, one can leverage Datasets' [ImageFolder](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder). Make sure to authenticate with the hub first, by running the `huggingface-cli login` command in a terminal, or the following in case you're working in a notebook:
 
-```
+```python
 from huggingface_hub import notebook_login
 
 notebook_login()
@@ -28,7 +28,7 @@ notebook_login()
 
 Next, run the following in a notebook/script:
 
-```
+```python
 from datasets import load_dataset
 
 # first: load dataset
@@ -47,7 +47,7 @@ You can then simply pass the name of the dataset to the script:
 python train.py --dataset huggan/my-awesome-dataset
 ```
 
-## Pushing model to the hub
+## Pushing model to the Hub
 
 You can push your trained generator to the hub after training by specifying the `push_to_hub` flag. 
 Then, you can run the script as follows:
@@ -60,7 +60,7 @@ This is made possible by making the generator inherit from `PyTorchModelHubMixin
 
 This means that after training, generating a new image can be done as follows:
 
-```
+```python
 import torch
 import torch.nn as nn
 from huggingface_hub import PyTorchModelHubMixin
