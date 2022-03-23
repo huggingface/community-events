@@ -97,7 +97,9 @@ from datasets import load_dataset
 dataset = load_dataset("mnist")
 ```
 
-In the latter case, it's required to upload the dataset to the hub, as part of the `huggan` [organization](https://huggingface.co/huggan). For this, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
+Be sure to also check out the datasets that are part of the `huggan` [organization](https://huggingface.co/huggan).
+
+In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan) by leveraging the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
 
 First, load your image dataset as a `Dataset` object:
 
@@ -106,8 +108,8 @@ from datasets import load_dataset
 
 # option 1: local folder
 dataset = load_dataset("imagefolder", data_dir="path_to_folder")
-# option 2: local or remote file(s
-dataset = load_dataset("imagefolder", data_files="path_to_zip")
+# option 2: local or remote file(s), e.g. the Edge2Shoes dataset of pix2pix
+dataset = load_dataset("imagefolder", data_files="http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/edges2shoes.tar.gz")
 ```
 
 Once you've loaded your dataset, you can check it out:
