@@ -1,0 +1,4 @@
+accelerate
+torch
+torchvision
+datasets
