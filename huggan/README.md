@@ -50,7 +50,6 @@ dataset = load_dataset("mnist")
 ```
 
 In the latter case, it's required to upload the dataset to the hub, as part of the `huggan` [organization](https://huggingface.co/huggan). For this, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
-```
 
 First, load your image dataset as a `Dataset` object:
 
