@@ -1,4 +1,4 @@
-# DCGAN
+# Pix2pix
 
 An implementation of [pix2pix](https://arxiv.org/abs/1611.07004), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
 
