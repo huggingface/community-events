@@ -41,8 +41,7 @@ These steps are explained in more detail below.
 
 The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be a standard one that is already available on the [hub](hf.co) (such as MNIST, CIFAR-10, CIFAR-100, etc.) or it could be one that's not already on the hub, for instance one that you collected yourself.
 
-In the format case, you can easily load a dataset as follows:
-
+In the former case, you can easily load a dataset as follows:
 
 ```python
 from datasets import load_dataset
@@ -50,7 +49,7 @@ from datasets import load_dataset
 dataset = load_dataset("mnist")
 ```
 
-In the latter case, it's required to upload the dataset to the hub, as part of the `huggan` organization. For this, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
+In the latter case, it's required to upload the dataset to the hub, as part of the `huggan` [organization](https://huggingface.co/huggan). For this, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder which was added recently to the Datasets library. 
 ```
 
 First, load your image dataset as a `Dataset` object:
