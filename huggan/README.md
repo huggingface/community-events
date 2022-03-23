@@ -19,13 +19,61 @@ To join:
 ## Table of Contents
 
 - [Important dates](##important-dates)
-- [General workflow](#how-to-install-relevant-libraries)
+- [How to install relevant libraries](##how-to-install-relevant-libraries)
+- [General workflow](##general-workflow)
 - [Submissions](##submissions)
 - [Links to check out](##links-to-check-out)
 
 ## Important dates
 
 (to do)
+
+## How to install relevant libraries
+
+The following libraries are required to train a generative model for this sprint:
+
+- [PyTorch](https://pytorch.org/) or [Keras](https://keras.io/) - depending on which framework you prefer ;)
+- [🤗 Datasets](https://github.com/huggingface/datasets)
+
+We recommend installing the above libraries in a [virtual environment](https://docs.python.org/3/library/venv.html). 
+If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/). Create a virtual environment with the version of Python you're going to use and activate it.
+
+You should be able to run the command:
+
+```bash
+python3 -m venv <your-venv-name>
+```
+
+You can activate your venv by running
+
+```bash
+source ~/<your-venv-name>/bin/activate
+```
+
+### Installing PyTorch or Keras
+
+For installing PyTorch or Keras, we refer to the respective installing guides ([PyTorch](https://pytorch.org/get-started/locally/), [Keras](https://keras.io/getting_started/)). In case you're using PyTorch, please make sure you have both PyTorch and CUDA (for the GPUs) correctly installed. 
+The following command should return ``True``:
+
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+```
+
+If the above command doesn't print ``True``, in the first step, please follow the instructions [here](https://pytorch.org/get-started/locally/) to install PyTorch with CUDA.
+
+### Installing 🤗 Datasets
+
+To install the Datasets library, simply run:
+
+```bash
+pip install datasets
+```
+
+or, in case you're using Conda:
+
+```bash
+conda install -c huggingface -c conda-forge datasets
+```
 
 ## General worfklow
 
@@ -39,7 +87,7 @@ These steps are explained in more detail below.
 
 ### 1. Get a dataset and push to hub
 
-The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be a standard one that is already available on the [hub](hf.co) (such as MNIST, CIFAR-10, CIFAR-100, etc.) or it could be one that's not already on the hub, for instance one that you collected yourself.
+The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be a standard one that is already available on the [hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as MNIST, CIFAR-10, CIFAR-100, etc.) or it could be one that's not already on the hub, for instance one that you collected yourself.
 
 In the former case, you can easily load a dataset as follows:
 
@@ -68,15 +116,13 @@ Once you've loaded your dataset, you can check it out:
 dataset
 ```
 
-Next, you can push it to the hub. To do this, make sure git-LFS is installed and that you're authenticated with the hub. 
-
-If you're working in a notebook (such as Google Colab), installing git-LFS can be done as follows:
+Next, you can push it to the hub. To do this, make sure (1) git-LFS is installed and (2) that you're logged in. Installing git-LFS can be done as follows (in a terminal):
 
 ```bash
-! sudo apt-get install git-lfs
+sudo apt-get install git-lfs
 ```
 
-Authenticating with the hub can be done as follows:
+Logging in can be done as follows:
 
 ```python
 from huggingface_hub import notebook_login
@@ -84,7 +130,13 @@ from huggingface_hub import notebook_login
 notebook_login()
 ```
 
-Finally, you can push your dataset to the hub as follows:
+in case you're working in a notebook, or by running the 
+
+```bash
+huggingface-cli login
+``` 
+
+command in a terminal. Finally, you can push your dataset to the hub as follows:
 
 ```python
 dataset.push_to_hub("huggan/name-of-your-dataset")
@@ -92,17 +144,51 @@ dataset.push_to_hub("huggan/name-of-your-dataset")
 
 ### 2. Train a model and push to hub
 
-Next, one can start training a model. This could be any model you'd like. However, we do provide some examples to help you get started, in both PyTorch and Keras.
+Next, one can start training a model. This could be any model you'd like. However, we do provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Keras](keras). An example is the [DCGAN](pytorch/dcgan) model. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment.
 
-An example is the [DCGAN]() model. Simply follow the README that explains all the details of the relevant implementation.
-
-If you're planning to train a PyTorch model, it's recommended to make it inherit from `PyTorchModelHubMixin`. This makes sure you can push it to the hub at the end of training as follows:
+IMPORTANT: If you're planning to train a custom PyTorch model, it's recommended to make it inherit from `PyTorchModelHubMixin`. This makes sure you can push it to the hub at the end of training, and reload it afterwards using `from_pretrained, as shown in the code example below:
 
 ```python
+from huggingface_hub import PyTorchModelHubMixin
+
+class MyModel(nn.Module, PyTorchModelHubMixin):
+   def __init__(self, **kwargs):
+      super().__init__()
+      self.config = kwargs.pop("config", None)
+      self.layer = ...
+   def forward(self, ...):
+      return ...
+
+# Create model
+model = MyModel()
+
+# Push to HuggingFace Hub
 model.push_to_hub("huggan/name-of-your-model").
+
+# Reload from HuggingFace Hub
+reloaded = MyModel.from_pretrained("huggan/name-of-your-model").
 ```
 
-In Keras, one can leverage the `push_to_hub_keras` method.
+In Keras, one can leverage the `push_to_hub_keras` and `from_pretrained_keras` methods:
+
+```python
+import tensorflow as tf
+from huggingface_hub import push_to_hub_keras, from_pretrained_keras
+
+# Build a Keras model
+inputs = tf.keras.layers.Input(shape=(2,))
+x = tf.keras.layers.Dense(2, activation="relu")(inputs)
+model = tf.keras.models.Model(inputs=inputs, outputs=x)
+model.compile(optimizer="adam", loss="mse")
+
+# Push to HuggingFace Hub
+push_to_hub_keras(model, "huggan/my-cool-model")
+
+# Reload from HuggingFace Hub
+reloaded = from_pretrained_keras("huggan/my-cool-model")
+```
+
+Models can be either trained by you, or ones that are available you’d like to share with the community. If you didn’t train the model yourself, be sure to both credit the original authors and include the associated license in your model card! Here is an [example model repo](https://huggingface.co/merve/anime-faces-generator).
 
 Model repositories are expected to have a full model card 🃏 that includes:
 - license,
@@ -113,8 +199,6 @@ Model repositories are expected to have a full model card 🃏 that includes:
 - a model output.
 
 ![Alt text](assets/example_model.png?raw=true "Title")
-
-Models can be either trained by you, or ones that are available you’d like to share with the community. If you didn’t train the model yourself, be sure to both credit the original authors and include the associated license in your model card! Here is an [example model repo](https://huggingface.co/merve/anime-faces-generator).
 
 Don't know how to share a model? Check out [this guide](https://huggingface.co/docs/hub/adding-a-model#adding-your-model-to-the-hugging-face-hub)!
 
