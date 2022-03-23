@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-# Copyright 2022 PyTorch and The HuggingFace Inc. team. All rights reserved.
+# Copyright (c) 2022 PyTorch contributors and The HuggingFace Inc. team. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ Based on PyTorch's official tutorial: https://pytorch.org/tutorials/beginner/dcg
 
 import argparse
 import os
+import sys
+from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -82,6 +84,31 @@ def parse_args(args=None):
         "and an Nvidia Ampere GPU.",
     )
     parser.add_argument("--cpu", action="store_true", help="If passed, will train on the CPU.")
+    parser.add_argument("--output", type=Path, default="images", help="Name of the directory to dump generated images during training.")
+    parser.add_argument(
+        "--push_to_hub",
+        action="store_true",
+        help="Whether to push the model to the HuggingFace hub after training.",
+        )
+    parser.add_argument(
+        "--pytorch_dump_folder_path",
+        required="--push_to_hub" in sys.argv,
+        type=Path,
+        help="Path to save the model. Will be created if it doesn't exist already.",
+    )
+    parser.add_argument(
+        "--model_name",
+        required="--push_to_hub" in sys.argv,
+        type=str,
+        help="Name of the model on the hub.",
+    )
+    parser.add_argument(
+        "--organization_name",
+        required=False,
+        default="huggan",
+        type=str,
+        help="Organization name to push to, in case args.push_to_hub is specified.",
+    )
     return parser.parse_args(args=args)
 
 
@@ -246,10 +273,20 @@ def training_function(config, args):
             if (iters % 500 == 0) or ((epoch == args.num_epochs - 1) and (i == len(dataloader) - 1)):
                 with torch.no_grad():
                     fake = netG(fixed_noise).detach().cpu()
-                # img_list.append(vutils.make_grid(fake, padding=2, normalize=True))
                 save_image(fake.data[:25], "images/%d.png" % i, nrow=5, normalize=True)
 
             iters += 1
+
+    # Optionally push to hub
+    if args.push_to_hub:
+        save_directory = args.pytorch_dump_folder_path
+        if not save_directory.exists():
+            save_directory.mkdir(parents=True)
+
+        netG.push_to_hub(
+            repo_path_or_name=save_directory / args.model_name,
+            organization=args.organization_name,
+        )
 
 
 def main():
