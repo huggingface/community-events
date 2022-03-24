@@ -2,21 +2,29 @@
 
 This folder contains a script to train [pix2pix](https://arxiv.org/abs/1611.07004), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
 
-To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [Facades](https://huggingface.co/datasets/huggan/facades), simply do:
+The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
 
-```
-python train.py
-```
+To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [huggan/facades](https://huggingface.co/datasets/huggan/facades) on your environment, first run:
 
-This will create a local "images" directory, containing generated images over the course of the training.
-
-To train on another dataset available on the hub, simply do:
-
-```
-python train.py --dataset night2day
+```bash
+accelerate config
 ```
 
-Make sure that you do have a dataset with 2 images in each example.
+and answer the questions asked. Next, launch the script as follows: 
+
+```
+accelerate launch train.py
+```
+
+This will create local "images" and "saved_models" directories, containing generated images and saved checkpoints over the course of the training.
+
+To train on another dataset available on the hub, simply do (for instance):
+
+```
+accelerate launch train.py --dataset huggan/night2day
+```
+
+Make sure to pick a dataset which has "imageA" and "imageB" columns defined. One can always tweak the script in case the column names are different.
 
 ## Training on your own data
 
