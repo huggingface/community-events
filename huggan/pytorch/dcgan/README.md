@@ -1,8 +1,10 @@
-# DCGAN
+# Train DCGAN on your custom data
 
-An implementation of [DCGAN](https://arxiv.org/abs/1511.06434), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
+This folder contains a script to train [DCGAN](https://arxiv.org/abs/1511.06434), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing your data and pushing the model to the Hub.
 
-To train the model with the default parameters (5 epochs, 64x64 images, etc.) on MNIST, simply do:
+## Training with default settings
+
+To train the model with the default parameters (5 epochs, 64x64 images, etc.) on [MNIST](https://huggingface.co/datasets/mnist), simply do:
 
 ```
 python train.py
@@ -10,7 +12,7 @@ python train.py
 
 This will create a local "images" directory, containing generated images over the course of the training.
 
-To train on another dataset available on the hub, simply do:
+To train on another dataset available on the hub, simply do (for instance):
 
 ```
 python train.py --dataset cifar-10
