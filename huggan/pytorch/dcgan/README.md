@@ -2,19 +2,39 @@
 
 This folder contains a script to train [DCGAN](https://arxiv.org/abs/1511.06434), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing your data and pushing the model to the Hub.
 
-## Training with default settings
+## Launching the script
 
-To train the model with the default parameters (5 epochs, 64x64 images, etc.) on [MNIST](https://huggingface.co/datasets/mnist), simply do:
+To train the model with the default parameters (5 epochs, 64x64 images, etc.) on [MNIST](https://huggingface.co/datasets/mnist), first clone this repo:
 
+```bash
+git clone https://github.com/huggingface/community-events.git
 ```
+
+Then move to the DCGAN directory:
+
+```bash
+cd community-events/huggan/pytorch/dcgan
+```
+
+Finally, run the script:
+
+```bash
 python train.py
 ```
 
 This will create a local "images" directory, containing generated images over the course of the training.
 
+In case you'd like to tweak the script to your liking, first fork the "community-events" [repo](https://github.com/huggingface/community-events) (see the button on the top right), then clone it locally:
+
+```bash
+git clone https://github.com/<your Github username>/community-events.git
+```
+
+and edit to your liking.
+
 To train on another dataset available on the hub, simply do (for instance):
 
-```
+```bash
 python train.py --dataset cifar-10
 ```
 
@@ -45,7 +65,7 @@ dataset.push_to_hub("huggan/my-awesome-dataset")
 
 You can then simply pass the name of the dataset to the script:
 
-```
+```bash
 python train.py --dataset huggan/my-awesome-dataset
 ```
 
@@ -54,7 +74,7 @@ python train.py --dataset huggan/my-awesome-dataset
 You can push your trained generator to the hub after training by specifying the `push_to_hub` flag. 
 Then, you can run the script as follows:
 
-```
+```bash
 python train.py --push_to_hub --model_name dcgan-mnist
 ```
 
