@@ -54,4 +54,4 @@ python train.py --dataset huggan/my-awesome-dataset
 
 # Citation
 
-This repo is entirely based on the  Erik Linder-Norén's [PyTorch-GAN repo](https://github.com/eriklindernoren/PyTorch-GAN), but with added HuggingFace goodies.
+This repo is entirely based on Erik Linder-Norén's [PyTorch-GAN repo](https://github.com/eriklindernoren/PyTorch-GAN), but with added HuggingFace goodies.
