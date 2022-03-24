@@ -1,8 +1,10 @@
 # Training CycleGAN on your own data
 
-This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub. Here's the result of training the model on [huggan/facades](https://huggingface.co/datasets/huggan/facades) in both directions:
+This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub. Here's the result of training the model on [huggan/facades](https://huggingface.co/datasets/huggan/facades) in both directions (segmentation -> facade, facade -> segmentation):
 
-![example](https://github.com/huggingface/community-events/blob/main/huggan/assets/cyclegan.png)
+<p align="center">
+    <img src="https://github.com/huggingface/community-events/blob/main/huggan/assets/cyclegan.png" alt="drawing" width="400"/>
+</p>
 
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
 
@@ -25,6 +27,8 @@ To train on another dataset available on the hub, simply do:
 ```
 accelerate launch train.py --dataset huggan/edges2shoes
 ```
+
+Make sure to pick a dataset which has "imageA" and "imageB" columns defined. One can always tweak the script in case the column names are different.
 
 ## Training on your own data
 
