@@ -1,6 +1,8 @@
 # Training CycleGAN on your own data
 
-This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
+This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub. Here's the result of training the model on [huggan/facades](https://huggingface.co/datasets/huggan/facades) in both directions:
+
+![example](https://github.com/huggingface/community-events/blob/main/huggan/assets/cyclegan.png)
 
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
 
