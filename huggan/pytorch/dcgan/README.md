@@ -65,6 +65,7 @@ This means that after training, generating a new image can be done as follows:
 ```python
 import torch
 import torch.nn as nn
+from torchvision.transforms import ToPILImage
 from huggingface_hub import PyTorchModelHubMixin
 
 class Generator(nn.Module, PyTorchModelHubMixin):
@@ -105,7 +106,13 @@ model.to(device)
  
 with torch.no_grad():
     z = torch.randn(1, 100, 1, 1, device=device)
-    outputs = model(z)
+    pixel_values = model(z)
+
+# turn into actual image
+image = pixel_values[0]
+image = (image + 1) /2
+image = ToPILImage()(image)
+image.save("generated.png")
 ```
 
 # Citation
