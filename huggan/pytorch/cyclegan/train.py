@@ -20,6 +20,8 @@ from utils import ReplayBuffer, LambdaLR
 
 from datasets import load_dataset
 
+from accelerate import Accelerator
+
 import torch.nn as nn
 import torch
 
@@ -35,12 +37,23 @@ def parse_args(args=None):
     parser.add_argument("--decay_epoch", type=int, default=100, help="epoch from which to start lr decay")
     parser.add_argument("--num_workers", type=int, default=8, help="Number of CPU threads to use during batch generation")
     parser.add_argument("--image_size", type=int, default=256, help="Size of images for training")
-    parser.add_argument("--channels", type=int, default=3, help="number of image channels")
+    parser.add_argument("--channels", type=int, default=3, help="Number of image channels")
     parser.add_argument("--sample_interval", type=int, default=100, help="interval between saving generator outputs")
     parser.add_argument("--checkpoint_interval", type=int, default=-1, help="interval between saving model checkpoints")
     parser.add_argument("--n_residual_blocks", type=int, default=9, help="number of residual blocks in generator")
     parser.add_argument("--lambda_cyc", type=float, default=10.0, help="cycle loss weight")
     parser.add_argument("--lambda_id", type=float, default=5.0, help="identity loss weight")
+    parser.add_argument("--fp16", action="store_true", help="If passed, will use FP16 training.")
+    parser.add_argument(
+        "--mixed_precision",
+        type=str,
+        default="no",
+        choices=["no", "fp16", "bf16"],
+        help="Whether to use mixed precision. Choose"
+        "between fp16 and bf16 (bfloat16). Bf16 requires PyTorch >= 1.10."
+        "and an Nvidia Ampere GPU.",
+    )
+    parser.add_argument("--cpu", action="store_true", help="If passed, will train on the CPU.")
     parser.add_argument(
             "--push_to_hub",
             action="store_true",
@@ -67,7 +80,21 @@ def parse_args(args=None):
     )
     return parser.parse_args(args=args)
 
-def train(args):
+
+def weights_init_normal(m):
+        classname = m.__class__.__name__
+        if classname.find("Conv") != -1:
+            torch.nn.init.normal_(m.weight.data, 0.0, 0.02)
+            if hasattr(m, "bias") and m.bias is not None:
+                torch.nn.init.constant_(m.bias.data, 0.0)
+        elif classname.find("BatchNorm2d") != -1:
+            torch.nn.init.normal_(m.weight.data, 1.0, 0.02)
+            torch.nn.init.constant_(m.bias.data, 0.0)
+
+
+def training_function(config, args):
+    accelerator = Accelerator(fp16=args.fp16, cpu=args.cpu, mixed_precision=args.mixed_precision)
+    
     # Create sample and checkpoint directories
     os.makedirs("images/%s" % args.dataset_name, exist_ok=True)
     os.makedirs("saved_models/%s" % args.dataset_name, exist_ok=True)
@@ -78,31 +105,14 @@ def train(args):
     criterion_identity = torch.nn.L1Loss()
 
     input_shape = (args.channels, args.image_size, args.image_size)
+    # Calculate output shape of image discriminator (PatchGAN)
+    output_shape = (1, args.image_size // 2 ** 4, args.image_size // 2 ** 4)
 
     # Initialize generator and discriminator
     G_AB = GeneratorResNet(input_shape, args.n_residual_blocks)
     G_BA = GeneratorResNet(input_shape, args.n_residual_blocks)
-    D_A = Discriminator(input_shape)
-    D_B = Discriminator(input_shape)
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    G_AB = G_AB.to(device)
-    G_BA = G_BA.to(device)
-    D_A = D_A.to(device)
-    D_B = D_B.to(device)
-    criterion_GAN.to(device)
-    criterion_cycle.to(device)
-    criterion_identity.to(device)
-
-    def weights_init_normal(m):
-        classname = m.__class__.__name__
-        if classname.find("Conv") != -1:
-            torch.nn.init.normal_(m.weight.data, 0.0, 0.02)
-            if hasattr(m, "bias") and m.bias is not None:
-                torch.nn.init.constant_(m.bias.data, 0.0)
-        elif classname.find("BatchNorm2d") != -1:
-            torch.nn.init.normal_(m.weight.data, 1.0, 0.02)
-            torch.nn.init.constant_(m.bias.data, 0.0)
+    D_A = Discriminator(args.channels)
+    D_B = Discriminator(args.channels)
 
     if args.epoch != 0:
         # Load pretrained models
@@ -172,9 +182,9 @@ def train(args):
         batch = next(iter(val_dataloader))
         G_AB.eval()
         G_BA.eval()
-        real_A = batch["A"].to(device)
+        real_A = batch["A"]
         fake_B = G_AB(real_A)
-        real_B = batch["B"].to(device)
+        real_B = batch["B"]
         fake_A = G_BA(real_B)
         # Arange images along x-axis
         real_A = make_grid(real_A, nrow=5, normalize=True)
@@ -185,7 +195,8 @@ def train(args):
         image_grid = torch.cat((real_A, fake_B, real_B, fake_A), 1)
         save_image(image_grid, "images/%s/%s.png" % (args.dataset_name, batches_done), normalize=False)
 
-
+    G_AB, G_BA, D_A, D_B, optimizer_G, optimizer_D_A, optimizer_D_B, dataloader, val_dataloader = accelerator.prepare(G_AB, G_BA, D_A, D_B, optimizer_G, optimizer_D_A, optimizer_D_B, dataloader, val_dataloader)
+    
     # ----------
     #  Training
     # ----------
@@ -195,12 +206,12 @@ def train(args):
         for i, batch in enumerate(dataloader):
 
             # Set model input
-            real_A = batch["A"].to(device)
-            real_B = batch["B"].to(device)
+            real_A = batch["A"]
+            real_B = batch["B"]
 
             # Adversarial ground truths
-            valid = torch.ones((real_A.size(0), *D_A.output_shape), device=device)
-            fake = torch.zeros((real_A.size(0), *D_A.output_shape), device=device)
+            valid = torch.ones((real_A.size(0), *output_shape), device=accelerator.device)
+            fake = torch.zeros((real_A.size(0), *output_shape), device=accelerator.device)
 
             # ------------------
             #  Train Generators
@@ -236,7 +247,7 @@ def train(args):
             # Total loss
             loss_G = loss_GAN + args.lambda_cyc * loss_cycle + args.lambda_id * loss_identity
 
-            loss_G.backward()
+            accelerator.backward(loss_G)
             optimizer_G.step()
 
             # -----------------------
@@ -253,7 +264,7 @@ def train(args):
             # Total loss
             loss_D_A = (loss_real + loss_fake) / 2
 
-            loss_D_A.backward()
+            accelerator.backward(loss_D_A)
             optimizer_D_A.step()
 
             # -----------------------
@@ -270,7 +281,7 @@ def train(args):
             # Total loss
             loss_D_B = (loss_real + loss_fake) / 2
 
-            loss_D_B.backward()
+            accelerator.backward(loss_D_B)
             optimizer_D_B.step()
 
             loss_D = (loss_D_A + loss_D_B) / 2
@@ -336,7 +347,7 @@ def main():
     # Make directory for saving generated images
     os.makedirs("images", exist_ok=True)
 
-    train(args)
+    training_function({}, args)
 
 
 if __name__ == "__main__":

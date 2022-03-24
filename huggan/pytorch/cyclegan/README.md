@@ -1,11 +1,19 @@
-# CycleGAN
+# Training CycleGAN on your own data
 
-An implementation of [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
+This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
 
-To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [huggan/facades](https://huggingface.co/datasets/huggan/facades), simply do:
+The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
+
+To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [huggan/facades](https://huggingface.co/datasets/huggan/facades) on your environment, first run:
+
+```bash
+accelerate config
+```
+
+and answer the questions asked. Next, launch the script as follows: 
 
 ```
-python train.py
+accelerate launch train.py
 ```
 
 This will create local "images" and "saved_models" directories, containing generated images and saved checkpoints over the course of the training.
@@ -13,7 +21,7 @@ This will create local "images" and "saved_models" directories, containing gener
 To train on another dataset available on the hub, simply do:
 
 ```
-python train.py --dataset huggan/edges2shoes
+accelerate launch train.py --dataset huggan/edges2shoes
 ```
 
 ## Training on your own data
@@ -44,7 +52,7 @@ dataset.push_to_hub("huggan/my-awesome-dataset")
 You can then simply pass the name of the dataset to the script:
 
 ```
-python train.py --dataset huggan/my-awesome-dataset
+accelerate launch train.py --dataset huggan/my-awesome-dataset
 ```
 
 ## Pushing model to the Hub
@@ -53,7 +61,7 @@ You can push your trained generator to the hub after training by specifying the 
 Then, you can run the script as follows:
 
 ```
-python train.py --push_to_hub --model_name dcgan-mnist
+accelerate launch train.py --push_to_hub --model_name dcgan-mnist
 ```
 
 This is made possible by making the generator inherit from `PyTorchModelHubMixin`available in the `huggingface_hub` library. 

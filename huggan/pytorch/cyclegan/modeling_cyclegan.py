@@ -84,13 +84,8 @@ class GeneratorResNet(nn.Module, PyTorchModelHubMixin):
 
 
 class Discriminator(nn.Module):
-    def __init__(self, input_shape):
+    def __init__(self, channels):
         super(Discriminator, self).__init__()
-
-        channels, height, width = input_shape
-
-        # Calculate output shape of image discriminator (PatchGAN)
-        self.output_shape = (1, height // 2 ** 4, width // 2 ** 4)
 
         def discriminator_block(in_filters, out_filters, normalize=True):
             """Returns downsampling layers of each discriminator block"""
