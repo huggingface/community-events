@@ -241,6 +241,7 @@ Besides the methods explained in sections 2.1 and 2.2 above, you can also share 
 When uploading a model to the hub, it's important to include a so-called [model card](https://huggingface.co/course/chapter4/4?fw=pt) with it. This is just a README (in Markdown) 🃏 that includes:
 - license,
 - task,
+- `huggan` and `gan` tags,
 - dataset metadata,
 - information related to the model,
 - information on dataset, intended uses,
@@ -260,6 +261,17 @@ Once you share a model, you then should share a [Space](https://huggingface.co/s
 ![Alt text](assets/example_space.png?raw=true "Title")
 
 Here is an [example Space](https://huggingface.co/spaces/merve/anime-face-generator) corresponding to the model example shared above. Don’t know how to create a space? Read more about how to add spaces [here](https://huggingface.co/docs/hub/spaces).
+
+## Example Scripts
+
+In this repo, we have provided some example scripts you can use to train your own GANs. Below is a table of the available scripts:
+
+| Name      | Paper |
+| ----------- | ----------- |
+| [CycleGAN](pytorch/cyclegan/README.md)  | [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
+|
+| [DCGAN](pytorch/dcgan/README.md)  | [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)  |
+| [pix2pix](pytorch/pix2pix/README.md) | [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004) |
 
 ## Links to Check Out
 
