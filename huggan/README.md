@@ -266,14 +266,19 @@ For each submission, you are expected to submit:
 
 ## Links to Check Out
 
-- https://github.com/lucidrains/lightweight-gan
-- https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
-- https://keras.io/examples/generative/wgan_gp/
-- https://keras.io/examples/generative/conditional_gan/
-- https://github.com/lucidrains/stylegan2-pytorch
-- https://github.com/NVlabs/stylegan3
-- https://github.com/ajbrock/BigGAN-PyTorch
-- https://github.com/huggingface/pytorch-pretrained-BigGAN
+PyTorch:
+- Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
+- StyleGAN2: https://github.com/lucidrains/stylegan2-pytorch
+- StyleGAN3: https://github.com/NVlabs/stylegan3
+- BigGAN: https://github.com/ajbrock/BigGAN-PyTorch, https://github.com/huggingface/pytorch-pretrained-BigGAN
+- ADGAN: https://github.com/menyifang/ADGAN
+- ICGAN: https://github.com/facebookresearch/ic_gan
+
+Keras:
+- WGAN-GP: https://keras.io/examples/generative/wgan_gp/
+- Conditional GAN: https://keras.io/examples/generative/conditional_gan/
+
+General links & tutorials:
 - https://paperswithcode.com/task/image-generation
 - https://github.com/facebookresearch/ic_gan
 
