@@ -21,7 +21,6 @@ To join:
 - [Important dates](#important-dates)
 - [How to install relevant libraries](#how-to-install-relevant-libraries)
 - [General workflow](#general-workflow)
-- [Submissions](#submissions)
 - [Links to check out](#links-to-check-out)
 - [Evaluation](#evaluation)
 - [Prizes](#prizes)
@@ -255,15 +254,6 @@ Once you share a model, you then should share a [Space](https://huggingface.co/s
 
 Here is an [example Space](https://huggingface.co/spaces/merve/anime-face-generator) corresponding to the model example shared above. Don’t know how to create a space? Read more about how to add spaces [here](https://huggingface.co/docs/hub/spaces).
 
-## Submissions
-
-For each submission, you are expected to submit:
-
-1. A model repository
-2. A space made with the model repository you created
-
----
-
 ## Links to Check Out
 
 PyTorch:
@@ -284,7 +274,10 @@ General links & tutorials:
 
 ## Evaluation
 
-TODO
+For each submission, you are expected to submit:
+
+1. A model repository
+2. A space made with the model repository you created
 
 ## Prizes
 
