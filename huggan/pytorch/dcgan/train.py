@@ -217,7 +217,7 @@ def training_function(config, args):
             # Calculate loss on all-real batch
             errD_real = criterion(output, label)
             # Calculate gradients for D in backward pass
-            errD_real.backward()
+            accelerator.backward(errD_real)
             D_x = output.mean().item()
 
             ## Train with all-fake batch
@@ -231,7 +231,7 @@ def training_function(config, args):
             # Calculate D's loss on the all-fake batch
             errD_fake = criterion(output, label)
             # Calculate the gradients for this batch, accumulated (summed) with previous gradients
-            errD_fake.backward()
+            accelerator.backward(errD_fake)
             D_G_z1 = output.mean().item()
             # Compute error of D as sum over the fake and the real batches
             errD = errD_real + errD_fake
@@ -248,7 +248,7 @@ def training_function(config, args):
             # Calculate G's loss based on this output
             errG = criterion(output, label)
             # Calculate gradients for G
-            errG.backward()
+            accelerator.backward(errG)
             D_G_z2 = output.mean().item()
             # Update G
             optimizerG.step()
