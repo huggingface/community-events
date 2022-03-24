@@ -30,7 +30,11 @@ To join:
 
 ## Important dates
 
-(to do)
+| Date      | Description |
+| ----------- | ----------- |
+| April 4th      | Sprint Kickoff 🚀      |
+| April 15th   | Submission Deadline 🛑  |
+| April 22nd | Prizes Announced for Participants 🎁 |
 
 ## How to install relevant libraries
 
