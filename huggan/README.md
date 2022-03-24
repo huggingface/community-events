@@ -256,17 +256,22 @@ Here is an [example Space](https://huggingface.co/spaces/merve/anime-face-genera
 
 ## Links to Check Out
 
-PyTorch:
+Possible models to port to the hub, PyTorch:
 - Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
 - StyleGAN2: https://github.com/lucidrains/stylegan2-pytorch
 - StyleGAN3: https://github.com/NVlabs/stylegan3
 - BigGAN: https://github.com/ajbrock/BigGAN-PyTorch, https://github.com/huggingface/pytorch-pretrained-BigGAN
 - ADGAN: https://github.com/menyifang/ADGAN
 - ICGAN: https://github.com/facebookresearch/ic_gan
+- StarGANv2: https://github.com/clovaai/stargan-v2
+- Progressive Growing GAN: https://github.com/Maggiking/PGGAN-PyTorch
 
-Keras:
+Possible models to port to the hub, Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
 - Conditional GAN: https://keras.io/examples/generative/conditional_gan/
+
+GAN metrics:
+- https://github.com/yhlleo/GAN-Metrics
 
 General links & tutorials:
 - https://paperswithcode.com/task/image-generation
