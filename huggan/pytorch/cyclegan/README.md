@@ -3,8 +3,11 @@
 This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.10593), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub. Here's the result of training the model on [huggan/facades](https://huggingface.co/datasets/huggan/facades) in both directions (segmentation -> facade, facade -> segmentation):
 
 <p align="center">
-    <img src="https://github.com/huggingface/community-events/blob/main/huggan/assets/cyclegan.png" alt="drawing" width="400"/>
+    <img src="https://camo.githubusercontent.com/16fa02525bf502bec1aac77a3eb5b96928b0f25d73f7d9dedcc041ba28c38751/68747470733a2f2f6a756e79616e7a2e6769746875622e696f2f4379636c6547414e2f696d616765732f7465617365725f686967685f7265732e6a7067" alt="drawing" width="700"/>
 </p>
+
+Example applications of CycleGAN. Taken from [this repo](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix).
+
 
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
 
