@@ -95,7 +95,7 @@ The first step is the most obvious one: to train a GAN (or any neural network), 
 
 #### 1.1 Use a dataset already available on the hub
 
-Most famous computer vision dataset are already available on the [hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as MNIST, CIFAR-10, CIFAR-100, etc.).
+Most famous computer vision dataset are already available on the [hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as [MNIST](https://huggingface.co/datasets/mnist), [Fashion MNIST](https://huggingface.co/datasets/fashion_mnist), [CIFAR-10](https://huggingface.co/datasets/cifar10), [CIFAR-100](https://huggingface.co/datasets/cifar100), etc.).
 
 Loading a dataset can be done as follows:
 
@@ -108,7 +108,7 @@ dataset = load_dataset("mnist")
 # ... or one that's part of the huggan organization
 dataset = load_dataset("huggan/edges2shoes")
 ```
-In a notebook, you can directly see the images by selecting a split and then the appropriate column:
+In a notebook, you can **directly see** the images by selecting a split and then the appropriate column:
 
 ```python
 example = dataset['train'][0]
@@ -118,6 +118,12 @@ print(example['image'])
 #### 1.2 Upload a new dataset to the hub
 
 In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). If you've signed up for the event by filling in the [spreadsheet]((https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0)), your HuggingFace account should be part of it. 
+
+Let's take NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset) as an example:
+
+<p align="center">
+    <img src="https://github.com/NVlabs/metfaces-dataset/blob/master/img/metfaces-teaser.png" alt="drawing" width="700"/>
+</p>
 
 To begin with, you should check that you are correctly logged in and that you have `git-lfs` installed so that your dataset can be uploaded.
 
@@ -135,7 +141,7 @@ from huggingface_hub import notebook_login
 notebook_login()
 ```
 
-to login. It is recommended to login with your access token that can be found under your HuggingFace profile (icon in the top right corner on [hf.co](http://hf.co/), then Settings -> Access Tokens -> User Access Tokens -> New Token (if you haven't generated one already)
+It is recommended to login with your access token that can be found under your HuggingFace profile (icon in the top right corner on [hf.co](http://hf.co/), then Settings -> Access Tokens -> User Access Tokens -> New Token (if you haven't generated one already)
 
 You can then copy-paste this token to log in locally.
 
@@ -151,15 +157,15 @@ The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1
 sudo apt-get install git-lfs
 ```
 
-Next, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. First, load your image dataset as a `Dataset` object:
+Next, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case your dataset is directly accessible through a URL, you can simply provide it. Otherwise, you'll need to go to the link of the dataset and manually donwload it first. Next, load your image dataset as a `Dataset` object:
 
 ```python
 from datasets import load_dataset
 
 # option 1: local folder
 dataset = load_dataset("imagefolder", data_dir="path_to_folder")
-# option 2: local or remote file(s), e.g. the Edge2Shoes dataset of pix2pix
-dataset = load_dataset("imagefolder", data_files="http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/edges2shoes.tar.gz")
+# option 2: local or remote file(s), such as zip or tar
+dataset = load_dataset("imagefolder", data_files="path_to_file.zip")
 ```
 
 Once you've loaded your dataset, you can push it to the hub, by simply typing:
@@ -168,7 +174,9 @@ Once you've loaded your dataset, you can push it to the hub, by simply typing:
 dataset.push_to_hub("huggan/name-of-your-dataset")
 ```
 
-Et voila! Your dataset is now available on the hub :) If you wait a bit, the Dataset viewer should be able to preview images in the browser (check for instance [this edges2shoes dataset](https://huggingface.co/datasets/huggan/edges2shoes)). The cool thing is that anyone can now access this dataset from anywhere, using `load_dataset`. 
+Et voila! Your dataset is now available on the hub :) If you wait a bit, the Dataset viewer should be able to preview images in the browser. The MetFaces dataset can be seen here: https://huggingface.co/datasets/huggan/metfaces. 
+
+The cool thing is that anyone can now access this dataset from anywhere, using `load_dataset`. 
 
 ### 2. Train a model and push to hub
 
