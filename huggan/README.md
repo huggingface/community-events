@@ -159,7 +159,7 @@ The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1
 sudo apt-get install git-lfs
 ```
 
-Next, one can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case the dataset you're uploading is directly accessible through a URL, you can simply provide it. Otherwise, you'll need to go to the link of the dataset and manually donwload it first (which was the case for MetFaces). Next, load your image dataset as a `Dataset` object:
+Next, one can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case the dataset you're uploading has a direct download URL, you can simply provide it to the `data_files` argument as shown below. Otherwise, you'll need to go to the link of the dataset and manually download it first as a zip/tar (which was the case for MetFaces), and provide the file through the `data_files` argument. Alternatively, it may be that you have a folder with images, in which case you can provide it using the `data_dir` argument. Note that the latter assumes a [particular structure](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder).
 
 ```python
 from datasets import load_dataset
