@@ -184,6 +184,12 @@ Et voila! Your dataset is now available on the hub :) If you wait a bit, the Dat
 
 The cool thing is that anyone can now access this dataset from anywhere, using `load_dataset`. 
 
+Note: When uploading a dataset, make sure that it has appropriate column names. The `ImageFolder` utility automatically creates `image` and `label` columns, however if there's only one image class, it makes sense to remove the `label column before pushing to the hub. This can be done as follows:
+
+```python
+dataset = dataset.remove_columns("label")
+```
+
 ### 2. Train a model and push to hub
 
 Next, one can start training a model. This could be any model you'd like, however, we do provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Keras](keras). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment.
