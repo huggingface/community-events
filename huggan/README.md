@@ -30,7 +30,11 @@ To join:
 
 ## Important dates
 
-(to do)
+| Date      | Description |
+| ----------- | ----------- |
+| April 4th      | Sprint Kickoff 🚀      |
+| April 15th   | Submission Deadline 🛑  |
+| April 22nd | Prizes Announced for Participants 🎁 |
 
 ## How to install relevant libraries
 
@@ -248,11 +252,16 @@ reloaded = from_pretrained_keras("huggan/my-cool-model")
 
 These methods are available in the [`huggingface_hub` library](https://github.com/huggingface/huggingface_hub), which comes pre-installed if you install `datasets` (or `transformers`) in your environment. Note that the `push_to_hub_keras` method supports pushing several models (such as a generator and discriminator) to the same repo, as illustrated [here](https://github.com/huggingface/huggingface_hub/issues/533#issuecomment-1058093158).
 
-#### 2.3 Model cards
+#### 2.3 Alternative ways to upload a model to the hub
+
+Besides the methods explained in sections 2.1 and 2.2 above, you can also share model assets directly from git, which is explained in depth in [this guide](https://huggingface.co/docs/hub/adding-a-model#uploading-your-files).
+
+#### 2.4 Model cards
 
 When uploading a model to the hub, it's important to include a so-called [model card](https://huggingface.co/course/chapter4/4?fw=pt) with it. This is just a README (in Markdown) 🃏 that includes:
 - license,
 - task,
+- `huggan` and `gan` tags,
 - dataset metadata,
 - information related to the model,
 - information on dataset, intended uses,
@@ -260,11 +269,10 @@ When uploading a model to the hub, it's important to include a so-called [model 
 
 If you trained one of the example models, this model card will be automatically generated for you. If you didn’t train the model yourself, be sure to both credit the original authors and include the associated license in your model card! Here is an [example model repo](https://huggingface.co/merve/anime-faces-generator).
 
+You can also use this [template model card](model_card_template.md)
+ as a guide to build your own.
+
 ![Alt text](assets/example_model.png?raw=true "Title")
-
-#### 2.4 Alternative ways to upload a model to the hub
-
-Besides the methods explained in sections 2.1 and 2.2 above, we do provide [this guide](https://huggingface.co/docs/hub/adding-a-model#adding-your-model-to-the-hugging-face-hub) which explains how to upload your files to the hub.
 
 ### 3. Create a demo
 
@@ -273,6 +281,16 @@ Once you share a model, you then should share a [Space](https://huggingface.co/s
 ![Alt text](assets/example_space.png?raw=true "Title")
 
 Here is an [example Space](https://huggingface.co/spaces/merve/anime-face-generator) corresponding to the model example shared above. Don’t know how to create a space? Read more about how to add spaces [here](https://huggingface.co/docs/hub/spaces).
+
+## Example Scripts
+
+In this repo, we have provided some example scripts you can use to train your own GANs. Below is a table of the available scripts:
+
+| Name      | Paper |
+| ----------- | ----------- |
+| [CycleGAN](pytorch/cyclegan/README.md)  | [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
+| [DCGAN](pytorch/dcgan/README.md)  | [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)  |
+| [pix2pix](pytorch/pix2pix/README.md) | [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004) |
 
 ## Links to Check Out
 
