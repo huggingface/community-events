@@ -265,6 +265,7 @@ Possible models to port to the hub, PyTorch:
 - ICGAN: https://github.com/facebookresearch/ic_gan
 - StarGANv2: https://github.com/clovaai/stargan-v2
 - Progressive Growing GAN: https://github.com/Maggiking/PGGAN-PyTorch
+- Vision Aided GAN: https://github.com/nupurkmr9/vision-aided-gan
 
 Possible models to port to the hub, Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
