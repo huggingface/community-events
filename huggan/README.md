@@ -119,7 +119,7 @@ print(example['image'])
 
 In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). If you've signed up for the event by filling in the [spreadsheet]((https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0)), your HuggingFace account should be part of it. 
 
-Let's illustrate how one could have uploaded NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset) to the hub:
+Let's illustrate with an example how this was done for NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset):
 
 <p align="center">
     <img src="https://github.com/NVlabs/metfaces-dataset/blob/master/img/metfaces-teaser.png" alt="drawing" width="700"/>
