@@ -125,6 +125,8 @@ Let's take NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-datase
     <img src="https://github.com/NVlabs/metfaces-dataset/blob/master/img/metfaces-teaser.png" alt="drawing" width="700"/>
 </p>
 
+Currently, this dataset is hosted in a folder in Google Drive.
+
 To begin with, you should check that you are correctly logged in and that you have `git-lfs` installed so that your dataset can be uploaded.
 
 Run:
@@ -157,7 +159,7 @@ The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1
 sudo apt-get install git-lfs
 ```
 
-Next, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case your dataset is directly accessible through a URL, you can simply provide it. Otherwise, you'll need to go to the link of the dataset and manually donwload it first. Next, load your image dataset as a `Dataset` object:
+Next, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case your dataset is directly accessible through a URL, you can simply provide it. Otherwise, you'll need to go to the link of the dataset and manually donwload it first (which was the case for MetFaces). Next, load your image dataset as a `Dataset` object:
 
 ```python
 from datasets import load_dataset
@@ -165,7 +167,7 @@ from datasets import load_dataset
 # option 1: local folder
 dataset = load_dataset("imagefolder", data_dir="path_to_folder")
 # option 2: local or remote file(s), such as zip or tar
-dataset = load_dataset("imagefolder", data_files="path_to_file.zip")
+dataset = load_dataset("imagefolder", data_files="path_to_file")
 ```
 
 Once you've loaded your dataset, you can push it to the hub, by simply typing:
@@ -175,6 +177,10 @@ dataset.push_to_hub("huggan/name-of-your-dataset")
 ```
 
 Et voila! Your dataset is now available on the hub :) If you wait a bit, the Dataset viewer should be able to preview images in the browser. The MetFaces dataset can be seen here: https://huggingface.co/datasets/huggan/metfaces. 
+
+<p align="center">
+    <img src="https://github.com/huggingface/community-events/blob/main/huggan/assets/metfaces.png" alt="drawing" width="700"/>
+</p>
 
 The cool thing is that anyone can now access this dataset from anywhere, using `load_dataset`. 
 
