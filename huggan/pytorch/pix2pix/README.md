@@ -1,6 +1,6 @@
-# Pix2pix
+# Train Pix2pix on your custom data
 
-An implementation of [pix2pix](https://arxiv.org/abs/1611.07004), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
+This folder contains a script to train [pix2pix](https://arxiv.org/abs/1611.07004), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
 
 To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [Facades](https://huggingface.co/datasets/huggan/facades), simply do:
 
