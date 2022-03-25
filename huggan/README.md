@@ -119,15 +119,15 @@ print(example['image'])
 
 In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). If you've signed up for the event by filling in the [spreadsheet]((https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0)), your HuggingFace account should be part of it. 
 
-Let's illustrate how we've uploaded NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset) to the hub:
+Let's illustrate how one could have uploaded NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset) to the hub:
 
 <p align="center">
     <img src="https://github.com/NVlabs/metfaces-dataset/blob/master/img/metfaces-teaser.png" alt="drawing" width="700"/>
 </p>
 
-Previously, this dataset was only hosted on [Google Drive](https://github.com/NVlabs/metfaces-dataset#overview).
+Previously, this dataset was only hosted on [Google Drive](https://github.com/NVlabs/metfaces-dataset#overview), and not really easily accessible.
 
-To begin with, you should check that you are correctly logged in and that you have `git-lfs` installed so that your dataset can be uploaded.
+To begin with, one should check that one is are correctly logged in and that `git-lfs` is installed so that the dataset can be uploaded.
 
 Run:
 
@@ -159,7 +159,7 @@ The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1
 sudo apt-get install git-lfs
 ```
 
-Next, we can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case your dataset is directly accessible through a URL, you can simply provide it. Otherwise, you'll need to go to the link of the dataset and manually donwload it first (which was the case for MetFaces). Next, load your image dataset as a `Dataset` object:
+Next, one can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case the dataset you're uploading is directly accessible through a URL, you can simply provide it. Otherwise, you'll need to go to the link of the dataset and manually donwload it first (which was the case for MetFaces). Next, load your image dataset as a `Dataset` object:
 
 ```python
 from datasets import load_dataset
