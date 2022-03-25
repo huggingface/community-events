@@ -1,3 +1,5 @@
+# 🤗 Upload custom image dataset to the hub
+
 This directory contains an example script that showcases how to upload a custom image dataset to the hub programmatically (using Python).
 
 In this example, we'll upload all available datasets shared by the [CycleGAN authors](https://github.com/junyanz/CycleGAN/blob/master/datasets/download_dataset.sh) to the hub.
