@@ -279,6 +279,7 @@ Here is an [example Space](https://huggingface.co/spaces/merve/anime-face-genera
 Possible models to port to the hub, PyTorch:
 - Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
 - StyleGAN2: https://github.com/lucidrains/stylegan2-pytorch
+- StyleGAN2-ada: https://github.com/NVlabs/stylegan2-ada
 - StyleGAN3: https://github.com/NVlabs/stylegan3
 - BigGAN: https://github.com/ajbrock/BigGAN-PyTorch, https://github.com/huggingface/pytorch-pretrained-BigGAN
 - ADGAN: https://github.com/menyifang/ADGAN
@@ -286,10 +287,12 @@ Possible models to port to the hub, PyTorch:
 - StarGANv2: https://github.com/clovaai/stargan-v2
 - Progressive Growing GAN: https://github.com/Maggiking/PGGAN-PyTorch
 - Vision Aided GAN: https://github.com/nupurkmr9/vision-aided-gan
+- DiffAugment (for training data-efficient GANs): https://github.com/mit-han-lab/data-efficient-gans
 
 Possible models to port to the hub, Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
 - Conditional GAN: https://keras.io/examples/generative/conditional_gan/
+- CycleGAN, DiscoGAN etc.: https://github.com/eriklindernoren/Keras-GAN
 
 GAN metrics:
 - https://github.com/yhlleo/GAN-Metrics
