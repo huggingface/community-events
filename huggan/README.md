@@ -119,13 +119,13 @@ print(example['image'])
 
 In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). If you've signed up for the event by filling in the [spreadsheet]((https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0)), your HuggingFace account should be part of it. 
 
-Let's take NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset) as an example:
+Let's illustrate how we've uploaded NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset) to the hub:
 
 <p align="center">
     <img src="https://github.com/NVlabs/metfaces-dataset/blob/master/img/metfaces-teaser.png" alt="drawing" width="700"/>
 </p>
 
-Currently, this dataset is hosted in a folder in Google Drive.
+Previously, this dataset was only hosted on [Google Drive](https://github.com/NVlabs/metfaces-dataset#overview).
 
 To begin with, you should check that you are correctly logged in and that you have `git-lfs` installed so that your dataset can be uploaded.
 
