@@ -25,14 +25,19 @@ from pathlib import Path
 
 import torch
 import torch.nn as nn
-from accelerate import Accelerator
-from datasets import load_dataset
 from torch.utils.data import DataLoader
 from torchvision.transforms import (CenterCrop, Compose, Normalize, Resize,
-                                    ToTensor)
+                                    ToTensor, ToPILImage)
 from torchvision.utils import save_image
 
+from accelerate import Accelerator
+
 from modeling_dcgan import Discriminator, Generator
+
+from datasets import load_dataset
+
+from inception import InceptionV3
+from fid_score import calculate_fretchet
 
 
 def parse_args(args=None):
@@ -140,6 +145,9 @@ def training_function(config, args):
     # Initialize weights
     netG.apply(weights_init)
     netD.apply(weights_init)
+
+    # Initialize Inceptionv3 (for FID metric)
+    model = InceptionV3()
 
     # Create batch of latent vectors that we will use to visualize
     # the progression of the generator
@@ -277,10 +285,14 @@ def training_function(config, args):
             # Check how the generator is doing by saving G's output on fixed_noise
             if (iters % 500 == 0) or ((epoch == args.num_epochs - 1) and (i == len(dataloader) - 1)):
                 with torch.no_grad():
-                    fake = netG(fixed_noise).detach().cpu()
-                save_image(fake.data[:25], args.output/f"iter_{i}.png", nrow=5, normalize=True)
+                    fake_images = netG(fixed_noise).detach().cpu()
+                save_image(fake_images.data[:25], args.output/f"iter_{i}.png", nrow=5, normalize=True)
 
             iters += 1
+
+        # Calculate FID metric
+        fid = calculate_fretchet(real_cpu, fake, model.to(accelerator.device))
+        print("FID metric:", fid)
 
     # Optionally push to hub
     if args.push_to_hub:
