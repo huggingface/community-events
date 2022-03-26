@@ -282,6 +282,13 @@ Once you share a model, you then should share a [Space](https://huggingface.co/s
 
 Here is an [example Space](https://huggingface.co/spaces/merve/anime-face-generator) corresponding to the model example shared above. Don’t know how to create a space? Read more about how to add spaces [here](https://huggingface.co/docs/hub/spaces).
 
+Below, we list some other great example GAN Spaces:
+- AnimeGANv2: https://huggingface.co/spaces/akhaliq/AnimeGANv2
+- ArcaneGAN: https://huggingface.co/spaces/akhaliq/ArcaneGAN
+- This Pokemon does not exist: https://huggingface.co/spaces/ronvolutional/ai-pokemon-card
+- GFP-GAN: https://huggingface.co/spaces/akhaliq/GFPGAN
+- DualStyleGAN: https://huggingface.co/spaces/hysts/DualStyleGAN
+
 ## Example Scripts
 
 In this repo, we have provided some example scripts you can use to train your own GANs. Below is a table of the available scripts:
