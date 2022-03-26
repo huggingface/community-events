@@ -22,6 +22,7 @@ To join:
 - [How to install relevant libraries](#how-to-install-relevant-libraries)
 - [General workflow](#general-workflow)
 - [Links to check out](#links-to-check-out)
+- [GAN metrics](#gan-metrics)
 - [Evaluation](#evaluation)
 - [Prizes](#prizes)
 - [Communication and Problems](#communication-and-problems)
