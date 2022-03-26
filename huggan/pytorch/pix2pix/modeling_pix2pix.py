@@ -17,6 +17,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
+from huggingface_hub import PyTorchModelHubMixin
+
 
 def weights_init_normal(m):
     classname = m.__class__.__name__
@@ -67,7 +69,7 @@ class UNetUp(nn.Module):
         return x
 
 
-class GeneratorUNet(nn.Module):
+class GeneratorUNet(nn.Module, PyTorchModelHubMixin):
     def __init__(self, in_channels=3, out_channels=3):
         super(GeneratorUNet, self).__init__()
 

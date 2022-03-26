@@ -71,11 +71,10 @@ python train.py --dataset huggan/my-awesome-dataset
 
 ## Pushing model to the Hub
 
-You can push your trained generator to the hub after training by specifying the `push_to_hub` flag. 
-Then, you can run the script as follows:
+You can push your trained generator to the hub after training by specifying the `push_to_hub` flag, along with a `model_name` and `pytorch_dump_folder_path`. 
 
 ```bash
-python train.py --push_to_hub --model_name dcgan-mnist
+python train.py --push_to_hub --model_name dcgan-mnist --pytorch_dump_folder_path output
 ```
 
 This is made possible by making the generator inherit from `PyTorchModelHubMixin`available in the `huggingface_hub` library. 
