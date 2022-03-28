@@ -1,3 +1,5 @@
+# Example scripts
+
 This directory contains a few example scripts that allow you to train famous GANs on your own data using a bit of 🤗 magic.
 
 More concretely, these scripts:
@@ -5,7 +7,7 @@ More concretely, these scripts:
 - leverage 🤗 Accelerate to instantly run the script on (multi-) GPU environments, supporting fp16 and mixed precision
 - leverage 🤗 Hub to push the model to the hub at the end of training, allowing to easily create a demo for it afterwards
 
-# Example scripts
+Currently, it contains the following examples:
 
 | Name      | Paper |
 | ----------- | ----------- |
