@@ -2,7 +2,7 @@
 
 ![Banner](assets/huggan_banner.png?raw=true "Banner")
 
-_**Timeline**: April 4th, 2020 - April 17th, 2020_
+_**Timeline**: April 4th, 2022 - April 17th, 2022_
 
 ---
 
