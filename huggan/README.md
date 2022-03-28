@@ -186,13 +186,15 @@ Et voila! Your dataset is now available on the hub :) If you wait a bit, the Dat
     <img src="https://github.com/huggingface/community-events/blob/main/huggan/assets/metfaces.png" alt="drawing" width="700"/>
 </p>
 
-The cool thing is that anyone can now access this dataset from anywhere, using `load_dataset`. 
+The cool thing is that anyone can now access this dataset from anywhere, using `load_dataset` 🎉🥳 this means that you can easily load the dataset on another computer for instance, or in a different environment. Amazing, isn't it?
 
-Note: When uploading a dataset, make sure that it has appropriate column names. The `ImageFolder` utility automatically creates `image` and `label` columns, however if there's only one image class, it makes sense to remove the `label` column before pushing to the hub. This can be done as follows:
+❗ Note: When uploading a dataset, make sure that it has appropriate column names. The `ImageFolder` utility automatically creates `image` and `label` columns, however if there's only one image class, it makes sense to remove the `label` column before pushing to the hub. This can be done as follows:
 
 ```python
 dataset = dataset.remove_columns("label")
 ```
+
+Note that you can always update a dataset by simply calling `push_to_hub again (providing the same name).
 
 ### 2. Train a model and push to hub
 
