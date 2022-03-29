@@ -13,7 +13,7 @@ During the sprint, we’ll be bringing in some awesome speakers to talk about GA
 To join:
 
 1. Fill out [this form](https://forms.gle/goq41UgzsvuKKTFFA), so we can keep track of who’s joining.
-2. Send a reaction in the [#join-sprint channel](https://discord.com/channels/879548962464493619/954070850645135462) under the HugGAN category in Discord. This will add you to the rest of the related channels. If you haven't joined our discord yet, [click here](discord.gg/H3bUrDPTfS).
+2. Send a reaction in the [#join-sprint channel](https://discord.com/channels/879548962464493619/954070850645135462) under the HugGAN category in Discord. This will add you to the rest of the related channels. If you haven't joined our discord yet, [click here](https://discord.gg/H3bUrDPTfS).
 3. Once you’ve decided what you want to work on, add your project’s information to [this sheet](https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0), where you can describe your project and let us know if you need additional compute. Still brainstorming? Feel free to propose ideas in #sprint-discussions.
 
 ## Table of Contents
