@@ -18,6 +18,7 @@ Paper: https://arxiv.org/abs/1511.06434.
 Based on PyTorch's official tutorial: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html.
 """
 
+
 import argparse
 import os
 import sys
@@ -36,8 +37,8 @@ from modeling_dcgan import Discriminator, Generator
 
 from datasets import load_dataset
 
-from inception import InceptionV3
-from fid_score import calculate_fretchet
+from metrics.inception import InceptionV3
+from metrics.fid_score import calculate_fretchet
 
 
 def parse_args(args=None):
