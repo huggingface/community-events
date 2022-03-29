@@ -3,9 +3,9 @@
 This directory contains a few example scripts that allow you to train famous GANs on your own data using a bit of 🤗 magic.
 
 More concretely, these scripts:
-- leverage 🤗 Datasets to load any image dataset from the hub (including your own, possibly private, dataset)
-- leverage 🤗 Accelerate to instantly run the script on (multi-) GPU environments, supporting fp16 and mixed precision
-- leverage 🤗 Hub to push the model to the hub at the end of training, allowing to easily create a demo for it afterwards
+- leverage 🤗 [Datasets](https://huggingface.co/docs/datasets/index) to load any image dataset from the hub (including your own, possibly private, dataset)
+- leverage 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index) to instantly run the script on (multi-) GPU environments, supporting fp16 and mixed precision
+- leverage 🤗 [Hub](https://huggingface.co/) to push the model to the hub at the end of training, allowing to easily create a demo for it afterwards
 
 Currently, it contains the following examples:
 
