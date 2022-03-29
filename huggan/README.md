@@ -347,7 +347,6 @@ The following table summarizes what platform to use for which problem.
 
 - Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @nielsrogge.
 - Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @nielsrogge.
-- Questions regarding access to the OVHcloud GPU, please ask in the Discord channel **#ovh-support**.
 - Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel [**#sprint-discussions**](https://discord.com/channels/879548962464493619/954111918895943720).
 
 ## Talks
