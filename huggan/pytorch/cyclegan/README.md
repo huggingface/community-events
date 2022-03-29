@@ -70,7 +70,7 @@ You can push your trained generator to the hub after training by specifying the 
 Then, you can run the script as follows:
 
 ```
-accelerate launch train.py --push_to_hub --model_name dcgan-mnist
+accelerate launch train.py --push_to_hub --model_name cyclegan-horse2zebra
 ```
 
 This is made possible by making the generator inherit from `PyTorchModelHubMixin`available in the `huggingface_hub` library. 
