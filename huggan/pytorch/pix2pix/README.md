@@ -1,8 +1,10 @@
 # Train Pix2pix on your custom data
 
-This folder contains a script to train [pix2pix](https://arxiv.org/abs/1611.07004), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
+This folder contains a script to train [pix2pix](https://arxiv.org/abs/1611.07004) for conditional image generation, leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing data and pushing the model to the Hub.
 
-The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
+The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting fp16/mixed precision.
+
+## Launching the script
 
 To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [huggan/facades](https://huggingface.co/datasets/huggan/facades) on your environment, first run:
 
@@ -10,7 +12,7 @@ To train the model with the default parameters (200 epochs, 256x256 images, etc.
 accelerate config
 ```
 
-and answer the questions asked. Next, launch the script as follows: 
+and answer the questions asked about your environment. Next, launch the script as follows: 
 
 ```
 accelerate launch train.py
@@ -25,6 +27,14 @@ accelerate launch train.py --dataset huggan/night2day
 ```
 
 Make sure to pick a dataset which has "imageA" and "imageB" columns defined. One can always tweak the script in case the column names are different.
+
+In case you'd like to tweak the script to your liking, first fork the "community-events" [repo](https://github.com/huggingface/community-events) (see the button on the top right), then clone it locally:
+
+```bash
+git clone https://github.com/<your Github username>/community-events.git
+```
+
+and edit to your liking.
 
 ## Training on your own data
 
@@ -68,7 +78,7 @@ You can push your trained generator to the hub after training by specifying the 
 accelerate launch train.py --push_to_hub --model_name dcgan-mnist --pytorch_dump_folder_path output
 ```
 
-This is made possible by making the generator inherit from `PyTorchModelHubMixin`available in the `huggingface_hub` library. 
+This is made possible by making the generator inherit from `PyTorchModelHubMixin` available in the `huggingface_hub` library. 
 
 # Citation
 

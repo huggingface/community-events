@@ -1,28 +1,35 @@
 # Train DCGAN on your custom data
 
-This folder contains a script to train [DCGAN](https://arxiv.org/abs/1511.06434), leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing your data and pushing the model to the Hub.
+This folder contains a script to train [DCGAN](https://arxiv.org/abs/1511.06434) for unconditional image generation, leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing your data and pushing the model to the Hub.
+
+The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting fp16/mixed precision.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/dcgan_mnist.png" alt="drawing" width="700"/>
+</p>
+
 
 ## Launching the script
 
-To train the model with the default parameters (5 epochs, 64x64 images, etc.) on [MNIST](https://huggingface.co/datasets/mnist), first clone this repo:
+To train the model with the default parameters (5 epochs, 64x64 images, etc.) on [MNIST](https://huggingface.co/datasets/mnist), first run:
 
 ```bash
-git clone https://github.com/huggingface/community-events.git
+accelerate config
 ```
 
-Then move to the DCGAN directory:
+and answer the questions asked about your environment. Next, launch the script as follows: 
 
 ```bash
-cd community-events/huggan/pytorch/dcgan
-```
-
-Finally, run the script:
-
-```bash
-python train.py
+accelerate launch train.py
 ```
 
 This will create a local "images" directory, containing generated images over the course of the training.
+
+To train on another dataset available on the hub, simply do (for instance):
+
+```bash
+python train.py --dataset cifar-10
+```
 
 In case you'd like to tweak the script to your liking, first fork the "community-events" [repo](https://github.com/huggingface/community-events) (see the button on the top right), then clone it locally:
 
@@ -31,12 +38,6 @@ git clone https://github.com/<your Github username>/community-events.git
 ```
 
 and edit to your liking.
-
-To train on another dataset available on the hub, simply do (for instance):
-
-```bash
-python train.py --dataset cifar-10
-```
 
 ## Training on your own data
 
@@ -133,6 +134,21 @@ image = (image + 1) /2
 image = ToPILImage()(image)
 image.save("generated.png")
 ```
+
+# Weights and Biases integration
+
+You can easily add logging to [Weights and Biases](https://wandb.ai/site) by passing the `--wandb` flag:
+
+```bash
+accelerate launch train.py --wandb
+````
+
+You can then follow the progress of your GAN in a browser:
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/wandb.png" alt="drawing" width="700"/>
+</p>
+
 
 # Citation
 

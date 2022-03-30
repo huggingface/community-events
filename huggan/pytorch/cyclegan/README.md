@@ -8,8 +8,9 @@ This folder contains a script to train [CycleGAN](https://arxiv.org/abs/1703.105
 
 Example applications of CycleGAN. Taken from [this repo](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix).
 
-
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
+
+## Launching the script
 
 To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [huggan/facades](https://huggingface.co/datasets/huggan/facades) on your environment, first run:
 

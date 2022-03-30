@@ -18,21 +18,35 @@ Paper: https://arxiv.org/abs/1511.06434.
 Based on PyTorch's official tutorial: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html.
 """
 
+
 import argparse
+import logging
 import os
 import sys
 from pathlib import Path
 
 import torch
 import torch.nn as nn
-from accelerate import Accelerator
-from datasets import load_dataset
 from torch.utils.data import DataLoader
 from torchvision.transforms import (CenterCrop, Compose, Normalize, Resize,
-                                    ToTensor)
+                                    ToTensor, ToPILImage)
 from torchvision.utils import save_image
 
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+from accelerate import Accelerator
+
 from modeling_dcgan import Discriminator, Generator
+
+from datasets import load_dataset
+
+from metrics.inception import InceptionV3
+from metrics.fid_score import calculate_fretchet
+
+import wandb
+
+logger = logging.getLogger(__name__)
 
 
 def parse_args(args=None):
@@ -84,32 +98,41 @@ def parse_args(args=None):
         "and an Nvidia Ampere GPU.",
     )
     parser.add_argument("--cpu", action="store_true", help="If passed, will train on the CPU.")
-    parser.add_argument("--output", type=Path, default=Path("./output"), help="Name of the directory to dump generated images during training.")
+    parser.add_argument("--output_dir", type=Path, default=Path("./output"), help="Name of the directory to dump generated images during training.")
+    parser.add_argument("--wandb", action="store_true", help="If passed, will log to Weights and Biases.")
+    parser.add_argument(
+        "--logging_steps",
+        type=int,
+        default=50,
+        help="Number of steps between each logging",
+    )
     parser.add_argument(
         "--push_to_hub",
         action="store_true",
         help="Whether to push the model to the HuggingFace hub after training.",
         )
     parser.add_argument(
-        "--pytorch_dump_folder_path",
-        required="--push_to_hub" in sys.argv,
-        type=Path,
-        help="Path to save the model. Will be created if it doesn't exist already.",
-    )
-    parser.add_argument(
         "--model_name",
-        required="--push_to_hub" in sys.argv,
+        default=None,
         type=str,
         help="Name of the model on the hub.",
     )
     parser.add_argument(
         "--organization_name",
-        required=False,
         default="huggan",
         type=str,
         help="Organization name to push to, in case args.push_to_hub is specified.",
     )
-    return parser.parse_args(args=args)
+    args = parser.parse_args()
+    
+    if args.push_to_hub:
+        assert args.output_dir is not None, "Need an `output_dir` to create a repo when `--push_to_hub` is passed."
+        assert args.model_name is not None, "Need a `model_name` to create a repo when `--push_to_hub` is passed."
+
+    if args.output_dir is not None:
+        os.makedirs(args.output_dir, exist_ok=True)
+    
+    return args
 
 
 # Custom weights initialization called on Generator and Discriminator
@@ -124,22 +147,39 @@ def weights_init(m):
 
 def training_function(config, args):
 
+    # Initialize the accelerator. We will let the accelerator handle device placement for us in this example.
     accelerator = Accelerator(fp16=args.fp16, cpu=args.cpu, mixed_precision=args.mixed_precision)
 
+    # Setup logging, we only want one process per machine to log things on the screen.
+    # accelerator.is_local_main_process is only True for one process per machine.
+    logger.setLevel(logging.INFO if accelerator.is_local_main_process else logging.ERROR)
+    if accelerator.is_local_main_process:
+        # set up Weights and Biases if requested
+        if args.wandb:
+            import wandb
+
+            wandb.init(project=str(args.output_dir).split("/")[-1])   
+    
     # Loss function
     criterion = nn.BCELoss()
 
     # Initialize generator and discriminator
-    netG = Generator(
+    generator = Generator(
         num_channels=args.num_channels,
         latent_dim=args.latent_dim,
         hidden_size=args.generator_hidden_size,
     )
-    netD = Discriminator(num_channels=args.num_channels, hidden_size=args.discriminator_hidden_size)
+    discriminator = Discriminator(num_channels=args.num_channels, hidden_size=args.discriminator_hidden_size)
 
     # Initialize weights
-    netG.apply(weights_init)
-    netD.apply(weights_init)
+    generator.apply(weights_init)
+    discriminator.apply(weights_init)
+
+    # Initialize Inceptionv3 (for FID metric)
+    model = InceptionV3()
+
+    # Initialize Inceptionv3 (for FID metric)
+    model = InceptionV3()
 
     # Create batch of latent vectors that we will use to visualize
     # the progression of the generator
@@ -150,8 +190,8 @@ def training_function(config, args):
     fake_label = 0.0
 
     # Setup Adam optimizers for both G and D
-    optimizerD = torch.optim.Adam(netD.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
-    optimizerG = torch.optim.Adam(netG.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
+    discriminator_optimizer = torch.optim.Adam(discriminator.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
+    generator_optimizer = torch.optim.Adam(generator.parameters(), lr=args.lr, betas=(args.beta1, 0.999))
 
     # Configure data loader
     dataset = load_dataset(args.dataset)
@@ -178,42 +218,35 @@ def training_function(config, args):
         transformed_dataset["train"], batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers
     )
 
-    netG, netD, optimizerG, optimizerD, dataloader = accelerator.prepare(netG, netD, optimizerG, optimizerD, dataloader)
+    generator, discriminator, generator_optimizer, discriminator_optimizer, dataloader = accelerator.prepare(generator, discriminator, generator_optimizer, discriminator_optimizer, dataloader)
 
     # ----------
     #  Training
     # ----------
-
-    # Directory to save generated images during training
-    output_directory = args.output
-    if not output_directory.exists():
-        output_directory.mkdir(parents=True)
     
     # Training Loop
 
     # Lists to keep track of progress
     img_list = []
-    G_losses = []
-    D_losses = []
-    iters = 0
 
-    print("Starting Training Loop...")
+    logger.info("***** Running training *****")
+    logger.info(f"  Num Epochs = {args.num_epochs}")
     # For each epoch
     for epoch in range(args.num_epochs):
         # For each batch in the dataloader
-        for i, batch in enumerate(dataloader, 0):
+        for step, batch in enumerate(dataloader, 0):
 
             ############################
             # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
             ###########################
             ## Train with all-real batch
-            netD.zero_grad()
+            discriminator.zero_grad()
             # Format batch
             real_cpu = batch["pixel_values"]
             batch_size = real_cpu.size(0)
             label = torch.full((batch_size,), real_label, dtype=torch.float, device=accelerator.device)
             # Forward pass real batch through D
-            output = netD(real_cpu).view(-1)
+            output = discriminator(real_cpu).view(-1)
             # Calculate loss on all-real batch
             errD_real = criterion(output, label)
             # Calculate gradients for D in backward pass
@@ -224,10 +257,10 @@ def training_function(config, args):
             # Generate batch of latent vectors
             noise = torch.randn(batch_size, args.latent_dim, 1, 1, device=accelerator.device)
             # Generate fake image batch with G
-            fake = netG(noise)
+            fake = generator(noise)
             label.fill_(fake_label)
             # Classify all fake batch with D
-            output = netD(fake.detach()).view(-1)
+            output = discriminator(fake.detach()).view(-1)
             # Calculate D's loss on the all-fake batch
             errD_fake = criterion(output, label)
             # Calculate the gradients for this batch, accumulated (summed) with previous gradients
@@ -236,60 +269,68 @@ def training_function(config, args):
             # Compute error of D as sum over the fake and the real batches
             errD = errD_real + errD_fake
             # Update D
-            optimizerD.step()
+            discriminator_optimizer.step()
 
             ############################
             # (2) Update G network: maximize log(D(G(z)))
             ###########################
-            netG.zero_grad()
+            generator.zero_grad()
             label.fill_(real_label)  # fake labels are real for generator cost
             # Since we just updated D, perform another forward pass of all-fake batch through D
-            output = netD(fake).view(-1)
+            output = discriminator(fake).view(-1)
             # Calculate G's loss based on this output
             errG = criterion(output, label)
             # Calculate gradients for G
             accelerator.backward(errG)
             D_G_z2 = output.mean().item()
             # Update G
-            optimizerG.step()
+            generator_optimizer.step()
 
-            # Output training stats
-            if i % 50 == 0:
-                print(
-                    "[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f"
-                    % (
-                        epoch,
-                        args.num_epochs,
-                        i,
-                        len(dataloader),
-                        errD.item(),
-                        errG.item(),
-                        D_x,
-                        D_G_z1,
-                        D_G_z2,
-                    )
-                )
+            # Log all results
+            if (step + 1) % args.logging_steps == 0:
+                errD.detach()
+                errG.detach()
 
-            # Save Losses for plotting later
-            G_losses.append(errG.item())
-            D_losses.append(errD.item())
+                if accelerator.state.num_processes > 1:
+                    errD = accelerator.gather(errD).sum() / accelerator.state.num_processes
+                    errG = accelerator.gather(errG).sum() / accelerator.state.num_processes
+
+                    train_logs = {
+                        "epoch": epoch,
+                        "discriminator_loss": errD,
+                        "generator_loss": errG,
+                        "D_x": D_x,
+                        "D_G_z1": D_G_z1,
+                        "D_G_z2": D_G_z2,
+                    }
+                    log_str = ""
+                    for k, v in train_logs.items():
+                        log_str += "| {}: {:.3e}".format(k, v)
+
+                    if accelerator.is_local_main_process:
+                        logger.info(log_str)
+                        if args.wandb:
+                            wandb.log(train_logs)
 
             # Check how the generator is doing by saving G's output on fixed_noise
-            if (iters % 500 == 0) or ((epoch == args.num_epochs - 1) and (i == len(dataloader) - 1)):
+            if (step % 500 == 0) or ((epoch == args.num_epochs - 1) and (step == len(dataloader) - 1)):
                 with torch.no_grad():
-                    fake = netG(fixed_noise).detach().cpu()
-                save_image(fake.data[:25], args.output/f"iter_{i}.png", nrow=5, normalize=True)
+                    fake_images = generator(fixed_noise).detach().cpu()
+                file_name = args.output_dir/f"iter_{step}.png"
+                save_image(fake_images.data[:25], file_name, nrow=5, normalize=True)
+                if accelerator.is_local_main_process and args.wandb:
+                    wandb.log({'generated_examples': wandb.Image(str(file_name)) })
 
-            iters += 1
+        # Calculate FID metric
+        fid = calculate_fretchet(real_cpu, fake, model.to(accelerator.device))
+        logger.info(f"FID: {fid}")
+        if accelerator.is_local_main_process and args.wandb:
+            wandb.log({"FID": fid})
 
     # Optionally push to hub
-    if args.push_to_hub:
-        save_directory = args.pytorch_dump_folder_path
-        if not save_directory.exists():
-            save_directory.mkdir(parents=True)
-
-        netG.push_to_hub(
-            repo_path_or_name=save_directory / args.model_name,
+    if accelerator.is_main_process and args.push_to_hub:
+        generator.module.push_to_hub(
+            repo_path_or_name=args.output_dir / args.model_name,
             organization=args.organization_name,
         )
 
@@ -297,9 +338,6 @@ def training_function(config, args):
 def main():
     args = parse_args()
     print(args)
-
-    # Make directory for saving generated images
-    os.makedirs("images", exist_ok=True)
 
     training_function({}, args)
 
