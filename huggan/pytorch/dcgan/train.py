@@ -41,8 +41,8 @@ from modeling_dcgan import Discriminator, Generator
 
 from datasets import load_dataset
 
-from metrics.inception import InceptionV3
-from metrics.fid_score import calculate_fretchet
+from huggan.pytorch.metrics.inception import InceptionV3
+from huggan.pytorch.metrics.fid_score import calculate_fretchet
 
 import wandb
 
