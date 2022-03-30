@@ -604,6 +604,7 @@ class Discriminator(nn.Module):
         assert disc_output_size in {1, 5}, 'discriminator output dimensions can only be 5x5 or 1x1'
 
         resolution = int(resolution)
+        self.resolution = resolution
 
         if transparent:
             init_channel = 4
@@ -703,8 +704,9 @@ class Discriminator(nn.Module):
             nn.Conv2d(32, 1, 4)
         )
 
-        self.decoder1 = SimpleDecoder(chan_in = last_chan, chan_out = init_channel)
-        self.decoder2 = SimpleDecoder(chan_in = features[-2][-1], chan_out = init_channel) if resolution >= 9 else None
+        self.init_channel = init_channel
+        self.features = features
+        self.last_chan = last_chan
 
     def forward(self, x, calc_aux_loss = False):
         orig_img = x
@@ -726,11 +728,22 @@ class Discriminator(nn.Module):
         img_32x32 = F.interpolate(orig_img, size = (32, 32))
         out_32x32 = self.to_shape_disc_out(img_32x32)
 
-        if not calc_aux_loss:
-            return out, out_32x32, None
+        # if not calc_aux_loss:
+        #     return out, out_32x32, None
 
+        return out, out_32x32, layer_outputs
+
+
+class DiscriminatorDecoders(nn.Module):
+    def __init__(self, last_chan, init_channel, features, resolution) -> None:
+        super().__init__()
+
+        self.decoder1 = SimpleDecoder(chan_in = last_chan, chan_out = init_channel)
+        self.decoder2 = SimpleDecoder(chan_in = features[-2][-1], chan_out = init_channel) if resolution >= 9 else None
+
+    def forward(self, layer_outputs, orig_img):
         # self-supervised auto-encoding loss
-
+        
         layer_8x8 = layer_outputs[-1]
         layer_16x16 = layer_outputs[-2]
 
@@ -755,7 +768,8 @@ class Discriminator(nn.Module):
 
             aux_loss = aux_loss + aux_loss_16x16
 
-        return out, out_32x32, aux_loss
+        return aux_loss
+        
 
 class LightweightGAN(nn.Module):
     def __init__(
@@ -803,6 +817,11 @@ class LightweightGAN(nn.Module):
             disc_output_size = disc_output_size
         )
 
+        self.D_s = DiscriminatorDecoders(last_chan=self.D.last_chan,
+                                        init_channel=self.D.init_channel,
+                                        features=self.D.features,
+                                        resolution=self.D.resolution)
+
         self.ema_updater = EMA(0.995)
         self.GE = Generator(**G_kwargs)
         set_requires_grad(self.GE, False)
@@ -811,6 +830,7 @@ class LightweightGAN(nn.Module):
         if optimizer == "adam":
             self.G_opt = Adam(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
             self.D_opt = Adam(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
+            self.D_s_opt = Adam(self.D_s.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
         # elif optimizer == "adabelief":
         #     self.G_opt = AdaBelief(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
         #     self.D_opt = AdaBelief(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
@@ -1128,6 +1148,8 @@ class Trainer():
         G = self.GAN.G
         D = self.GAN.D
         D_aug = self.GAN.D_aug
+        D_s = self.GAN.D_s
+        GE = self.GAN.GE
 
         # apply_gradient_penalty = self.steps % 4 == 0
         apply_gradient_penalty = False # TODO support gradient penalty
@@ -1144,7 +1166,7 @@ class Trainer():
             D_loss_fn = hinge_loss
 
         # prepare
-        G, D, D_aug, self.GAN.D_opt, self.GAN.G_opt, self.loader = self.accelerator.prepare(G, D, D_aug, self.GAN.D_opt, self.GAN.G_opt, self.loader)
+        G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.GAN.D_s_opt, self.loader = self.accelerator.prepare(G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.GAN.D_s_opt, self.loader)
         
         # train discriminator
 
@@ -1160,7 +1182,9 @@ class Trainer():
 
             fake_output, fake_output_32x32, _ = D_aug(generated_images, detach = True, **aug_kwargs)
 
-            real_output, real_output_32x32, real_aux_loss = D_aug(image_batch, calc_aux_loss = True, **aug_kwargs)
+            real_output, real_output_32x32, layer_outputs = D_aug(image_batch, **aug_kwargs)
+
+            real_aux_loss = D_s(layer_outputs, image_batch)
 
             real_output_loss = real_output
             fake_output_loss = fake_output
@@ -1307,7 +1331,7 @@ class Trainer():
         
         # moving averages
 
-        generated_images = self.generate_(self.GAN.GE, latents)
+        generated_images = self.generate_(self.GAN.GE.to(self.accelerator.device), latents)
         torchvision.utils.save_image(generated_images, str(self.results_dir / self.name / f'{str(num)}-ema.{ext}'), nrow=num_rows)
 
     @torch.no_grad()
