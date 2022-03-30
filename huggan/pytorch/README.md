@@ -1,4 +1,4 @@
-# Example scripts
+# Example scripts (PyTorch)
 
 This directory contains a few example scripts that allow you to train famous GANs on your own data using a bit of 🤗 magic.
 
