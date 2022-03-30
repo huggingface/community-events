@@ -906,6 +906,7 @@ class Trainer():
         world_size = 1,
         log = False,
         amp = False,
+        wandb = False,
         *args,
         **kwargs
     ):
@@ -986,6 +987,8 @@ class Trainer():
         # self.amp = amp
         # self.G_scaler = GradScaler(enabled = self.amp)
         # self.D_scaler = GradScaler(enabled = self.amp)
+
+        self.wandb = wandb
 
     @property
     def image_extension(self):
@@ -1125,6 +1128,13 @@ class Trainer():
 
     def init_accelerator(self):
         self.accelerator = Accelerator()
+
+        if self.accelerator.is_local_main_process:
+            # set up Weights and Biases if requested
+            if self.wandb:
+                import wandb
+
+                wandb.init(project=str(self.results_dir).split("/")[-1])   
 
         # device = torch.device(f'cuda:{self.rank}')
 
@@ -1502,6 +1512,13 @@ class Trainer():
         data = [d for d in data if exists(d[1])]
         log = ' | '.join(map(lambda n: f'{n[0]}: {n[1]:.2f}', data))
         print(log)
+
+        if self.accelerator.is_local_main_process:
+            log_dict = {v[0]: v[1] for v in data}
+            if self.wandb:
+                import wandb
+
+                wandb.log(log_dict)
 
     def model_name(self, num):
         return str(self.models_dir / self.name / f'model_{num}.pt')
