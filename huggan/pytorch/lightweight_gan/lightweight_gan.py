@@ -1123,16 +1123,36 @@ class Trainer():
             self.aug_prob = min(0.5, (1e5 - num_samples) * 3e-6)
             print(f'autosetting augmentation probability to {round(self.aug_prob * 100)}%')
 
-    def train(self):
+    def init_accelerator(self):
         self.accelerator = Accelerator()
-        
-        assert exists(self.loader), 'You must first initialize the data source with `.set_data_src(<folder of images>)`'
+
         # device = torch.device(f'cuda:{self.rank}')
 
         if not exists(self.GAN):
             self.init_GAN()
 
+        G = self.GAN.G
+        D = self.GAN.D
+        D_aug = self.GAN.D_aug
+        D_s = self.GAN.D_s
+
+        # amp related contexts and functions
+
+        # amp_context = autocast if self.amp else null_context
+
+        # discriminator loss fn
+
+        # prepare
+        G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.loader = self.accelerator.prepare(G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.loader)
+
+        return G, D, D_aug, D_s
+    
+    def train(self, G, D, D_aug, D_s):
+        assert exists(self.loader), 'You must first initialize the data source with `.set_data_src(<folder of images>)`'
+        
+        # put model in training mode
         self.GAN.train()
+
         total_disc_loss = torch.zeros([], device=self.accelerator.device)
         total_gen_loss = torch.zeros([], device=self.accelerator.device)
 
@@ -1144,32 +1164,17 @@ class Trainer():
         aug_prob = default(self.aug_prob, 0)
         aug_types = self.aug_types
         aug_kwargs = {'prob': aug_prob, 'types': aug_types}
-
-        G = self.GAN.G
-        D = self.GAN.D
-        D_aug = self.GAN.D_aug
-        D_s = self.GAN.D_s
-        GE = self.GAN.GE
-
+        
         # apply_gradient_penalty = self.steps % 4 == 0
         apply_gradient_penalty = False # TODO support gradient penalty
-
-        # amp related contexts and functions
-
-        # amp_context = autocast if self.amp else null_context
-
-        # discriminator loss fn
 
         if self.dual_contrast_loss:
             D_loss_fn = dual_contrastive_loss
         else:
             D_loss_fn = hinge_loss
 
-        # prepare
-        G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.loader = self.accelerator.prepare(G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.loader)
-        
         # train discriminator
-
+        
         self.GAN.D_opt.zero_grad()
         for i in gradient_accumulate_contexts(self.gradient_accumulate_every, self.is_ddp, ddps=[D_aug, G]):
             latents = torch.randn(self.batch_size, latent_dim, device=self.accelerator.device)
