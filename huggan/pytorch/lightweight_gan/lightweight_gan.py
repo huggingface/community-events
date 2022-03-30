@@ -829,8 +829,8 @@ class LightweightGAN(nn.Module):
 
         if optimizer == "adam":
             self.G_opt = Adam(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
-            self.D_opt = Adam(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
-            self.D_s_opt = Adam(self.D_s.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
+            self.D_opt = Adam(list(self.D.parameters()) + list(self.D_s.parameters()), lr = lr * ttur_mult, betas=(0.5, 0.9))
+            # self.D_s_opt = Adam(self.D_s.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
         # elif optimizer == "adabelief":
         #     self.G_opt = AdaBelief(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
         #     self.D_opt = AdaBelief(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
@@ -1072,7 +1072,7 @@ class Trainer():
 
     def set_data_src(self, folder):
         # start of using HuggingFace dataset
-        dataset = load_dataset("mnist")
+        dataset = load_dataset("huggan/CelebA-faces")
 
         if self.transparent:
             num_channels = 4
@@ -1166,7 +1166,7 @@ class Trainer():
             D_loss_fn = hinge_loss
 
         # prepare
-        G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.GAN.D_s_opt, self.loader = self.accelerator.prepare(G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.GAN.D_s_opt, self.loader)
+        G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.loader = self.accelerator.prepare(G, D, D_aug, D_s, self.GAN.D_opt, self.GAN.G_opt, self.loader)
         
         # train discriminator
 
@@ -1228,6 +1228,7 @@ class Trainer():
 
         self.last_recon_loss = aux_loss.item()
         self.d_loss = float(total_disc_loss.item() / self.gradient_accumulate_every)
+        self.GAN.D_opt.step()
         # self.D_scaler.step(self.GAN.D_opt)
         # self.D_scaler.update()
 
@@ -1270,6 +1271,7 @@ class Trainer():
             total_gen_loss += loss 
 
         self.g_loss = float(total_gen_loss.item() / self.gradient_accumulate_every)
+        self.GAN.D_opt.step()
         # self.G_scaler.step(self.GAN.G_opt)
         # self.G_scaler.update()
 
