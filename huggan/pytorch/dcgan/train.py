@@ -178,6 +178,9 @@ def training_function(config, args):
     # Initialize Inceptionv3 (for FID metric)
     model = InceptionV3()
 
+    # Initialize Inceptionv3 (for FID metric)
+    model = InceptionV3()
+
     # Create batch of latent vectors that we will use to visualize
     # the progression of the generator
     fixed_noise = torch.randn(64, args.latent_dim, 1, 1, device=accelerator.device)
@@ -340,6 +343,10 @@ def training_function(config, args):
         logger.info("FID:", fid)
         if accelerator.is_local_main_process and args.wandb:
             wandb.log({"FID": fid})
+
+        # Calculate FID metric
+        fid = calculate_fretchet(real_cpu, fake, model.to(accelerator.device))
+        print("FID metric:", fid)
 
     # Optionally push to hub
     if accelerator.is_main_process and args.push_to_hub:
