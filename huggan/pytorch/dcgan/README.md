@@ -5,7 +5,7 @@ This folder contains a script to train [DCGAN](https://arxiv.org/abs/1511.06434)
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting fp16/mixed precision.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/dcgan_mnist.png" alt="drawing" width="400"/>
+    <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/dcgan_mnist.png" alt="drawing" width="300"/>
 </p>
 
 
