@@ -135,7 +135,7 @@ image = ToPILImage()(image)
 image.save("generated.png")
 ```
 
-# Weights and Biases integration
+## Weights and Biases integration
 
 You can easily add logging to [Weights and Biases](https://wandb.ai/site) by passing the `--wandb` flag:
 
