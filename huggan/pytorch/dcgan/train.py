@@ -287,23 +287,6 @@ def training_function(config, args):
             generator_optimizer.step()
 
             # Log all results
-            # if step % 50 == 0:
-            #     print(
-            #         "[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f"
-            #         % (
-            #             epoch,
-            #             args.num_epochs,
-            #             step,
-            #             len(dataloader),
-            #             errD.item(),
-            #             errG.item(),
-            #             D_x,
-            #             D_G_z1,
-            #             D_G_z2,
-            #         )
-            #     )
-
-            # Log all results (v2)
             if (step + 1) % args.logging_steps == 0:
                 errD.detach()
                 errG.detach()
