@@ -135,6 +135,21 @@ image = ToPILImage()(image)
 image.save("generated.png")
 ```
 
+# Weights and Biases integration
+
+You can easily add logging to [Weights and Biases](https://wandb.ai/site) by passing the `--wandb` flag:
+
+```bash
+accelerate launch train.py --wandb
+````
+
+You can then follow the progress of your GAN in a browser:
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/wandb.png" alt="drawing" width="700"/>
+</p>
+
+
 # Citation
 
 This repo is entirely based on PyTorch's official [DCGAN tutorial](https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html), but with added HuggingFace goodies.

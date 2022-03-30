@@ -287,21 +287,21 @@ def training_function(config, args):
             generator_optimizer.step()
 
             # Log all results
-            if step % 50 == 0:
-                print(
-                    "[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f"
-                    % (
-                        epoch,
-                        args.num_epochs,
-                        step,
-                        len(dataloader),
-                        errD.item(),
-                        errG.item(),
-                        D_x,
-                        D_G_z1,
-                        D_G_z2,
-                    )
-                )
+            # if step % 50 == 0:
+            #     print(
+            #         "[%d/%d][%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tD(x): %.4f\tD(G(z)): %.4f / %.4f"
+            #         % (
+            #             epoch,
+            #             args.num_epochs,
+            #             step,
+            #             len(dataloader),
+            #             errD.item(),
+            #             errG.item(),
+            #             D_x,
+            #             D_G_z1,
+            #             D_G_z2,
+            #         )
+            #     )
 
             # Log all results (v2)
             if (step + 1) % args.logging_steps == 0:
@@ -329,24 +329,20 @@ def training_function(config, args):
                         if args.wandb:
                             wandb.log(train_logs)
 
-                    # Check how the generator is doing by saving G's output on fixed_noise
-                    if (step % 500 == 0) or ((epoch == args.num_epochs - 1) and (step == len(dataloader) - 1)):
-                        with torch.no_grad():
-                            fake_images = generator(fixed_noise).detach().cpu()
-                        file_name = args.output_dir/f"iter_{step}.png"
-                        save_image(fake_images.data[:25], file_name, nrow=5, normalize=True)
-                        if accelerator.is_local_main_process and args.wandb:
-                            wandb.log({'generated_examples': wandb.Image(str(file_name)) })
+            # Check how the generator is doing by saving G's output on fixed_noise
+            if (step % 500 == 0) or ((epoch == args.num_epochs - 1) and (step == len(dataloader) - 1)):
+                with torch.no_grad():
+                    fake_images = generator(fixed_noise).detach().cpu()
+                file_name = args.output_dir/f"iter_{step}.png"
+                save_image(fake_images.data[:25], file_name, nrow=5, normalize=True)
+                if accelerator.is_local_main_process and args.wandb:
+                    wandb.log({'generated_examples': wandb.Image(str(file_name)) })
 
         # Calculate FID metric
         fid = calculate_fretchet(real_cpu, fake, model.to(accelerator.device))
-        logger.info("FID:", fid)
+        logger.info(f"FID: {fid}")
         if accelerator.is_local_main_process and args.wandb:
             wandb.log({"FID": fid})
-
-        # Calculate FID metric
-        fid = calculate_fretchet(real_cpu, fake, model.to(accelerator.device))
-        print("FID metric:", fid)
 
     # Optionally push to hub
     if accelerator.is_main_process and args.push_to_hub:
