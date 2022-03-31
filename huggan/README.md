@@ -328,6 +328,7 @@ GAN metrics:
 General links & tutorials:
 - https://paperswithcode.com/task/image-generation
 - https://github.com/facebookresearch/ic_gan
+- studioGAN (PyTorch library with SOTA GAN implementations): https://github.com/POSTECH-CVLab/PyTorch-StudioGAN
 
 ## Evaluation
 
