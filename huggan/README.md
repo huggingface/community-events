@@ -171,7 +171,8 @@ from datasets import load_dataset
 
 # option 1: local folder
 dataset = load_dataset("imagefolder", data_dir="path_to_folder")
-# option 2: local or remote file(s), such as zip or tar
+# option 2: local or remote file(s), supports both local and remote files
+# with the following extensions: tar, gzip, zip, xz, rar, zstd
 dataset = load_dataset("imagefolder", data_files="path_to_file")
 ```
 
