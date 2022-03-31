@@ -174,6 +174,9 @@ dataset = load_dataset("imagefolder", data_dir="path_to_folder")
 # option 2: local or remote file(s), supports both local and remote files
 # with the following extensions: tar, gzip, zip, xz, rar, zstd
 dataset = load_dataset("imagefolder", data_files="path_to_file")
+
+# note that you can also provide them as separate splits, like so:
+dataset = load_dataset("imagefolder", data_files={"train": ["path/to/file1", "path/to/file2"], "test": ["path/to/file3", "path/to/file4"]})
 ```
 
 Once you've loaded your dataset, you can push it to the hub, by simply typing:
