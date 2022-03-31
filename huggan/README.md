@@ -100,7 +100,7 @@ The first step is the most obvious one: to train a GAN (or any neural network), 
 
 #### 1.1 Use a dataset already available on the hub
 
-Most famous computer vision dataset are already available on the [hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as [MNIST](https://huggingface.co/datasets/mnist), [Fashion MNIST](https://huggingface.co/datasets/fashion_mnist), [CIFAR-10](https://huggingface.co/datasets/cifar10), [CIFAR-100](https://huggingface.co/datasets/cifar100), etc.).
+Most famous computer vision datasets are already available on the [hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as [MNIST](https://huggingface.co/datasets/mnist), [Fashion MNIST](https://huggingface.co/datasets/fashion_mnist), [CIFAR-10](https://huggingface.co/datasets/cifar10), [CIFAR-100](https://huggingface.co/datasets/cifar100), etc.).
 
 Loading a dataset can be done as follows:
 
@@ -171,9 +171,8 @@ from datasets import load_dataset
 
 # option 1: local folder
 dataset = load_dataset("imagefolder", data_dir="path_to_folder")
-# option 2: local or remote file(s), supports both local and remote files
-# with the following extensions: tar, gzip, zip, xz, rar, zstd
-dataset = load_dataset("imagefolder", data_files="path_to_file")
+# option 2: local or remote file(s), supporting the following extensions: tar, gzip, zip, xz, rar, zstd
+dataset = load_dataset("imagefolder", data_files="path_to_file_or_direct_download_link")
 
 # note that you can also provide them as separate splits, like so:
 dataset = load_dataset("imagefolder", data_files={"train": ["path/to/file1", "path/to/file2"], "test": ["path/to/file3", "path/to/file4"]})
