@@ -8,6 +8,7 @@ from functools import partial
 from contextlib import contextmanager, ExitStack
 from pathlib import Path
 from shutil import rmtree
+from pydantic import NoneIsNotAllowedError
 
 import torch
 from torch.cuda.amp import autocast, GradScaler
@@ -982,7 +983,8 @@ class Trainer():
         self.rank = rank
         self.world_size = world_size
 
-        self.syncbatchnorm = is_ddp
+        # self.syncbatchnorm = is_ddp
+        self.syncbatchnorm = True
 
         # self.amp = amp
         # self.G_scaler = GradScaler(enabled = self.amp)
@@ -1110,7 +1112,7 @@ class Trainer():
 
         transformed_dataset = dataset.with_transform(transform_images)
         
-        dataloader = DataLoader(transformed_dataset["train"], batch_size = self.batch_size, shuffle = True, drop_last = True, pin_memory = True)
+        dataloader = DataLoader(transformed_dataset["train"], self.batch_size, sampler = None, shuffle = False, drop_last = True, pin_memory = True)
         num_samples = len(transformed_dataset)
         ## end of HuggingFace dataset
         
@@ -1166,7 +1168,7 @@ class Trainer():
         total_disc_loss = torch.zeros([], device=self.accelerator.device)
         total_gen_loss = torch.zeros([], device=self.accelerator.device)
 
-        # batch_size = math.ceil(self.batch_size / self.accelerator.num_processes)
+        batch_size = math.ceil(self.batch_size / self.accelerator.num_processes)
 
         image_size = self.GAN.image_size
         latent_dim = self.GAN.latent_dim
@@ -1175,8 +1177,7 @@ class Trainer():
         aug_types = self.aug_types
         aug_kwargs = {'prob': aug_prob, 'types': aug_types}
         
-        # apply_gradient_penalty = self.steps % 4 == 0
-        apply_gradient_penalty = False # TODO support gradient penalty
+        apply_gradient_penalty = self.steps % 4 == 0
 
         if self.dual_contrast_loss:
             D_loss_fn = dual_contrastive_loss
@@ -1216,7 +1217,7 @@ class Trainer():
                 # outputs = list(map(self.D_scaler.scale, outputs)) if self.amp else outputs
 
                 scaled_gradients = torch_grad(outputs=outputs, inputs=image_batch,
-                                       grad_outputs=list(map(lambda t: torch.ones(t.size(), device = image_batch.device), outputs)),
+                                       grad_outputs=list(map(lambda t: torch.ones(t.size(), device = self.accelerator.device), outputs)),
                                        create_graph=True, retain_graph=True, only_inputs=True)[0]
 
                 inv_scale = 1.
@@ -1226,7 +1227,7 @@ class Trainer():
                     gradients = scaled_gradients * inv_scale
 
                     # with amp_context():
-                    gradients = gradients.reshape(self.batch_size, -1)
+                    gradients = gradients.reshape(batch_size, -1)
                     gp =  self.gp_weight * ((gradients.norm(2, dim=1) - 1) ** 2).mean()
 
                     if not torch.isnan(gp):
