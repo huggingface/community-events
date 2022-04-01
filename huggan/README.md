@@ -237,7 +237,7 @@ dataloader = DataLoader(
 )
 ``` 
 
-As can be seen, we leverage the [`with_transform`]((https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.with_transform)) method here, which will make sure the image transformations will only be performed when iterating over the data (i.e. data augmentation is performed on-the-fly, making it very RAM-friendly) rather than performing it on the entire dataset in one go (which would be the case if you use [`map`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.map)). The `with_transform` method does the same thing as [`set_transform`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.set_transform), except that it does return a new `Dataset` rather than performing the operation in-place.
+As can be seen, we leverage the [`with_transform`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.with_transform) method here, which will make sure the image transformations will only be performed when iterating over the data (i.e. data augmentation is performed on-the-fly, making it very RAM-friendly) rather than performing it on the entire dataset in one go (which would be the case if you use [`map`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.map)). The `with_transform` method does the same thing as [`set_transform`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.set_transform), except that it does return a new `Dataset` rather than performing the operation in-place.
 
 ### 2. Train a model and push to hub
 
