@@ -231,7 +231,7 @@ def transforms(examples):
 
 transformed_dataset = dataset.with_transform(transforms)
 
-# creata dataloader
+# create dataloader
 dataloader = DataLoader(
      transformed_dataset["train"], batch_size="your batch size", shuffle=True, num_workers="your number of CPU cores"
 )
