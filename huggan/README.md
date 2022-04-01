@@ -350,7 +350,7 @@ Possible models to port to the hub, PyTorch:
 - Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
 - StyleGAN2: https://github.com/lucidrains/stylegan2-pytorch
 - StyleGAN2-ada: https://github.com/NVlabs/stylegan2-ada
-- StyleGAN3: https://github.com/NVlabs/stylegan3
+- StyleGAN3 (alias-free GAN): https://github.com/NVlabs/stylegan3
 - BigGAN: https://github.com/ajbrock/BigGAN-PyTorch, https://github.com/huggingface/pytorch-pretrained-BigGAN
 - ADGAN: https://github.com/menyifang/ADGAN
 - ICGAN: https://github.com/facebookresearch/ic_gan
@@ -358,6 +358,7 @@ Possible models to port to the hub, PyTorch:
 - Progressive Growing GAN: https://github.com/Maggiking/PGGAN-PyTorch
 - Vision Aided GAN: https://github.com/nupurkmr9/vision-aided-gan
 - DiffAugment (for training data-efficient GANs): https://github.com/mit-han-lab/data-efficient-gans
+- StyleGAN-XL: https://github.com/autonomousvision/stylegan_xl
 
 Possible models to port to the hub, Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
