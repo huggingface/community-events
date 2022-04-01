@@ -359,13 +359,14 @@ Possible models to port to the hub, PyTorch:
 - Vision Aided GAN: https://github.com/nupurkmr9/vision-aided-gan
 - DiffAugment (for training data-efficient GANs): https://github.com/mit-han-lab/data-efficient-gans
 - StyleGAN-XL: https://github.com/autonomousvision/stylegan_xl
-- https://github.com/open-mmlab/mmgeneration
+- CUT: https://github.com/taesungp/contrastive-unpaired-translation
 
 Possible models to port to the hub, Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
 - Conditional GAN: https://keras.io/examples/generative/conditional_gan/
 - CycleGAN, DiscoGAN etc.: https://github.com/eriklindernoren/Keras-GAN
 - Neural Style Transfer: https://www.tensorflow.org/tutorials/generative/style_transfer
+
 
 GAN metrics:
 - https://github.com/yhlleo/GAN-Metrics
@@ -374,6 +375,7 @@ General links & tutorials:
 - https://paperswithcode.com/task/image-generation
 - https://github.com/facebookresearch/ic_gan
 - studioGAN (PyTorch library with SOTA GAN implementations): https://github.com/POSTECH-CVLab/PyTorch-StudioGAN
+- MMGeneration (library with many PyTorch implementations): https://github.com/open-mmlab/mmgeneration
 
 ## Evaluation
 
