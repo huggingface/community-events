@@ -202,7 +202,7 @@ Note that you can always update a dataset by simply calling `push_to_hub again (
 
 #### 1.3 Processing the data
 
-Once you've uploaded your dataset, you can load it and create a dataloader for it. The code example below shows how to apply some data augmentation and creating a PyTorch Dataloader (the [PyTorch example scripts](pytorch) all leverage this):
+Once you've uploaded your dataset, you can load it and create a dataloader for it. The code example below shows how to apply some data augmentation and creating a PyTorch Dataloader (the [PyTorch example scripts](pytorch) all leverage this). More info can also be found in the [docs](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#process-image-data).
 
 ```
 from datasets import load_dataset
