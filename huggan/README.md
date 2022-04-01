@@ -200,6 +200,45 @@ dataset = dataset.remove_columns("label")
 
 Note that you can always update a dataset by simply calling `push_to_hub again (providing the same name).
 
+#### 1.3 Processing the data
+
+Once you've uploaded your dataset, you can load it and create a dataloader for it. The code example below shows how to apply some data augmentation and creating a PyTorch Dataloader (the [PyTorch example scripts](pytorch) all leverage this):
+
+```
+from datasets import load_dataset
+from torchvision.transforms import CenterCrop, Compose, Normalize, Resize, ToTensor
+
+# load your data
+dataset = load_dataset("dataset_name")
+
+image_size = 256
+
+# define image transformations (e.g. using torchvision)
+transform = Compose(
+    [
+        Resize(image_size),
+        CenterCrop(image_size),
+        ToTensor(),
+        Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+    ]
+)
+
+# define function
+def transforms(examples):
+   examples["image"] = [transform(image.convert("RGB")) for image in examples["image"]]
+
+   return examples
+
+transformed_dataset = dataset.with_transform(transforms)
+
+# creata dataloader
+dataloader = DataLoader(
+     transformed_dataset["train"], batch_size="your batch size", shuffle=True, num_workers="your number of CPU cores"
+)
+``` 
+
+As can be seen, we leverage the [`with_transform`]((https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.with_transform)) method here, which will make sure the image transformations will only be performed when iterating over the data (i.e. data augmentation is performed on-the-fly, making it very RAM-friendly) rather than performing it on the entire dataset in one go (which would be the case if you use [`map`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.map)). The `with_transform` method does the same thing as [`set_transform`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.set_transform), except that it does return a new `Dataset` rather than performing the operation in-place.
+
 ### 2. Train a model and push to hub
 
 Next, one can start training a model. This could be any model you'd like, however, we do provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Keras](keras). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment.
