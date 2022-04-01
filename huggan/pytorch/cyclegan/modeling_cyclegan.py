@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
-from huggingface_hub import PyTorchModelHubMixin
+from huggan.pytorch.huggan_mixin import HugGANModelHubMixin
 
 
 ##############################
@@ -28,7 +28,7 @@ class ResidualBlock(nn.Module):
         return x + self.block(x)
 
 
-class GeneratorResNet(nn.Module, PyTorchModelHubMixin):
+class GeneratorResNet(nn.Module, HugGANModelHubMixin):
     def __init__(self, input_shape, num_residual_blocks):
         super(GeneratorResNet, self).__init__()
 

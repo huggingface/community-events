@@ -2,10 +2,8 @@
 tags:
 - huggan
 - gan
-task: image-generation
-license: 
-datasets:
-- 
+task: unconditional-image-generation
+license: mit
 ---
 
 # MyModelName
