@@ -346,7 +346,7 @@ In this repo, we have provided some example scripts you can use to train your ow
 
 ## Links to Check Out
 
-Possible models to port to the hub, PyTorch:
+PyTorch:
 - Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
 - StyleGAN2: https://github.com/lucidrains/stylegan2-pytorch
 - StyleGAN2-ada: https://github.com/NVlabs/stylegan2-ada
@@ -360,22 +360,19 @@ Possible models to port to the hub, PyTorch:
 - DiffAugment (for training data-efficient GANs): https://github.com/mit-han-lab/data-efficient-gans
 - StyleGAN-XL: https://github.com/autonomousvision/stylegan_xl
 - CUT: https://github.com/taesungp/contrastive-unpaired-translation
+- studioGAN (library with many GAN implementations): https://github.com/POSTECH-CVLab/PyTorch-StudioGAN
+- MMGeneration (library with many GAN implementations): https://github.com/open-mmlab/mmgeneration
 
-Possible models to port to the hub, Keras:
+Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
 - Conditional GAN: https://keras.io/examples/generative/conditional_gan/
 - CycleGAN, DiscoGAN etc.: https://github.com/eriklindernoren/Keras-GAN
 - Neural Style Transfer: https://www.tensorflow.org/tutorials/generative/style_transfer
-
-
-GAN metrics:
-- https://github.com/yhlleo/GAN-Metrics
+- Image Super Resolution: https://github.com/idealo/image-super-resolution
 
 General links & tutorials:
+- https://github.com/yhlleo/GAN-Metrics
 - https://paperswithcode.com/task/image-generation
-- https://github.com/facebookresearch/ic_gan
-- studioGAN (PyTorch library with SOTA GAN implementations): https://github.com/POSTECH-CVLab/PyTorch-StudioGAN
-- MMGeneration (library with many PyTorch implementations): https://github.com/open-mmlab/mmgeneration
 
 ## Evaluation
 
