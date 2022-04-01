@@ -8,6 +8,10 @@ from huggan import TEMPLATE_MODEL_CARD_PATH
 
 
 class HugGANModelHubMixin(PyTorchModelHubMixin):
+    """A mixin to push PyTorch Models to the Hugging Face Hub. This
+    mixin was adapted from the PyTorchModelHubMixin to also push a template
+    README.md for the HugGAN sprint.
+    """
 
     def push_to_hub(
         self,
