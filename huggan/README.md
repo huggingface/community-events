@@ -198,7 +198,7 @@ The cool thing is that anyone can now access this dataset from anywhere, using `
 dataset = dataset.remove_columns("label")
 ```
 
-Note that you can always update a dataset by simply calling `push_to_hub again (providing the same name).
+Note that you can always update a dataset by simply calling `push_to_hub` again (providing the same name).
 
 #### 1.3 Processing the data
 
