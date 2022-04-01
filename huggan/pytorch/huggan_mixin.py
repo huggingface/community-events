@@ -62,6 +62,8 @@ class HugGANModelHubMixin(PyTorchModelHubMixin):
                 pushing files to the hub.
             config (`dict`, *optional*):
                 Configuration object to be saved alongside the model weights.
+            default_model_card (`str`, *optional*):
+                Path to a markdown file to use as your default model card.
         Returns:
             The url of the commit of your model in the given repository.
         """
