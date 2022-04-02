@@ -4,7 +4,7 @@ This directory contains a few example scripts that allow you to train famous GAN
 
 More concretely, these scripts:
 - leverage 🤗 [Datasets](https://huggingface.co/docs/datasets/index) to load any image dataset from the hub (including your own, possibly private, dataset)
-- leverage 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index) to instantly run the script on CPU, (multi-) GPU, TPU environments, supporting fp16 and mixed precision
+- leverage 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index) to instantly run the script on (multi-) CPU, (multi-) GPU, TPU environments, supporting fp16 and mixed precision as well as DeepSpeed
 - leverage 🤗 [Hub](https://huggingface.co/) to push the model to the hub at the end of training, allowing to easily create a demo for it afterwards
 
 Currently, it contains the following examples:
