@@ -42,7 +42,8 @@ To join:
 The following libraries are required to train a generative model for this sprint:
 
 - [PyTorch](https://pytorch.org/) or [Keras](https://keras.io/) - depending on which framework you prefer ;)
-- [🤗 Datasets](https://github.com/huggingface/datasets)
+- [🤗 Datasets](https://huggingface.co/docs/datasets/index)
+- [🤗 Accelerate](https://huggingface.co/docs/accelerate/index) - in case you're planning to train a PyTorch model and you want it to be run effortlessly 
 
 We recommend installing the above libraries in a [virtual environment](https://docs.python.org/3/library/venv.html). 
 If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/). Create a virtual environment with the version of Python you're going to use and activate it.
@@ -83,6 +84,16 @@ or, in case you're using Conda:
 ```bash
 conda install -c huggingface -c conda-forge datasets
 ```
+
+### Installing 🤗 Accelerate
+
+To install the Accelerate library, simply run:
+
+```bash
+pip install accelerate
+```
+
+Accelerate is a library meant for people that still want to write their raw PyTorch training loop, but having it run on any kind of hardware out-of-the-box like CPU, multi-CPU, GPU, multi-GPU, TPU... while supporting fp16 and mixed precision (for saving memory, i.e. fitting larger models/batches in RAM) at the same time. All the [PyTorch example scripts](pytorch) leverage this library, it's definitely something worth checking out! 
 
 ## General worfklow
 
@@ -241,11 +252,13 @@ As can be seen, we leverage the [`with_transform`](https://huggingface.co/docs/d
 
 ### 2. Train a model and push to hub
 
-Next, one can start training a model. This could be any model you'd like, however, we do provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Keras](keras). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment.
+Next, one can start training a model. This could be any model you'd like, however, we do provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Keras](keras). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment. 
+
+The PyTorch example scripts all leverage 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), which provides an easy API to make your scripts run on any kind of distributed setting (multi-GPUs, TPUs etc.) and with mixed precision, while still letting you write your own training loop. 
 
 Alternatively, we also provide a [Links to Check Out](#links-to-check-out) section to give you some inspiration.
 
-Below, we explain in more detail how to upload your model to the hub, depending on the framework you're using (sections 2.1 and 2.2). In section 2.3, we'll explain how to write a nice model card. In section 2.4, we'll illustrate alternative ways to upload (and re-use) a model to (and from) the hub.
+Below, we explain in more detail how to upload your model to the hub, depending on the framework you're using (sections [2.1](#2.1-pytorch) and [2.2](#2.2-keras)). In section [2.3](#alternative-ways-to-upload-a-model-to-the-hub), we'll explain how to write a nice model card. In section 2.4, we'll illustrate alternative ways to upload (and re-use) a model to (and from) the hub. Finally, in section 2.5, we explain 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), the awesome library that makes training PyTorch models on any kind of environment a breeze. Be sure to check it out!
 
 #### 2.1 PyTorch
 
@@ -318,6 +331,70 @@ You can also use this [template model card](model_card_template.md)
  as a guide to build your own.
 
 ![Alt text](assets/example_model.png?raw=true "Title")
+
+#### 2.5 Accelerate
+
+HuggingFace Accelerate is an awesome library for training PyTorch models. Here we show why. 
+
+Basically, the library requires to replace this:
+
+```
+my_model.to(device)
+
+for batch in my_training_dataloader:
+    my_optimizer.zero_grad()
+    inputs, targets = batch
+    inputs = inputs.to(device)
+    targets = targets.to(device)
+    outputs = my_model(inputs)
+    loss = my_loss_function(outputs, targets)
+    loss.backward()
+    my_optimizer.step()
+```    
+    
+by this:
+
+```diff
++ from accelerate import Accelerator
+
++ accelerator = Accelerator()
+- my_model.to(device)
+  # Pass every important object (model, optimizer, dataloader) to *accelerator.prepare*
++ my_model, my_optimizer, my_training_dataloader = accelerate.prepare(
++     my_model, my_optimizer, my_training_dataloader
++ )
+
+  for batch in my_training_dataloader:
+      my_optimizer.zero_grad()
+      inputs, targets = batch
+-     inputs = inputs.to(device)
+-     targets = targets.to(device)
+      outputs = my_model(inputs)
+      loss = my_loss_function(outputs, targets)
+      # Just a small change for the backward instruction
+-     loss.backward()
++     accelerator.backward(loss)
+      my_optimizer.step()
+```
+
+and BOOM, your script runs on **any kind of hardware**, including CPU, multi-CPU, GPU, multi-GPU and TPU. It also supports things like [DeepSpeed](https://github.com/microsoft/DeepSpeed) and [mixed precision](https://arxiv.org/abs/1710.03740) for training efficiently.
+
+You can now run your script as follows:
+
+```bash
+accelerate config
+```
+=> Accelerate will ask what kind of environment you'd like to run your script on, simply answer the questions being asked. Next:
+
+``bash
+accelerate launch <your script.py>
+```
+This will run your script on the environment you asked for. You can always check the environment settings by typing:
+
+```bash
+accelerate env
+```
+You can of course the environment by running `accelerate config` again.
 
 ### 3. Create a demo
 
