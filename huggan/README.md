@@ -258,7 +258,7 @@ The PyTorch example scripts all leverage 🤗 [Accelerate](https://huggingface.c
 
 Alternatively, we also provide a [Links to Check Out](#links-to-check-out) section to give you some inspiration.
 
-Below, we explain in more detail how to upload your model to the hub, depending on the framework you're using (sections [2.1](#2.1-pytorch) and [2.2](#2.2-keras)). In section [2.3](#alternative-ways-to-upload-a-model-to-the-hub), we'll explain how to write a nice model card. In section 2.4, we'll illustrate alternative ways to upload (and re-use) a model to (and from) the hub. Finally, in section 2.5, we explain 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), the awesome library that makes training PyTorch models on any kind of environment a breeze. Be sure to check it out!
+Below, we explain in more detail how to upload your model to the hub, depending on the framework you're using (sections [2.1](#21-pytorch) and [2.2](#22-keras)). In section [2.3](#33-alternative-ways-to-upload-a-model-to-the-hub), we'll explain how to write a nice model card. In section [2.4](24-model-cards), we'll illustrate alternative ways to upload (and re-use) a model to (and from) the hub. Finally, in section [2.5](25-accelerate), we explain 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), the awesome library that makes training PyTorch models on any kind of environment a breeze. Be sure to check it out!
 
 #### 2.1 PyTorch
 
