@@ -384,17 +384,20 @@ You can now run your script as follows:
 ```bash
 accelerate config
 ```
+
 => Accelerate will ask what kind of environment you'd like to run your script on, simply answer the questions being asked. Next:
 
-``bash
+```bash
 accelerate launch <your script.py>
 ```
+
 This will run your script on the environment you asked for. You can always check the environment settings by typing:
 
 ```bash
 accelerate env
 ```
-You can of course the environment by running `accelerate config` again.
+
+You can of course change the environment by running `accelerate config` again.
 
 ### 3. Create a demo
 
