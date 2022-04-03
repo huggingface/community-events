@@ -429,16 +429,15 @@ In this repo, we have provided some example scripts you can use to train your ow
 
 ## Datasets to add
 
-Below, we list some datasets which could be added to the Hub:
+Below, we list some datasets which could be added to the Hub (feel free to add on one of these, or open a PR to add more datasets!):
 
 - DeepFashion: https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion.html
 - Flowers: https://www.robots.ox.ac.uk/~vgg/data/flowers/
 - LSUN: https://www.yf.io/p/lsun
-- 
 
 ## Links to Check Out
 
-Below, we list some possible awesome project ideas:
+Below, we list some possible awesome project ideas (feel free to work on one of these, or open a PR to add more project ideas!):
 
 PyTorch:
 - Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
