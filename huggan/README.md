@@ -458,6 +458,10 @@ General links & tutorials:
 - https://github.com/yhlleo/GAN-Metrics
 - https://paperswithcode.com/task/image-generation
 
+## GAN metrics
+
+There have been several quantitative measures defined for assessing the quality of GANs (and other generative models). Refer to [this page](metrics) for more info.
+
 ## Evaluation
 
 For each submission, you are expected to submit:
