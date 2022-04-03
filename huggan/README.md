@@ -21,6 +21,7 @@ To join:
 - [Important dates](#important-dates)
 - [How to install relevant libraries](#how-to-install-relevant-libraries)
 - [General workflow](#general-workflow)
+- [Datasets to add](#datasets-to-add)
 - [Links to check out](#links-to-check-out)
 - [GAN metrics](#gan-metrics)
 - [Evaluation](#evaluation)
@@ -108,6 +109,8 @@ These steps are explained in more detail below.
 ### 1. Get a dataset and push to hub
 
 The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be either a dataset that is already available on the hub, or one that isn't already. Below we'll explain how to load the data in both cases.
+
+Note that we maintain a list of interesting datasets to add to the Hub [here](#datasets-to-add).
 
 #### 1.1 Use a dataset already available on the hub
 
@@ -423,6 +426,15 @@ In this repo, we have provided some example scripts you can use to train your ow
 | [DCGAN](pytorch/dcgan)  | [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)  |
 | [pix2pix](pytorch/pix2pix) | [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004) |
 | [CycleGAN](pytorch/cyclegan)  | [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
+
+## Datasets to add
+
+Below, we list some datasets which could be added to the Hub:
+
+- DeepFashion: https://mmlab.ie.cuhk.edu.hk/projects/DeepFashion.html
+- Flowers: https://www.robots.ox.ac.uk/~vgg/data/flowers/
+- LSUN: https://www.yf.io/p/lsun
+- 
 
 ## Links to Check Out
 
