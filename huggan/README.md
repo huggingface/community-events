@@ -426,6 +426,8 @@ In this repo, we have provided some example scripts you can use to train your ow
 
 ## Links to Check Out
 
+Below, we list some possible awesome project ideas:
+
 PyTorch:
 - Lightweight-GAN: https://github.com/lucidrains/lightweight-gan
 - StyleGAN2: https://github.com/lucidrains/stylegan2-pytorch
@@ -442,6 +444,7 @@ PyTorch:
 - CUT: https://github.com/taesungp/contrastive-unpaired-translation
 - studioGAN (library with many GAN implementations): https://github.com/POSTECH-CVLab/PyTorch-StudioGAN
 - MMGeneration (library with many GAN implementations): https://github.com/open-mmlab/mmgeneration
+- Deformable GAN: https://github.com/ssfootball04/pose-transfer
 
 Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
@@ -449,6 +452,7 @@ Keras:
 - CycleGAN, DiscoGAN etc.: https://github.com/eriklindernoren/Keras-GAN
 - Neural Style Transfer: https://www.tensorflow.org/tutorials/generative/style_transfer
 - Image Super Resolution: https://github.com/idealo/image-super-resolution
+- Deformable GAN: https://github.com/AliaksandrSiarohin/pose-gan
 
 General links & tutorials:
 - https://github.com/yhlleo/GAN-Metrics
