@@ -61,40 +61,17 @@ You can activate your venv by running
 source ~/<your-venv-name>/bin/activate
 ```
 
-### Installing PyTorch or Keras
+### Install Dependencies
 
-For installing PyTorch or Keras, we refer to the respective installing guides ([PyTorch](https://pytorch.org/get-started/locally/), [Keras](https://keras.io/getting_started/)). In case you're using PyTorch, please make sure you have both PyTorch and CUDA (for the GPUs) correctly installed. 
-The following command should return ``True``:
+We've packaged up the example scripts here into a simple Python package. To install it, just clone it and pip install it locally. 
 
-```bash
-python -c "import torch; print(torch.cuda.is_available())"
+```
+git clone https://github.com/huggingface/community-events.git
+cd community-events
+pip install .
 ```
 
-If the above command doesn't print ``True``, in the first step, please follow the instructions [here](https://pytorch.org/get-started/locally/) to install PyTorch with CUDA.
-
-### Installing 🤗 Datasets
-
-To install the Datasets library, simply run:
-
-```bash
-pip install datasets
-```
-
-or, in case you're using Conda:
-
-```bash
-conda install -c huggingface -c conda-forge datasets
-```
-
-### Installing 🤗 Accelerate
-
-To install the Accelerate library, simply run:
-
-```bash
-pip install accelerate
-```
-
-Accelerate is a library meant for people that still want to write their raw PyTorch training loop, but having it run on any kind of hardware out-of-the-box like CPU, multi-CPU, GPU, multi-GPU, TPU... while supporting fp16 and mixed precision (for saving memory, i.e. fitting larger models/batches in RAM) at the same time. All the [PyTorch example scripts](pytorch) leverage this library, it's definitely something worth checking out! 
+If you use `pip install -e .` instead of `pip install .`, it will install the package in development mode, which can be useful if you are planning on contributing any changes here 🤗. 
 
 ## General worfklow
 
