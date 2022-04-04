@@ -123,7 +123,7 @@ Let's illustrate with an example how this was done for NVIDIA's [MetFaces datase
 
 Previously, this dataset was only hosted on [Google Drive](https://github.com/NVlabs/metfaces-dataset#overview), and not really easily accessible.
 
-To begin with, one should check that one is are correctly logged in and that `git-lfs` is installed so that the dataset can be uploaded.
+To begin with, one should check that one is correctly logged in and that `git-lfs` is installed so that the dataset can be uploaded.
 
 Run:
 
@@ -153,6 +153,8 @@ The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1
 
 ```bash
 sudo apt-get install git-lfs
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
 ```
 
 Next, one can leverage the [`ImageFolder`](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder) builder to very easily upload an image dataset to the hub. In case the dataset you're uploading has a direct download URL, you can simply provide it to the `data_files` argument as shown below. Otherwise, you'll need to go to the link of the dataset and manually download it first as a zip/tar (which was the case for MetFaces), and provide the file through the `data_files` argument. Alternatively, it may be that you have a folder with images, in which case you can provide it using the `data_dir` argument. Note that the latter assumes a [particular structure](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder).
