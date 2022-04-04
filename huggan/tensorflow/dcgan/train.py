@@ -58,22 +58,12 @@ def create_discriminator():
 
     return discriminator
 
-generator = create_generator()
-discriminator = create_discriminator()
-
-cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
 def discriminator_loss(real_image, generated_image):
     real_loss = cross_entropy(tf.ones_like(real_image), real_image)
     fake_loss = cross_entropy(tf.zeros_like(generated_image), generated_image)
     total_loss = real_loss + fake_loss
     return total_loss
-
-generator_optimizer = tf.keras.optimizers.Adam(1e-4)
-discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
-
-# create seed with dimensions of number of examples to generate and noise
-seed = tf.random.normal([4, 100])
 
 
 @tf.function
@@ -96,7 +86,6 @@ def train_step(images):
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
 
 
-EPOCHS = 45
 
 def generate_and_save_images(model, epoch, test_input, output_dir):
   predictions = model(test_input, training=False)
@@ -206,6 +195,15 @@ def preprocess_images(args):
 if __name__ == "__main__":
     args = parse_args()
     dataset = preprocess_images(args)
+    generator = create_generator()
+    discriminator = create_discriminator()
+    generator_optimizer = tf.keras.optimizers.Adam(1e-4)
+    discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
+
+    # create seed with dimensions of number of examples to generate and noise
+    seed = tf.random.normal([4, 100])
+
+    cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
     train(dataset, args.num_epochs, args.output.dir)
 
