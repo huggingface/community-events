@@ -85,7 +85,7 @@ These steps are explained in more detail below.
 
 ### 1. Get a dataset and push to hub
 
-The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be either a dataset that is already available on the hub, or one that isn't already. Below we'll explain how to load the data in both cases.
+The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be either a dataset that is already available on the [hub](https://huggingface.co/), or one that isn't already. Below we'll explain how to load the data in both cases.
 
 Note that we maintain a list of interesting datasets to add to the Hub [here](#datasets-to-add).
 
