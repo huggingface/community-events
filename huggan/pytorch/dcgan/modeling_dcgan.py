@@ -14,10 +14,11 @@
 # See the License for the specific language governing permissions.
 
 import torch.nn as nn
-from huggingface_hub import PyTorchModelHubMixin
+
+from huggan.pytorch.huggan_mixin import HugGANModelHubMixin
 
 
-class Generator(nn.Module, PyTorchModelHubMixin):
+class Generator(nn.Module, HugGANModelHubMixin):
     def __init__(self, num_channels=3, latent_dim=100, hidden_size=64):
         super(Generator, self).__init__()
         self.model = nn.Sequential(

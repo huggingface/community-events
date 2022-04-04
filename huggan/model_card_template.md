@@ -2,10 +2,10 @@
 tags:
 - huggan
 - gan
-task: image-generation
-license: 
-datasets:
-- 
+# See a list of available tags here:
+# https://github.com/huggingface/hub-docs/blob/main/js/src/lib/interfaces/Types.ts#L12
+# task: unconditional-image-generation or conditional-image-generation or image-to-image
+license: mit
 ---
 
 # MyModelName

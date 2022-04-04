@@ -2,3 +2,5 @@ accelerate
 torch
 torchvision
 datasets
+scipy
+wandb
