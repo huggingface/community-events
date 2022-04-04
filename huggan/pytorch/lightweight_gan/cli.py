@@ -10,7 +10,6 @@ from diff_augment_test import DiffAugmentTest
 
 import torch
 import torch.multiprocessing as mp
-import torch.distributed as dist
 
 import numpy as np
 
@@ -36,22 +35,9 @@ def set_seed(seed):
     random.seed(seed)
 
 def run_training(model_args, data, load_from, new, num_train_steps, name, seed):
-    # is_main = rank == 0
-    # is_ddp = world_size > 1
-
-    # if is_ddp:
-    #     set_seed(seed)
-    #     os.environ['MASTER_ADDR'] = 'localhost'
-    #     os.environ['MASTER_PORT'] = '12355'
-    #     dist.init_process_group('nccl', rank=rank, world_size=world_size)
-
-    #     print(f"{rank + 1}/{world_size} process initialized.")
-
-    # model_args.update(
-    #     is_ddp = is_ddp,
-    #     rank = rank,
-    #     world_size = world_size
-    # )
+    
+    if seed is not None:
+        set_seed(seed)
 
     model = Trainer(**model_args)
 
@@ -74,9 +60,6 @@ def run_training(model_args, data, load_from, new, num_train_steps, name, seed):
             model.print_log()
 
     model.save(model.checkpoint_num)
-
-    # if is_ddp:
-    #     dist.destroy_process_group()
 
 def train_from_folder(
     dataset_name = 'huggan/CelebA-faces',
@@ -118,7 +101,7 @@ def train_from_folder(
     calculate_fid_num_images = 12800,
     clear_fid_cache = False,
     seed = 42,
-    amp = False,
+    mixed_precision = "no",
     show_progress = False,
     wandb = False,
 ):
@@ -152,7 +135,7 @@ def train_from_folder(
         calculate_fid_every = calculate_fid_every,
         calculate_fid_num_images = calculate_fid_num_images,
         clear_fid_cache = clear_fid_cache,
-        amp = amp,
+        mixed_precision = mixed_precision,
         wandb = wandb,
     )
 
@@ -186,14 +169,16 @@ def train_from_folder(
 
     world_size = torch.cuda.device_count()
 
-    if world_size == 1 or not multi_gpus:
-        run_training(model_args, data, load_from, new, num_train_steps, name, seed)
-        return
+    run_training(model_args, data, load_from, new, num_train_steps, name, seed)
+
+    # if world_size == 1 or not multi_gpus:
+    #     run_training(model_args, data, load_from, new, num_train_steps, name, seed)
+    #     return
     
-    mp.spawn(run_training,
-        args=(world_size, model_args, data, load_from, new, num_train_steps, name, seed),
-        nprocs=world_size,
-        join=True)
+    # mp.spawn(run_training,
+    #     args=(world_size, model_args, data, load_from, new, num_train_steps, name, seed),
+    #     nprocs=world_size,
+    #     join=True)
 
 def main():
     fire.Fire(train_from_folder)

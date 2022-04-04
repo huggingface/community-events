@@ -10,14 +10,11 @@ from pathlib import Path
 from shutil import rmtree
 
 import torch
-from torch.cuda.amp import autocast, GradScaler
 from torch.optim import Adam
 from torch import nn, einsum
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 from torch.autograd import grad as torch_grad
-from torch.utils.data.distributed import DistributedSampler
-from torch.nn.parallel import DistributedDataParallel as DDP
 
 from PIL import Image
 import torchvision
@@ -80,19 +77,6 @@ def cycle(iterable):
 def raise_if_nan(t):
     if torch.isnan(t):
         raise NanException
-
-# def gradient_accumulate_contexts(gradient_accumulate_every, is_ddp, ddps):
-#     if is_ddp:
-#         num_no_syncs = gradient_accumulate_every - 1
-#         head = [combine_contexts(map(lambda ddp: ddp.no_sync, ddps))] * num_no_syncs
-#         tail = [null_context]
-#         contexts =  head + tail
-#     else:
-#         contexts = [null_context] * gradient_accumulate_every
-
-#     for context in contexts:
-#         with context():
-#             yield
 
 def evaluate_in_chunks(max_batch_size, model, *args):
     split_args = list(zip(*list(map(lambda x: x.split(max_batch_size, dim=0), args))))
@@ -775,7 +759,6 @@ class LightweightGAN(nn.Module):
         ttur_mult = 1.,
         lr = 2e-4,
         rank = 0,
-        ddp = False
     ):
         super().__init__()
         self.latent_dim = latent_dim
@@ -883,11 +866,10 @@ class Trainer():
         calculate_fid_every = None,
         calculate_fid_num_images = 12800,
         clear_fid_cache = False,
-        is_ddp = False,
         rank = 0,
         world_size = 1,
         log = False,
-        amp = False,
+        mixed_precision = "no",
         wandb = False,
         *args,
         **kwargs
@@ -961,7 +943,6 @@ class Trainer():
         self.calculate_fid_num_images = calculate_fid_num_images
         self.clear_fid_cache = clear_fid_cache
 
-        self.is_ddp = is_ddp
         self.is_main = rank == 0
         self.rank = rank
         self.world_size = world_size
@@ -969,10 +950,8 @@ class Trainer():
         # TODO make this more general
         self.syncbatchnorm = True
 
-        # self.amp = amp
-        # self.G_scaler = GradScaler(enabled = self.amp)
-        # self.D_scaler = GradScaler(enabled = self.amp)
-
+        self.mixed_precision = mixed_precision
+        
         self.wandb = wandb
 
     @property
@@ -994,15 +973,6 @@ class Trainer():
         norm_class = nn.SyncBatchNorm if self.syncbatchnorm else nn.BatchNorm2d
         Blur = nn.Identity if not self.antialias else Blur
 
-        # handle bugs when
-        # switching from multi-gpu back to single gpu
-
-        # if self.syncbatchnorm and not self.is_ddp:
-        #     import torch.distributed as dist
-        #     os.environ['MASTER_ADDR'] = 'localhost'
-        #     os.environ['MASTER_PORT'] = '12355'
-        #     dist.init_process_group('nccl', rank=0, world_size=1)
-
         # instantiate GAN
 
         self.GAN = LightweightGAN(
@@ -1021,13 +991,6 @@ class Trainer():
             *args,
             **kwargs
         )
-
-        # if self.is_ddp:
-        #     ddp_kwargs = {'device_ids': [self.rank], 'output_device': self.rank, 'find_unused_parameters': True}
-
-        #     self.G_ddp = DDP(self.GAN.G, **ddp_kwargs)
-        #     self.D_ddp = DDP(self.GAN.D, **ddp_kwargs)
-        #     self.D_aug_ddp = DDP(self.GAN.D_aug, **ddp_kwargs)
 
     def write_config(self):
         self.config_path.write_text(json.dumps(self.config()))
@@ -1113,8 +1076,9 @@ class Trainer():
             print(f'autosetting augmentation probability to {round(self.aug_prob * 100)}%')
 
     def init_accelerator(self):
+        # Initialize the accelerator. We will let the accelerator handle device placement.
         ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
-        self.accelerator = Accelerator(kwargs_handlers=[ddp_kwargs])
+        self.accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], mixed_precision=self.mixed_precision)
         
         if self.accelerator.is_local_main_process:
             # set up Weights and Biases if requested
@@ -1129,10 +1093,6 @@ class Trainer():
         G = self.GAN.G
         D = self.GAN.D
         D_aug = self.GAN.D_aug
-
-        # amp related contexts and functions
-
-        # amp_context = autocast if self.amp else null_context
 
         # discriminator loss fn
 
@@ -1165,15 +1125,7 @@ class Trainer():
         aug_types  = self.aug_types
         aug_kwargs = {'prob': aug_prob, 'types': aug_types}
 
-        # G = self.GAN.G if not self.is_ddp else self.G_ddp
-        # D = self.GAN.D if not self.is_ddp else self.D_ddp
-        # D_aug = self.GAN.D_aug if not self.is_ddp else self.D_aug_ddp
-
         apply_gradient_penalty = self.steps % 4 == 0
-
-        # amp related contexts and functions
-
-        # amp_context = autocast if self.amp else null_context
 
         # discriminator loss fn
 
@@ -1195,7 +1147,6 @@ class Trainer():
             # print("Shape of latents:", latents.shape)
             # print("Shape of image batch:", image_batch.shape)
 
-            # with amp_context():
             with torch.no_grad():
                 generated_images = G(latents)
 
@@ -1218,21 +1169,21 @@ class Trainer():
 
             if apply_gradient_penalty:
                 outputs = [real_output, real_output_32x32]
-                # outputs = list(map(self.D_scaler.scale, outputs)) if self.amp else outputs
-                outputs = outputs
+                if self.accelerator.scaler is not None:
+                    outputs = list(map(self.accelerator.scaler.scale, outputs))
 
                 scaled_gradients = torch_grad(outputs=outputs, inputs=image_batch,
                                        # grad_outputs=list(map(lambda t: torch.ones(t.size(), device = image_batch.device), outputs)),
                                        grad_outputs=list(map(lambda t: torch.ones(t.size(), device = self.accelerator.device), outputs)),
                                        create_graph=True, retain_graph=True, only_inputs=True)[0]
 
-                # inv_scale = safe_div(1., self.D_scaler.get_scale()) if self.amp else 1.
                 inv_scale = 1.
+                if self.accelerator.scaler is not None:
+                    inv_scale = safe_div(1., self.accelerator.scaler.get_scale())
 
                 if inv_scale != float('inf'):
                     gradients = scaled_gradients * inv_scale
 
-                    # with amp_context():
                     gradients = gradients.reshape(batch_size, -1)
                     gp =  self.gp_weight * ((gradients.norm(2, dim=1) - 1) ** 2).mean()
 
@@ -1240,7 +1191,6 @@ class Trainer():
                         disc_loss = disc_loss + gp
                         self.last_gp_loss = gp.clone().detach().item()
 
-            # with amp_context():
             # divide loss by gradient accumulation steps since gradients
             # are accumulated for multiple backward passes in PyTorch
             disc_loss = disc_loss / self.gradient_accumulate_every
@@ -1252,8 +1202,6 @@ class Trainer():
             
         self.last_recon_loss = aux_loss.item()
         self.d_loss = float(total_disc_loss.item() / self.gradient_accumulate_every)
-        # self.D_scaler.step(self.GAN.D_opt)
-        # self.D_scaler.update()
         self.GAN.D_opt.step()
 
         # generator loss fn
@@ -1278,7 +1226,6 @@ class Trainer():
                 image_batch = next(self.loader)["image"]
                 image_batch.requires_grad_()
 
-            # with amp_context():
             generated_images = G(latents)
 
             fake_output, fake_output_32x32, _ = D_aug(generated_images, **aug_kwargs)
@@ -1299,17 +1246,12 @@ class Trainer():
         # divide loss by gradient accumulation steps since gradients
         # are accumulated for multiple backward passes in PyTorch
         self.g_loss = float(total_gen_loss.item() / self.gradient_accumulate_every)
-        # self.G_scaler.step(self.GAN.G_opt)
-        # self.G_scaler.update()
         self.GAN.G_opt.step()
 
         # calculate moving averages
-
-        # if self.is_main and self.steps % 10 == 0 and self.steps > 20000:
         if self.accelerator.is_main_process and self.steps % 10 == 0 and self.steps > 20000:
             self.GAN.EMA()
 
-        #if self.is_main and self.steps <= 25000 and self.steps % 1000 == 2:
         if self.accelerator.is_main_process and self.steps <= 25000 and self.steps % 1000 == 2:
             self.GAN.reset_parameter_averaging()
 
@@ -1325,7 +1267,6 @@ class Trainer():
 
         # periodically save results
 
-        # if self.is_main:
         if self.accelerator.is_main_process:
             if self.steps % self.save_every == 0:
                 self.save(self.checkpoint_num)
@@ -1568,15 +1509,12 @@ class Trainer():
     def save(self, num):
         save_data = {
             'GAN': self.GAN.state_dict(),
-            #'version': __version__,
-            #'G_scaler': self.G_scaler.state_dict(),
-            #'D_scaler': self.D_scaler.state_dict()
         }
 
         torch.save(save_data, self.model_name(num))
         self.write_config()
 
-    def load(self, num=-1, print_version=True):
+    def load(self, num=-1):
         self.load_config()
 
         name = num
@@ -1593,19 +1531,11 @@ class Trainer():
 
         load_data = torch.load(self.model_name(name))
 
-        if print_version and 'version' in load_data and self.is_main:
-            print(f"loading from version {load_data['version']}")
-
         try:
             self.GAN.load_state_dict(load_data['GAN'])
         except Exception as e:
             print('unable to load save model. please try downgrading the package to the version specified by the saved model')
             raise e
-
-        # if 'G_scaler' in load_data:
-        #     self.G_scaler.load_state_dict(load_data['G_scaler'])
-        # if 'D_scaler' in load_data:
-        #     self.D_scaler.load_state_dict(load_data['D_scaler'])
 
     def get_checkpoints(self):
         file_paths = [p for p in Path(self.models_dir / self.name).glob('model_*.pt')]
