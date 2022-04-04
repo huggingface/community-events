@@ -857,7 +857,7 @@ class Trainer():
         lr = 2e-4,
         lr_mlp = 1.,
         ttur_mult = 1.,
-        save_every = 1000,
+        save_every = 10000,
         evaluate_every = 1000,
         aug_prob = None,
         aug_types = ['translation', 'cutout'],

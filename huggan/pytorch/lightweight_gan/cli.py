@@ -76,7 +76,7 @@ def train_from_folder(
     gradient_accumulate_every = 4,
     num_train_steps = 150000,
     learning_rate = 2e-4,
-    save_every = 1000,
+    save_every = 10000,
     evaluate_every = 1000,
     generate = False,
     generate_types = ['default', 'ema'],
@@ -94,7 +94,6 @@ def train_from_folder(
     save_frames = False,
     num_image_tiles = None,
     num_workers = None,
-    multi_gpus = False,
     calculate_fid_every = None,
     calculate_fid_num_images = 12800,
     clear_fid_cache = False,
@@ -164,19 +163,6 @@ def train_from_folder(
         return
 
     run_training(model_args, data, load_from, new, num_train_steps, name, seed)
-
-    world_size = torch.cuda.device_count()
-
-    run_training(model_args, data, load_from, new, num_train_steps, name, seed)
-
-    # if world_size == 1 or not multi_gpus:
-    #     run_training(model_args, data, load_from, new, num_train_steps, name, seed)
-    #     return
-    
-    # mp.spawn(run_training,
-    #     args=(world_size, model_args, data, load_from, new, num_train_steps, name, seed),
-    #     nprocs=world_size,
-    #     join=True)
 
 def main():
     fire.Fire(train_from_folder)
