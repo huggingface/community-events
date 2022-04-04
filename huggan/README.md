@@ -450,7 +450,7 @@ General links & tutorials:
 
 ## GAN metrics
 
-There have been several quantitative measures defined for assessing the quality of GANs (and other generative models). Refer to [this page](metrics) for more info.
+There have been several quantitative measures defined for assessing the quality of GANs (and other generative models). Refer to [this page](pytorch/metrics) for more info.
 
 ## Evaluation
 
