@@ -86,4 +86,4 @@ You can then follow the progress of your GAN in a browser:
 
 # Citation
 
-This repo is entirely based on lucidrains's [Pytorch implementation](https://github.com/lucidrains/lightweight-gan), but with added HuggingFace goodies.
+This repo is entirely based on lucidrains' [Pytorch implementation](https://github.com/lucidrains/lightweight-gan), but with added HuggingFace goodies.
