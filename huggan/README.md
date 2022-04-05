@@ -40,7 +40,7 @@ To join:
 
 ## How to install relevant libraries
 
-The following libraries are required to train a generative model for this sprint:
+You'll need the following dependencies installed to use this repo:
 
 - [PyTorch](https://pytorch.org/) or [Keras](https://keras.io/) - depending on which framework you prefer ;)
 - [🤗 Datasets](https://huggingface.co/docs/datasets/index)
