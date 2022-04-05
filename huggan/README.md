@@ -63,35 +63,33 @@ source ~/<your-venv-name>/bin/activate
 
 ### Install Dependencies
 
-We've packaged up the example scripts here into a simple Python package. To install it, just clone it and pip install it locally. 
+We've packaged up the example scripts here into a simple Python package. To install it, just pip install it
 
 ```
-git clone https://github.com/huggingface/community-events.git
-cd community-events
-pip install .
+pip install git+https://github.com/huggingface/community-events.git
 ```
 
-If you use `pip install -e .` instead of `pip install .`, it will install the package in development mode, which can be useful if you are planning on contributing any changes here 🤗. 
+If you use `pip install -e .` instead of `pip install`, it will install the package in development mode, which can be useful if you are planning on contributing any changes here 🤗. 
 
-## General worfklow
+## General workflow
 
 The process to follow is outlined below. It consists of 3 steps:
 
-1. Get a dataset and push to hub
-2. Train a model and push to hub
+1. Get a dataset and push to the Hub
+2. Train a model and push to the Hub
 3. Create a demo (🤗 Space)
 
 These steps are explained in more detail below.
 
-### 1. Get a dataset and push to hub
+### 1. Get a dataset and push to Hub
 
-The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be either a dataset that is already available on the [hub](https://huggingface.co/), or one that isn't already. Below we'll explain how to load the data in both cases.
+The first step is the most obvious one: to train a GAN (or any neural network), we need a dataset. This could be either a dataset that is already available on the [Hub](https://huggingface.co/datasets), or one that isn't already. Below we'll explain how to load the data in both cases.
 
 Note that we maintain a list of interesting datasets to add to the Hub [here](#datasets-to-add).
 
-#### 1.1 Use a dataset already available on the hub
+#### 1.1 Use a dataset already available on the Hub
 
-Most famous computer vision datasets are already available on the [hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as [MNIST](https://huggingface.co/datasets/mnist), [Fashion MNIST](https://huggingface.co/datasets/fashion_mnist), [CIFAR-10](https://huggingface.co/datasets/cifar10), [CIFAR-100](https://huggingface.co/datasets/cifar100), etc.).
+Most famous computer vision datasets are already available on the [Hub](https://huggingface.co/datasets?task_categories=task_categories:image-classification) (such as [MNIST](https://huggingface.co/datasets/mnist), [Fashion MNIST](https://huggingface.co/datasets/fashion_mnist), [CIFAR-10](https://huggingface.co/datasets/cifar10), [CIFAR-100](https://huggingface.co/datasets/cifar100), etc.).
 
 Loading a dataset can be done as follows:
 
@@ -104,6 +102,7 @@ dataset = load_dataset("mnist")
 # ... or one that's part of the huggan organization
 dataset = load_dataset("huggan/edges2shoes")
 ```
+
 In a notebook, you can **directly see** the images by selecting a split and then the appropriate column:
 
 ```python
@@ -111,9 +110,9 @@ example = dataset['train'][0]
 print(example['image'])
 ```
 
-#### 1.2 Upload a new dataset to the hub
+#### 1.2 Upload a new dataset to the Hub
 
-In case your dataset is not already on the hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). If you've signed up for the event by filling in the [spreadsheet]((https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0)), your HuggingFace account should be part of it. 
+In case your dataset is not already on the Hub, you can upload it to the `huggan` [organization](https://huggingface.co/huggan). If you've signed up for the event by filling in the [spreadsheet]((https://docs.google.com/spreadsheets/d/1aAHqOOk2SOw4j6mrJLkLT6ZyKyLDOvGF5D9tuUqnoG8/edit#gid=0)), your Hugging Face account should be part of it. 
 
 Let's illustrate with an example how this was done for NVIDIA's [MetFaces dataset](https://github.com/NVlabs/metfaces-dataset):
 
@@ -139,7 +138,7 @@ from huggingface_hub import notebook_login
 notebook_login()
 ```
 
-It is recommended to login with your access token that can be found under your HuggingFace profile (icon in the top right corner on [hf.co](http://hf.co/), then Settings -> Access Tokens -> User Access Tokens -> New Token (if you haven't generated one already)
+It is recommended to login with your access token that can be found under your HuggingFace profile (icon in the top right corner on [hf.co](http://hf.co/), then Settings -> Access Tokens -> User Access Tokens -> New Token (if you haven't generated one already). Alternatively, you can go to [your token settings](https://huggingface.co/settings/tokens) directly.
 
 You can then copy-paste this token to log in locally.
 
@@ -171,13 +170,13 @@ dataset = load_dataset("imagefolder", data_files="path_to_file_or_direct_downloa
 dataset = load_dataset("imagefolder", data_files={"train": ["path/to/file1", "path/to/file2"], "test": ["path/to/file3", "path/to/file4"]})
 ```
 
-Once you've loaded your dataset, you can push it to the hub, by simply typing:
+Once you've loaded your dataset, you can push it to the Hub with a single line of code:
 
 ```python
 dataset.push_to_hub("huggan/name-of-your-dataset")
 ```
 
-Et voila! Your dataset is now available on the hub :) If you wait a bit, the Dataset viewer should be able to preview images in the browser. The MetFaces dataset can be seen here: https://huggingface.co/datasets/huggan/metfaces. 
+Et voila! Your dataset is now available on the Hub :) If you wait a bit, the Dataset viewer should be able to preview images in the browser. The MetFaces dataset can be seen here: https://huggingface.co/datasets/huggan/metfaces. 
 
 <p align="center">
     <img src="https://github.com/huggingface/community-events/blob/main/huggan/assets/metfaces.png" alt="drawing" width="700"/>
@@ -197,7 +196,7 @@ Note that you can always update a dataset by simply calling `push_to_hub` again 
 
 Once you've uploaded your dataset, you can load it and create a dataloader for it. The code example below shows how to apply some data augmentation and creating a PyTorch Dataloader (the [PyTorch example scripts](pytorch) all leverage this). More info can also be found in the [docs](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#process-image-data).
 
-```
+```python
 from datasets import load_dataset
 from torchvision.transforms import CenterCrop, Compose, Normalize, Resize, ToTensor
 
@@ -232,19 +231,19 @@ dataloader = DataLoader(
 
 As can be seen, we leverage the [`with_transform`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.with_transform) method here, which will make sure the image transformations will only be performed when iterating over the data (i.e. data augmentation is performed on-the-fly, making it very RAM-friendly) rather than performing it on the entire dataset in one go (which would be the case if you use [`map`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.map)). The `with_transform` method does the same thing as [`set_transform`](https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/main_classes#datasets.Dataset.set_transform), except that it does return a new `Dataset` rather than performing the operation in-place.
 
-### 2. Train a model and push to hub
+### 2. Train a model and push to Hub
 
-Next, one can start training a model. This could be any model you'd like, however, we do provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Keras](keras). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment. 
+Next, one can start training a model. This could be any model you'd like. However, we provide some example scripts to help you get started, in [PyTorch](pytorch). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment. 
 
 The PyTorch example scripts all leverage 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), which provides an easy API to make your scripts run on any kind of distributed setting (multi-GPUs, TPUs etc.) and with mixed precision, while still letting you write your own training loop. 
 
 Alternatively, we also provide a [Links to Check Out](#links-to-check-out) section to give you some inspiration.
 
-Below, we explain in more detail how to upload your model to the hub, depending on the framework you're using (sections [2.1](#21-pytorch) and [2.2](#22-keras)). In section [2.3](#33-alternative-ways-to-upload-a-model-to-the-hub), we'll explain how to write a nice model card. In section [2.4](24-model-cards), we'll illustrate alternative ways to upload (and re-use) a model to (and from) the hub. Finally, in section [2.5](25-accelerate), we explain 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), the awesome library that makes training PyTorch models on any kind of environment a breeze. Be sure to check it out!
+Below, we explain in more detail how to upload your model to the Hub, depending on the framework you're using (sections [2.1](#21-pytorch) and [2.2](#22-keras)). In section [2.3](#33-alternative-ways-to-upload-a-model-to-the-hub), we'll explain how to write a nice model card. In section [2.4](24-model-cards), we'll illustrate alternative ways to upload (and re-use) a model to (and from) the hub. Finally, in section [2.5](25-accelerate), we explain 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), the awesome library that makes training PyTorch models on any kind of environment a breeze. Be sure to check it out!
 
 #### 2.1 PyTorch
 
-If you're planning to train a custom PyTorch model, it's recommended to make it inherit from `PyTorchModelHubMixin`. This makes sure you can push it to the hub at the end of training, and reload it afterwards using `from_pretrained`, as shown in the code example below:
+If you're planning to train a custom PyTorch model, it's recommended to make it inherit from `PyTorchModelHubMixin`. This makes sure you can push it to the Hub at the end of training, and reload it afterwards using `from_pretrained`, as shown in the code example below:
 
 ```python
 from huggingface_hub import PyTorchModelHubMixin
@@ -292,13 +291,13 @@ reloaded = from_pretrained_keras("huggan/my-cool-model")
 
 These methods are available in the [`huggingface_hub` library](https://github.com/huggingface/huggingface_hub), which comes pre-installed if you install `datasets` (or `transformers`) in your environment. Note that the `push_to_hub_keras` method supports pushing several models (such as a generator and discriminator) to the same repo, as illustrated [here](https://github.com/huggingface/huggingface_hub/issues/533#issuecomment-1058093158).
 
-#### 2.3 Alternative ways to upload a model to the hub
+#### 2.3 Alternative ways to upload a model to the Hub
 
 Besides the methods explained in sections 2.1 and 2.2 above, you can also share model assets directly from git, which is explained in depth in [this guide](https://huggingface.co/docs/hub/adding-a-model#uploading-your-files).
 
 #### 2.4 Model cards
 
-When uploading a model to the hub, it's important to include a so-called [model card](https://huggingface.co/course/chapter4/4?fw=pt) with it. This is just a README (in Markdown) 🃏 that includes:
+When uploading a model to the Hub, it's important to include a so-called [model card](https://huggingface.co/course/chapter4/4?fw=pt) with it. This is just a README (in Markdown) 🃏 that includes:
 - license,
 - task,
 - `huggan` and `gan` tags,
@@ -316,7 +315,7 @@ You can also use this [template model card](model_card_template.md)
 
 #### 2.5 Accelerate
 
-HuggingFace Accelerate is an awesome library for training PyTorch models. Here we show why. 
+HuggingFace `accelerate` is an awesome library for training PyTorch models. Here we show why. 
 
 Basically, the library requires to replace this:
 
