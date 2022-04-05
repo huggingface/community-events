@@ -2,7 +2,7 @@
 
 This folder contains a script to train ['Lightweight' GAN](https://openreview.net/forum?id=1Fqg133qRaI) for unconditional image generation, leveraging the [Hugging Face](https://huggingface.co/) ecosystem for processing your data and pushing the model to the Hub.
 
-The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting fp16/mixed precision.
+The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting mixed precision.
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/lucidrains/lightweight-gan/main/images/pizza-512.jpg" alt="drawing" width="300"/>
@@ -27,7 +27,7 @@ accelerate launch cli.py
 This will instantly run on multi-GPUs (if you asked for that). To train on another dataset available on the hub, simply do (for instance):
 
 ```bash
-python train.py --dataset_name cifar-10
+python cli.py --dataset_name cifar-10
 ```
 
 In case you'd like to tweak the script to your liking, first fork the "community-events" [repo](https://github.com/huggingface/community-events) (see the button on the top right), then clone it locally:
@@ -66,7 +66,7 @@ dataset.push_to_hub("huggan/my-awesome-dataset")
 You can then simply pass the name of the dataset to the script:
 
 ```bash
-python train.py --dataset huggan/my-awesome-dataset
+accelerate launch cli.py --dataset huggan/my-awesome-dataset
 ```
 
 ## Pushing model to the Hub
@@ -74,7 +74,7 @@ python train.py --dataset huggan/my-awesome-dataset
 You can push your trained generator to the hub after training by specifying the `push_to_hub` flag, along with a `model_name` and `pytorch_dump_folder_path`. 
 
 ```bash
-python train.py --push_to_hub --model_name dcgan-mnist
+accelerate launch cli.py --push_to_hub --model_name dcgan-mnist
 ```
 
 This is made possible by making the generator inherit from `PyTorchModelHubMixin`available in the `huggingface_hub` library. 
