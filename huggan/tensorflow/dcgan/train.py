@@ -23,11 +23,11 @@ def stack_generator_layers(model, units):
 def create_generator(channel, hidden_size, latent_dim):
     generator = tf.keras.Sequential()
     generator.add(layers.Input((latent_dim,))) # 
-    generator.add(layers.Dense(hidden_size*8, use_bias=False, input_shape=(100,)))
+    generator.add(layers.Dense(hidden_size*8*4*4, use_bias=False, input_shape=(100,)))
     generator.add(layers.BatchNormalization())
     generator.add(layers.LeakyReLU())
 
-    generator.add(layers.Reshape((4, 4, 1024)))
+    generator.add(layers.Reshape((4, 4, hidden_size*8)))
 
     units = [hidden_size*8, hidden_size*4, hidden_size*2, hidden_size*2, hidden_size]
     for unit in units:
@@ -47,7 +47,7 @@ def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=F
 
 def create_discriminator(channel, hidden_size):
     discriminator = tf.keras.Sequential()
-    discriminator.add(layers.Input((64, 64, channel)))
+    discriminator.add(layers.Input((28, 28, channel)))
     discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True, use_dropout = True)
     discriminator = stack_discriminator_layers(discriminator, hidden_size * 2)
     discriminator = stack_discriminator_layers(discriminator, hidden_size*2, use_batch_norm = True, use_dropout = True)
@@ -120,7 +120,7 @@ def parse_args(args=None):
     parser.add_argument(
         "--generator_hidden_size",
         type=int,
-        default=64,
+        default=28,
         help="Hidden size of the generator's feature maps.",
     )
     parser.add_argument("--latent_dim", type=int, default=100, help="Dimensionality of the latent space.")
@@ -176,24 +176,13 @@ def parse_args(args=None):
 
 
 
-def train(dataset, epochs):
-  for epoch in range(args.epochs):
-    for image_batch in dataset:
-      train_step(image_batch)
-
-    generate_and_save_images(generator,
-                             epoch + 1,
-                             seed)
-
-
 
 def preprocess_dataset(dataset, BATCH_SIZE):
     preprocessed_images = []
     print("Preprocessing dataset..")
-    breakpoint()
-    for img in dataset["train"]:
-        img = img["image"].convert('RGB') 
-        img = np.array(img) 
+    for example in range(len(dataset["train"])):
+        img = dataset["train"][example]["image"].convert('RGB') 
+        img = np.asarray(img) 
         img = tf.keras.utils.img_to_array(PIL.Image.fromarray(img))
         preprocessed_images.append(img)
     train_images = np.asarray(preprocessed_images)
@@ -207,6 +196,7 @@ if __name__ == "__main__":
     print("Downloading dataset..")
     dataset = load_dataset(args.dataset)
     dataset, channel = preprocess_dataset(dataset, args.batch_size)
+    print("Training model..")
     generator = create_generator(channel, args.generator_hidden_size, args.latent_dim)
     discriminator = create_discriminator(channel, args.discriminator_hidden_size)
     generator_optimizer = tf.keras.optimizers.Adam(1e-4)
@@ -217,6 +207,6 @@ if __name__ == "__main__":
 
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
-    train(dataset, args.num_epochs, args.output.dir)
+    train(dataset, args.num_epochs, args.output_dir)
 
     push_to_hub_keras(generator, repo_path_or_name=args.output_dir / args.model_name,organization=args.organization_name)
