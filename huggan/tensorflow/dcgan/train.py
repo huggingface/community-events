@@ -15,7 +15,7 @@ from datasets import load_dataset
 
 
 def stack_generator_layers(model, units):
-    model.add(layers.Conv2DTranspose(1024, (4, 4), strides=2, padding='same', use_bias=False))
+    model.add(layers.Conv2DTranspose(units, (4, 4), strides=2, padding='same', use_bias=False))
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())  
     return model 
