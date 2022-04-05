@@ -22,7 +22,6 @@ from torchvision.utils import save_image
 from kornia.filters import filter2d
 
 from diff_augment import DiffAugment
-# from lightweight_gan.version import __version__
 
 from tqdm import tqdm
 from einops import rearrange, reduce, repeat
@@ -701,7 +700,6 @@ class LightweightGAN(nn.Module):
         freq_chan_attn = False,
         ttur_mult = 1.,
         lr = 2e-4,
-        rank = 0,
     ):
         super().__init__()
         self.latent_dim = latent_dim
@@ -738,16 +736,17 @@ class LightweightGAN(nn.Module):
         if optimizer == "adam":
             self.G_opt = Adam(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
             self.D_opt = Adam(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
-        # elif optimizer == "adabelief":
-        #     self.G_opt = AdaBelief(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
-        #     self.D_opt = AdaBelief(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
+        elif optimizer == "adabelief":
+            from adabelief_pytorch import AdaBelief
+
+            self.G_opt = AdaBelief(self.G.parameters(), lr = lr, betas=(0.5, 0.9))
+            self.D_opt = AdaBelief(self.D.parameters(), lr = lr * ttur_mult, betas=(0.5, 0.9))
         else:
             assert False, "No valid optimizer is given"
 
         self.apply(self._init_weights)
         self.reset_parameter_averaging()
 
-        # self.cuda(rank)
         self.D_aug = AugWrapper(self.D, image_size)
 
     def _init_weights(self, m):
@@ -809,8 +808,6 @@ class Trainer():
         calculate_fid_every = None,
         calculate_fid_num_images = 12800,
         clear_fid_cache = False,
-        rank = 0,
-        world_size = 1,
         log = False,
         mixed_precision = "no",
         wandb = False,
@@ -886,12 +883,7 @@ class Trainer():
         self.calculate_fid_num_images = calculate_fid_num_images
         self.clear_fid_cache = clear_fid_cache
 
-        self.is_main = rank == 0
-        self.rank = rank
-        self.world_size = world_size
-
-        # TODO make this more general
-        self.syncbatchnorm = True
+        self.syncbatchnorm = torch.cuda.device_count() > 1
 
         self.mixed_precision = mixed_precision
         
@@ -930,7 +922,6 @@ class Trainer():
             disc_output_size = self.disc_output_size,
             transparent = self.transparent,
             greyscale = self.greyscale,
-            rank = self.rank,
             *args,
             **kwargs
         )
@@ -1006,10 +997,6 @@ class Trainer():
         num_samples = len(transformed_dataset)
         ## end of HuggingFace dataset
 
-        # num_workers = default(self.num_workers, math.ceil(NUM_CORES / self.world_size))
-        # self.dataset = ImageDataset(folder, self.image_size, transparent = self.transparent, greyscale = self.greyscale, aug_prob = self.dataset_aug_prob)
-        # sampler = DistributedSampler(self.dataset, rank=self.rank, num_replicas=self.world_size, shuffle=True) if self.is_ddp else None
-        # dataloader = DataLoader(self.dataset, num_workers = num_workers, batch_size = math.ceil(self.batch_size / self.world_size), sampler = sampler, shuffle = not self.is_ddp, drop_last = True, pin_memory = True)
         self.loader = cycle(dataloader)
 
         # auto set augmentation prob for user if dataset is detected to be low
@@ -1048,17 +1035,11 @@ class Trainer():
     
     def train(self, G, D, D_aug):
         assert exists(self.loader), 'You must first initialize the data source with `.set_data_src(<folder of images>)`'
-        
-        # device = torch.device(f'cuda:{self.rank}')
-
-        # if not exists(self.GAN):
-        #     self.init_GAN()
 
         self.GAN.train()
         total_disc_loss = torch.zeros([], device=self.accelerator.device)
         total_gen_loss = torch.zeros([], device=self.accelerator.device)
 
-        # batch_size = math.ceil(self.batch_size / self.world_size)
         batch_size = math.ceil(self.batch_size / self.accelerator.num_processes)
 
         image_size = self.GAN.image_size
@@ -1081,14 +1062,9 @@ class Trainer():
 
         self.GAN.D_opt.zero_grad()
         for i in range(self.gradient_accumulate_every):
-            # latents = torch.randn(batch_size, latent_dim).cuda(self.rank)
-            # image_batch = next(self.loader).cuda(self.rank)
             latents = torch.randn(batch_size, latent_dim, device=self.accelerator.device)
             image_batch = next(self.loader)["image"]
             image_batch.requires_grad_()
-
-            # print("Shape of latents:", latents.shape)
-            # print("Shape of image batch:", image_batch.shape)
 
             with torch.no_grad():
                 generated_images = G(latents)
@@ -1099,9 +1075,6 @@ class Trainer():
 
             real_output_loss = real_output
             fake_output_loss = fake_output
-
-            # print("Shape of real output:", real_output.shape)
-            # print("Shape of fake output:", fake_output.shape)
 
             divergence = D_loss_fn(real_output_loss, fake_output_loss)
             divergence_32x32 = D_loss_fn(real_output_32x32, fake_output_32x32)
@@ -1116,7 +1089,6 @@ class Trainer():
                     outputs = list(map(self.accelerator.scaler.scale, outputs))
 
                 scaled_gradients = torch_grad(outputs=outputs, inputs=image_batch,
-                                       # grad_outputs=list(map(lambda t: torch.ones(t.size(), device = image_batch.device), outputs)),
                                        grad_outputs=list(map(lambda t: torch.ones(t.size(), device = self.accelerator.device), outputs)),
                                        create_graph=True, retain_graph=True, only_inputs=True)[0]
 
@@ -1139,7 +1111,6 @@ class Trainer():
             disc_loss = disc_loss / self.gradient_accumulate_every
 
             disc_loss.register_hook(raise_if_nan)
-            # self.D_scaler.scale(disc_loss).backward()
             self.accelerator.backward(disc_loss)
             total_disc_loss += divergence
             
@@ -1161,11 +1132,9 @@ class Trainer():
         self.GAN.G_opt.zero_grad()
 
         for i in range(self.gradient_accumulate_every):
-            # latents = torch.randn(batch_size, latent_dim).cuda(self.rank)
             latents = torch.randn(batch_size, latent_dim, device=self.accelerator.device)
 
             if G_requires_calc_real:
-                # image_batch = next(self.loader).cuda(self.rank)
                 image_batch = next(self.loader)["image"]
                 image_batch.requires_grad_()
 
@@ -1182,7 +1151,6 @@ class Trainer():
             gen_loss = gen_loss / self.gradient_accumulate_every
 
             gen_loss.register_hook(raise_if_nan)
-            # self.G_scaler.scale(gen_loss).backward()
             self.accelerator.backward(gen_loss)
             total_gen_loss += loss 
 
@@ -1239,7 +1207,6 @@ class Trainer():
 
         # latents and noise
 
-        # latents = torch.randn((num_rows ** 2, latent_dim)).cuda(self.rank)
         latents = torch.randn(num_rows ** 2, latent_dim, device=self.accelerator.device)
 
         # regular
@@ -1275,7 +1242,6 @@ class Trainer():
         # regular
         if 'default' in types:
             for i in tqdm(range(num_image_tiles), desc='Saving generated default images'):
-                # latents = torch.randn((1, latent_dim)).cuda(self.rank)
                 latents = torch.randn(1, latent_dim, device=self.accelerator.device)
                 generated_image = self.generate_(self.GAN.G, latents)
                 path = str(self.results_dir / dir_name / f'{str(num)}-{str(i)}.{ext}')
@@ -1284,7 +1250,6 @@ class Trainer():
         # moving averages
         if 'ema' in types:
             for i in tqdm(range(num_image_tiles), desc='Saving generated EMA images'):
-                # latents = torch.randn((1, latent_dim)).cuda(self.rank)
                 latents = torch.randn(1, latent_dim, device=self.accelerator.device)
                 generated_image = self.generate_(self.GAN.GE, latents)
                 path = str(self.results_dir / dir_name / f'{str(num)}-{str(i)}-ema.{ext}')
@@ -1312,7 +1277,6 @@ class Trainer():
             self.GAN.eval()
 
             if checkpoint == 0:
-                # latents = torch.randn((num_images, self.GAN.latent_dim)).cuda(self.rank)
                 latents = torch.randn(num_images, self.GAN.latent_dim, self.accelerator.device)
 
             # regular
@@ -1330,8 +1294,6 @@ class Trainer():
     @torch.no_grad()
     def calculate_fid(self, num_batches):
         from pytorch_fid import fid_score
-        # torch.cuda.empty_cache()
-
         real_path = self.fid_dir / 'real'
         fake_path = self.fid_dir / 'fake'
 
@@ -1347,7 +1309,6 @@ class Trainer():
                     save_image(image, real_path / f'{ind}.png')
 
         # generate a bunch of fake images in results / name / fid_fake
-
         rmtree(fake_path, ignore_errors=True)
         os.makedirs(fake_path)
 
@@ -1359,7 +1320,6 @@ class Trainer():
 
         for batch_num in tqdm(range(num_batches), desc='calculating FID - saving generated'):
             # latents and noise
-            # latents = torch.randn(self.batch_size, latent_dim).cuda(self.rank)
             latents = torch.randn(self.batch_size, latent_dim, device=self.accelerator.device)
 
             # moving averages
@@ -1386,9 +1346,6 @@ class Trainer():
         image_size = self.GAN.image_size
 
         # latents and noise
-
-        # latents_low = torch.randn(num_rows ** 2, latent_dim).cuda(self.rank)
-        # latents_high = torch.randn(num_rows ** 2, latent_dim).cuda(self.rank)
         latents_low = torch.randn(num_rows ** 2, latent_dim, device=self.accelerator.device)
         latents_high = torch.randn(num_rows ** 2, latent_dim, device=self.accelerator.device)
 
