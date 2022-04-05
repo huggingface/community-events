@@ -66,7 +66,7 @@ source ~/<your-venv-name>/bin/activate
 We've packaged up the example scripts here into a simple Python package. To install it, just pip install it
 
 ```
-!pip install git+https://github.com/huggingface/community-events.git
+pip install git+https://github.com/huggingface/community-events.git
 ```
 
 If you use `pip install -e .` instead of `pip install`, it will install the package in development mode, which can be useful if you are planning on contributing any changes here 🤗. 
