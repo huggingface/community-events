@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import huggingface_hub
 import tensorflow as tf
-import cv2
+from pathlib import Path
+import os
 import PIL
 import argparse
 from tensorflow.keras import layers
@@ -19,20 +20,20 @@ def stack_generator_layers(model, units):
     model.add(layers.LeakyReLU())  
     return model 
 
-def create_generator():
+def create_generator(channel, hidden_size, latent_dim):
     generator = tf.keras.Sequential()
-    generator.add(layers.Input((100,))) # 
-    generator.add(layers.Dense(1024*16, use_bias=False, input_shape=(100,)))
+    generator.add(layers.Input((latent_dim,))) # 
+    generator.add(layers.Dense(hidden_size*8, use_bias=False, input_shape=(100,)))
     generator.add(layers.BatchNormalization())
     generator.add(layers.LeakyReLU())
 
     generator.add(layers.Reshape((4, 4, 1024)))
 
-    units = [1024, 512, 256, 128]
+    units = [hidden_size*8, hidden_size*4, hidden_size*2, hidden_size*2, hidden_size]
     for unit in units:
         generator = stack_generator_layers(generator, unit)
 
-    generator.add(layers.Conv2DTranspose(3, (4, 4), strides=1, padding='same', use_bias=False, activation='tanh'))
+    generator.add(layers.Conv2DTranspose(channel, (4, 4), strides=1, padding='same', use_bias=False, activation='tanh'))
     return generator
 
 def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=False):
@@ -44,14 +45,14 @@ def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=F
     model.add(layers.LeakyReLU())
     return model
 
-def create_discriminator():
+def create_discriminator(channel, hidden_size):
     discriminator = tf.keras.Sequential()
-    discriminator.add(layers.Input((64, 64, 3)))
-    discriminator = stack_discriminator_layers(discriminator, 64, use_batch_norm = True, use_dropout = True)
-    discriminator = stack_discriminator_layers(discriminator, 128)
-    discriminator = stack_discriminator_layers(discriminator, 256, use_batch_norm = True, use_dropout = True)
-    discriminator = stack_discriminator_layers(discriminator, 512, use_batch_norm = True)
-    discriminator = stack_discriminator_layers(discriminator, 1024, use_batch_norm = True)
+    discriminator.add(layers.Input((64, 64, channel)))
+    discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True, use_dropout = True)
+    discriminator = stack_discriminator_layers(discriminator, hidden_size * 2)
+    discriminator = stack_discriminator_layers(discriminator, hidden_size*2, use_batch_norm = True, use_dropout = True)
+    discriminator = stack_discriminator_layers(discriminator, hidden_size*4, use_batch_norm = True)
+    discriminator = stack_discriminator_layers(discriminator, hidden_size*8, use_batch_norm = True)
 
     discriminator.add(layers.Flatten())
     discriminator.add(layers.Dense(1))
@@ -112,9 +113,24 @@ def train(dataset, epochs, output_dir):
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=str, default="huggan/anime-faces", help="Dataset to load from the HuggingFace hub.")
+    parser.add_argument("--dataset", type=str, default="mnist", help="Dataset to load from the HuggingFace hub.")
     parser.add_argument("--num_workers", type=int, default=0, help="Number of workers when loading data")
     parser.add_argument("--batch_size", type=int, default=128, help="Batch size to use during training")
+    parser.add_argument("--number_of_examples_to_generate", type=int, default=4, help="Number of examples to be generated in inference mode")
+    parser.add_argument(
+        "--generator_hidden_size",
+        type=int,
+        default=64,
+        help="Hidden size of the generator's feature maps.",
+    )
+    parser.add_argument("--latent_dim", type=int, default=100, help="Dimensionality of the latent space.")
+
+    parser.add_argument(
+        "--discriminator_hidden_size",
+        type=int,
+        default=64,
+        help="Hidden size of the discriminator's feature maps.",
+    )
     parser.add_argument(
         "--image_size",
         type=int,
@@ -171,37 +187,33 @@ def train(dataset, epochs):
 
 
 
-def preprocess_images(args):
-    dataset = load_dataset(args.dataset)
-
-    train_images = []
-
-    for img in dataset:
-        if img.endswith(".png"):
-            image = cv2.imread(img) # read the image
-            # opencv reads images in BGR, we have to convert to RGB
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            # convert image to array and append to list
-            image = tf.keras.utils.img_to_array(PIL.Image.fromarray(image))
-            train_images.append(image)
-
-    train_images = np.asarray(train_images)
-    # Normalize images
+def preprocess_dataset(dataset, BATCH_SIZE):
+    preprocessed_images = []
+    print("Preprocessing dataset..")
+    breakpoint()
+    for img in dataset["train"]:
+        img = img["image"].convert('RGB') 
+        img = np.array(img) 
+        img = tf.keras.utils.img_to_array(PIL.Image.fromarray(img))
+        preprocessed_images.append(img)
+    train_images = np.asarray(preprocessed_images)
+    channel = train_images[0].shape[-1]
     train_images = (train_images - 127.5) / 127.5 
-
-    train_dataset = tf.data.Dataset.from_tensor_slices(train_images).batch(args.batch_size)
-    return train_dataset
+    train_dataset = tf.data.Dataset.from_tensor_slices(train_images).batch(BATCH_SIZE)
+    return train_dataset, channel
 
 if __name__ == "__main__":
     args = parse_args()
-    dataset = preprocess_images(args)
-    generator = create_generator()
-    discriminator = create_discriminator()
+    print("Downloading dataset..")
+    dataset = load_dataset(args.dataset)
+    dataset, channel = preprocess_dataset(dataset, args.batch_size)
+    generator = create_generator(channel, args.generator_hidden_size, args.latent_dim)
+    discriminator = create_discriminator(channel, args.discriminator_hidden_size)
     generator_optimizer = tf.keras.optimizers.Adam(1e-4)
     discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
 
     # create seed with dimensions of number of examples to generate and noise
-    seed = tf.random.normal([4, 100])
+    seed = tf.random.normal([args.number_of_examples_to_generate, args.latent_dim])
 
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
