@@ -315,7 +315,7 @@ You can also use this [template model card](model_card_template.md)
 
 #### 2.5 Accelerate
 
-HuggingFace `accelerate is an awesome library for training PyTorch models. Here we show why. 
+HuggingFace `accelerate` is an awesome library for training PyTorch models. Here we show why. 
 
 Basically, the library requires to replace this:
 
