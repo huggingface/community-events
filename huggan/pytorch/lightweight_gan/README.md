@@ -27,7 +27,7 @@ accelerate launch cli.py
 This will instantly run on multi-GPUs (if you asked for that). To train on another dataset available on the hub, simply do (for instance):
 
 ```bash
-python cli.py --dataset_name huggan/pokemon
+accelerate launch cli.py --dataset_name huggan/pokemon
 ```
 
 In case you'd like to tweak the script to your liking, first fork the "community-events" [repo](https://github.com/huggingface/community-events) (see the button on the top right), then clone it locally:
