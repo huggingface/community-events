@@ -69,16 +69,6 @@ You can then simply pass the name of the dataset to the script:
 accelerate launch cli.py --dataset huggan/my-awesome-dataset
 ```
 
-## Pushing model to the Hub
-
-You can push your trained generator to the hub after training by specifying the `push_to_hub` flag, along with a `model_name` and `pytorch_dump_folder_path`. 
-
-```bash
-accelerate launch cli.py --push_to_hub --model_name dcgan-mnist
-```
-
-This is made possible by making the generator inherit from `PyTorchModelHubMixin`available in the `huggingface_hub` library. 
-
 ## Weights and Biases integration
 
 You can easily add logging to [Weights and Biases](https://wandb.ai/site) by passing the `--wandb` flag:
