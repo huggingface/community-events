@@ -4,7 +4,6 @@ from retry.api import retry_call
 from tqdm import tqdm
 from datetime import datetime
 from lightweight_gan import Trainer, NanException
-from diff_augment_test import DiffAugmentTest
 
 import torch
 import torch.multiprocessing as mp
@@ -156,10 +155,6 @@ def train_from_folder(
     if show_progress:
         model = Trainer(**model_args)
         model.show_progress(num_images=num_image_tiles, types=generate_types)
-        return
-
-    if aug_test:
-        DiffAugmentTest(data=data, image_size=image_size, batch_size=batch_size, types=aug_types, nrow=num_image_tiles)
         return
 
     run_training(model_args, data, load_from, new, num_train_steps, name, seed)

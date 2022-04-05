@@ -27,8 +27,6 @@ from diff_augment import DiffAugment
 from tqdm import tqdm
 from einops import rearrange, reduce, repeat
 
-# from adabelief_pytorch import AdaBelief
-
 from datasets import load_dataset
 
 from accelerate import Accelerator, DistributedDataParallelKwargs
@@ -50,13 +48,6 @@ def exists(val):
 @contextmanager
 def null_context():
     yield
-
-# def combine_contexts(contexts):
-#     @contextmanager
-#     def multi_contexts():
-#         with ExitStack() as stack:
-#             yield [stack.enter_context(ctx()) for ctx in contexts]
-#     return multi_contexts
 
 def is_power_of_two(val):
     return log2(val).is_integer()
@@ -271,53 +262,6 @@ def resize_to_minimum_size(min_size, image):
     if max(*image.size) < min_size:
         return torchvision.transforms.functional.resize(image, min_size)
     return image
-
-class ImageDataset(Dataset):
-    def __init__(
-        self,
-        folder,
-        image_size,
-        transparent = False,
-        greyscale = False,
-        aug_prob = 0.
-    ):
-        super().__init__()
-        self.folder = folder
-        self.image_size = image_size
-        self.paths = [p for ext in EXTS for p in Path(f'{folder}').glob(f'**/*.{ext}')]
-        assert len(self.paths) > 0, f'No images were found in {folder} for training'
-
-        if transparent:
-            num_channels = 4
-            pillow_mode = 'RGBA'
-            expand_fn = expand_greyscale(transparent)
-        elif greyscale:
-            num_channels = 1
-            pillow_mode = 'L'
-            expand_fn = identity()
-        else:
-            num_channels = 3
-            pillow_mode = 'RGB'
-            expand_fn = expand_greyscale(transparent)
-
-        convert_image_fn = partial(convert_image_to, pillow_mode)
-
-        self.transform = transforms.Compose([
-            transforms.Lambda(convert_image_fn),
-            transforms.Lambda(partial(resize_to_minimum_size, image_size)),
-            transforms.Resize(image_size),
-            RandomApply(aug_prob, transforms.RandomResizedCrop(image_size, scale=(0.5, 1.0), ratio=(0.98, 1.02)), transforms.CenterCrop(image_size)),
-            transforms.ToTensor(),
-            transforms.Lambda(expand_fn)
-        ])
-
-    def __len__(self):
-        return len(self.paths)
-
-    def __getitem__(self, index):
-        path = self.paths[index]
-        img = Image.open(path)
-        return self.transform(img)
 
 # augmentations
 
