@@ -436,6 +436,7 @@ PyTorch:
 - studioGAN (library with many GAN implementations): https://github.com/POSTECH-CVLab/PyTorch-StudioGAN
 - MMGeneration (library with many GAN implementations): https://github.com/open-mmlab/mmgeneration
 - Deformable GAN: https://github.com/ssfootball04/pose-transfer
+- Denoising Diffusion GAN: https://github.com/NVlabs/denoising-diffusion-gan
 
 Keras:
 - WGAN-GP: https://keras.io/examples/generative/wgan_gp/
