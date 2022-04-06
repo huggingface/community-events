@@ -11,6 +11,7 @@ import argparse
 from tensorflow.keras import layers
 from huggingface_hub import push_to_hub_keras
 from datasets import load_dataset
+from transformers import DefaultDataCollator
 
 
 
@@ -179,21 +180,28 @@ def parse_args(args=None):
 
 
 def preprocess(examples):
-    images = [(np.asarray(examples["image"]).astype('float32')- 127.5) / 127.5]
+    images = (np.asarray(examples["image"]).astype('float32')- 127.5) / 127.5
+    images = np.expand_dims(images, -1)
     examples["pixel_values"] = images
     return examples
 
 
 
 def preprocess_images(dataset, args):
+    
+ 
+    data_collator = DefaultDataCollator(return_tensors="tf")
+
+
     processed_dataset = dataset.map(preprocess)
-    new_dataset = []
     
-    for image in processed_dataset["pixel_values"]:
-        new_dataset.append(image[0])
-    
-    new_dataset = tf.data.Dataset.from_tensor_slices(new_dataset).batch(args.batch_size)
-    return new_dataset
+    tf_train_dataset = processed_dataset.to_tf_dataset(
+	    columns=['pixel_values'],
+	    shuffle=True,
+	    batch_size=args.batch_size,
+	    collate_fn=data_collator)
+
+    return tf_train_dataset
 
 
 if __name__ == "__main__":
