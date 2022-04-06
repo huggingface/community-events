@@ -186,7 +186,7 @@ def preprocess(examples):
 
 
 def preprocess_images(dataset, args):
-    processed_dataset = dataset["test"].map(preprocess)
+    processed_dataset = dataset.map(preprocess)
     new_dataset = []
     
     for image in processed_dataset["pixel_values"]:
