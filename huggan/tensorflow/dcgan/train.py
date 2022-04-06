@@ -23,13 +23,13 @@ def stack_generator_layers(model, units):
 def create_generator(channel, hidden_size, latent_dim):
     generator = tf.keras.Sequential()
     generator.add(layers.Input((latent_dim,))) # 
-    generator.add(layers.Dense(hidden_size*8*4*4, use_bias=False, input_shape=(100,)))
+    generator.add(layers.Dense(hidden_size*4*7*7, use_bias=False, input_shape=(100,)))
     generator.add(layers.BatchNormalization())
     generator.add(layers.LeakyReLU())
 
-    generator.add(layers.Reshape((4, 4, hidden_size*8)))
+    generator.add(layers.Reshape((7, 7, hidden_size*4)))
 
-    units = [hidden_size*8, hidden_size*4, hidden_size*2, hidden_size*2, hidden_size]
+    units = [hidden_size*2, hidden_size*1]
     for unit in units:
         generator = stack_generator_layers(generator, unit)
 
@@ -47,10 +47,9 @@ def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=F
 
 def create_discriminator(channel, hidden_size):
     discriminator = tf.keras.Sequential()
-    discriminator.add(layers.Input((28, 28, channel)))
+    #discriminator.add(layers.Input((28, 28, channel)))
     discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True, use_dropout = True)
     discriminator = stack_discriminator_layers(discriminator, hidden_size * 2)
-    discriminator = stack_discriminator_layers(discriminator, hidden_size*2, use_batch_norm = True, use_dropout = True)
     discriminator = stack_discriminator_layers(discriminator, hidden_size*4, use_batch_norm = True)
     discriminator = stack_discriminator_layers(discriminator, hidden_size*8, use_batch_norm = True)
 
@@ -69,7 +68,7 @@ def discriminator_loss(real_image, generated_image):
 
 @tf.function
 def train_step(images):
-    noise = tf.random.normal([256, 100])
+    noise = tf.random.normal([128, 100])
 
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
       generated_images = generator(noise, training=True)
@@ -88,13 +87,13 @@ def train_step(images):
 
 
 
-def generate_and_save_images(model, epoch, test_input, output_dir):
+def generate_and_save_images(model, epoch, test_input, output_dir, number_of_examples_to_generate):
   predictions = model(test_input, training=False)
 
-  fig = plt.figure(figsize=(16, 64))
+  fig = plt.figure(figsize=(number_of_examples_to_generate*4, number_of_examples_to_generate*16))
 
   for i in range(predictions.shape[0]):
-      plt.subplot(1, 4, i+1)
+      plt.subplot(1, number_of_examples_to_generate, i+1)
       plt.imshow(predictions[i, :, :, :])
       plt.axis('off')
 
@@ -128,13 +127,13 @@ def parse_args(args=None):
     parser.add_argument(
         "--discriminator_hidden_size",
         type=int,
-        default=64,
+        default=28,
         help="Hidden size of the discriminator's feature maps.",
     )
     parser.add_argument(
         "--image_size",
         type=int,
-        default=64,
+        default=28,
         help="Spatial size to use when resizing images for training.",
     )
     parser.add_argument(
@@ -177,7 +176,7 @@ def parse_args(args=None):
 
 
 
-def preprocess_dataset(dataset, BATCH_SIZE):
+def preprocess_dataset(dataset, BATCH_SIZE, image_size):
     preprocessed_images = []
     print("Preprocessing dataset..")
     for example in range(len(dataset["train"])):
@@ -187,6 +186,8 @@ def preprocess_dataset(dataset, BATCH_SIZE):
         preprocessed_images.append(img)
     train_images = np.asarray(preprocessed_images)
     channel = train_images[0].shape[-1]
+    train_images = train_images.reshape(train_images.shape[0], image_size, image_size, channel).astype('float32')
+
     train_images = (train_images - 127.5) / 127.5 
     train_dataset = tf.data.Dataset.from_tensor_slices(train_images).batch(BATCH_SIZE)
     return train_dataset, channel
@@ -195,7 +196,7 @@ if __name__ == "__main__":
     args = parse_args()
     print("Downloading dataset..")
     dataset = load_dataset(args.dataset)
-    dataset, channel = preprocess_dataset(dataset, args.batch_size)
+    dataset, channel = preprocess_dataset(dataset, args.batch_size, args.image_size)
     print("Training model..")
     generator = create_generator(channel, args.generator_hidden_size, args.latent_dim)
     discriminator = create_discriminator(channel, args.discriminator_hidden_size)
