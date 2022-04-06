@@ -2,7 +2,7 @@ from pathlib import Path
 from re import TEMPLATE
 from typing import Optional, Union
 
-from huggingface_hub import PyTorchModelHubMixin, HfFolder, Repository
+from huggingface_hub import PyTorchModelHubMixin, HfApi, HfFolder, Repository
 
 from huggan import TEMPLATE_MODEL_CARD_PATH
 
