@@ -113,7 +113,6 @@ def train(dataset, epochs, output_dir):
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="mnist", help="Dataset to load from the HuggingFace hub.")
-    parser.add_argument("--num_workers", type=int, default=0, help="Number of workers when loading data")
     parser.add_argument("--batch_size", type=int, default=128, help="Batch size to use during training")
     parser.add_argument("--number_of_examples_to_generate", type=int, default=4, help="Number of examples to be generated in inference mode")
     parser.add_argument(
@@ -143,7 +142,6 @@ def parse_args(args=None):
         help="Number of channels in the training images. For color images this is 3.",
     )
     parser.add_argument("--num_epochs", type=int, default=5, help="number of epochs of training")
-    parser.add_argument("--lr", type=float, default=0.01, help="Learning rate")
     parser.add_argument("--output_dir", type=Path, default=Path("./output"), help="Name of the directory to dump generated images during training.")
     parser.add_argument(
         "--push_to_hub",
@@ -209,5 +207,6 @@ if __name__ == "__main__":
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
     train(dataset, args.num_epochs, args.output_dir)
+    if args.push_to_hub is not None:
 
-    push_to_hub_keras(generator, repo_path_or_name=args.output_dir / args.model_name,organization=args.organization_name)
+        push_to_hub_keras(generator, repo_path_or_name=args.output_dir / args.model_name,organization=args.organization_name)
