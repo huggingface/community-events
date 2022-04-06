@@ -14,6 +14,7 @@ from datasets import load_dataset
 
 
 
+
 def stack_generator_layers(model, units):
     model.add(layers.Conv2DTranspose(units, (4, 4), strides=2, padding='same', use_bias=False))
     model.add(layers.BatchNormalization())
@@ -24,7 +25,6 @@ def create_generator(channel, hidden_size, latent_dim):
     generator = tf.keras.Sequential()
     generator.add(layers.Input((latent_dim,))) # 
     generator.add(layers.Dense(hidden_size*4*7*7, use_bias=False, input_shape=(100,)))
-    generator.add(layers.BatchNormalization())
     generator.add(layers.LeakyReLU())
 
     generator.add(layers.Reshape((7, 7, hidden_size*4)))
@@ -33,7 +33,7 @@ def create_generator(channel, hidden_size, latent_dim):
     for unit in units:
         generator = stack_generator_layers(generator, unit)
 
-    generator.add(layers.Conv2DTranspose(channel, (4, 4), strides=1, padding='same', use_bias=False, activation='tanh'))
+    generator.add(layers.Conv2DTranspose(args.num_channels, (4, 4), strides=1, padding='same', use_bias=False, activation='tanh'))
     return generator
 
 def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=False):
@@ -45,13 +45,13 @@ def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=F
     model.add(layers.LeakyReLU())
     return model
 
-def create_discriminator(channel, hidden_size):
+def create_discriminator(channel, hidden_size, args):
     discriminator = tf.keras.Sequential()
-    #discriminator.add(layers.Input((28, 28, channel)))
-    discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True, use_dropout = True)
+    discriminator.add(layers.Input((args.image_size, args.image_size, args.num_channels)))
+    discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True,  use_dropout = True)
     discriminator = stack_discriminator_layers(discriminator, hidden_size * 2)
-    discriminator = stack_discriminator_layers(discriminator, hidden_size*4, use_batch_norm = True)
-    discriminator = stack_discriminator_layers(discriminator, hidden_size*8, use_batch_norm = True)
+    discriminator = stack_discriminator_layers(discriminator,True, hidden_size*4)
+    discriminator = stack_discriminator_layers(discriminator,True, hidden_size*16)
 
     discriminator.add(layers.Flatten())
     discriminator.add(layers.Dense(1))
@@ -88,19 +88,24 @@ def train_step(images):
 
 
 def generate_and_save_images(model, epoch, test_input, output_dir, number_of_examples_to_generate):
+  
   predictions = model(test_input, training=False)
 
   fig = plt.figure(figsize=(number_of_examples_to_generate*4, number_of_examples_to_generate*16))
 
   for i in range(predictions.shape[0]):
       plt.subplot(1, number_of_examples_to_generate, i+1)
-      plt.imshow(predictions[i, :, :, :])
+      if args.num_channels == 1:
+        plt.imshow(predictions[i, :, :, :], cmap='gray')
+      else:
+        plt.imshow(predictions[i, :, :, :])
+          
       plt.axis('off')
 
   plt.savefig(f'{output_dir}/image_at_epoch_{epoch}.png')
 
 
-def train(dataset, epochs, output_dir):
+def train(dataset, epochs, output_dir, args):
   for epoch in range(epochs):
     for image_batch in dataset:
       train_step(image_batch)
@@ -108,7 +113,8 @@ def train(dataset, epochs, output_dir):
     generate_and_save_images(generator,
                              epoch + 1,
                              seed,
-                             output_dir)
+                             output_dir,
+                             args.number_of_examples_to_generate)
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
@@ -172,32 +178,32 @@ def parse_args(args=None):
     return args
 
 
+def preprocess(examples):
+    images = [(np.asarray(examples["image"]).astype('float32')- 127.5) / 127.5]
+    examples["pixel_values"] = images
+    return examples
 
 
-def preprocess_dataset(dataset, BATCH_SIZE, image_size):
-    preprocessed_images = []
-    print("Preprocessing dataset..")
-    for example in range(len(dataset["train"])):
-        img = dataset["train"][example]["image"].convert('RGB') 
-        img = np.asarray(img) 
-        img = tf.keras.utils.img_to_array(PIL.Image.fromarray(img))
-        preprocessed_images.append(img)
-    train_images = np.asarray(preprocessed_images)
-    channel = train_images[0].shape[-1]
-    train_images = train_images.reshape(train_images.shape[0], image_size, image_size, channel).astype('float32')
 
-    train_images = (train_images - 127.5) / 127.5 
-    train_dataset = tf.data.Dataset.from_tensor_slices(train_images).batch(BATCH_SIZE)
-    return train_dataset, channel
+def preprocess_images(dataset, args):
+    processed_dataset = dataset["test"].map(preprocess)
+    new_dataset = []
+    
+    for image in processed_dataset["pixel_values"]:
+        new_dataset.append(image[0])
+    
+    new_dataset = tf.data.Dataset.from_tensor_slices(new_dataset).batch(args.batch_size)
+    return new_dataset
+
 
 if __name__ == "__main__":
     args = parse_args()
     print("Downloading dataset..")
     dataset = load_dataset(args.dataset)
-    dataset, channel = preprocess_dataset(dataset, args.batch_size, args.image_size)
+    dataset= preprocess_images(dataset, args)
     print("Training model..")
-    generator = create_generator(channel, args.generator_hidden_size, args.latent_dim)
-    discriminator = create_discriminator(channel, args.discriminator_hidden_size)
+    generator = create_generator(args.num_channels, args.generator_hidden_size, args.latent_dim)
+    discriminator = create_discriminator(args.num_channels, args.discriminator_hidden_size, args)
     generator_optimizer = tf.keras.optimizers.Adam(1e-4)
     discriminator_optimizer = tf.keras.optimizers.Adam(1e-4)
 
@@ -206,7 +212,7 @@ if __name__ == "__main__":
 
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
-    train(dataset, args.num_epochs, args.output_dir)
+    train(dataset, args.num_epochs, args.output_dir, args)
     if args.push_to_hub is not None:
 
-        push_to_hub_keras(generator, repo_path_or_name=args.output_dir / args.model_name,organization=args.organization_name)
+        push_to_hub_keras(generator, repo_path_or_name=f"{args.output_dir}/{args.model_name}",organization=args.organization_name)
