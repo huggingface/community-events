@@ -23,8 +23,7 @@ notebook_login()
 ```
 Next, run the following in a notebook/script:
 
-```
-python
+```python
 from datasets import load_dataset
 
 # first: load dataset
