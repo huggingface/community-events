@@ -8,8 +8,8 @@ You can simply run `python train.py` with default parameters. It will download M
 
 To train on another dataset available on the hub, simply do (for instance):
 
+```bash
 python train.py --dataset cifar-10
-In case you'd like to tweak the script to your liking, first fork the "community-events" repo (see the button on the top right), then clone it locally:
 
 `git clone https://github.com/<your Github username>/community-events.git`
 and edit to your liking.
