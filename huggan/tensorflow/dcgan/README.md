@@ -1,7 +1,7 @@
 ## Train DCGAN on your custom data
 This folder contains a script to train DCGAN for unconditional image generation, leveraging the Hugging Face ecosystem for processing your data and pushing the model to the Hub.
 
-The script leverages 🤗 Datasets for loading and processing data, and TensorFlow for training the model and 🤗 Hub for hosting it.
+The script leverages 🤗 [Datasets](https://huggingface.co/docs/datasets/index) for loading and processing data, and TensorFlow for training the model and 🤗 [Hub](https://huggingface.co/) for hosting it.
 
 ## Launching the script
 You can simply run `python train.py` with the default parameters. It will download the MNIST dataset, preprocess it and train a model on it, will save results after each epoch in a local directory and push the model to the 🤗 Hub.
@@ -13,7 +13,7 @@ python train.py --dataset cifar-10
 ```
 
 ## Training on your own data
-You can of course also train on your own images. For this, one can leverage Datasets' ImageFolder. Make sure to authenticate with the hub first, by running the huggingface-cli login command in a terminal, or the following in case you're working in a notebook:
+You can of course also train on your own images. For this, one can leverage Datasets' [ImageFolder](https://huggingface.co/docs/datasets/v2.0.0/en/image_process#imagefolder). Make sure to authenticate with the hub first, by running the huggingface-cli login command in a terminal, or the following in case you're working in a notebook:
 
 ```
 python
