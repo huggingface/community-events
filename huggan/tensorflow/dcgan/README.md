@@ -10,6 +10,7 @@ To train on another dataset available on the hub, simply do (for instance):
 
 ```bash
 python train.py --dataset cifar-10
+```
 
 `git clone https://github.com/<your Github username>/community-events.git`
 and edit to your liking.
@@ -24,6 +25,7 @@ from huggingface_hub import notebook_login
 notebook_login()
 ```
 Next, run the following in a notebook/script:
+
 ```
 python
 from datasets import load_dataset
@@ -40,6 +42,7 @@ dataset.push_to_hub("huggan/my-awesome-dataset")
 
 python train.py --dataset huggan/my-awesome-dataset
 ```
+
 ## Pushing model to the Hub
 
 For this you can use `push_to_hub_keras` which generates a card for your model with training metrics, plot of the architecture and hyperparameters. For this, specify `--output_dir` and `--model_name` and use the `--push_to_hub` flag like so:
