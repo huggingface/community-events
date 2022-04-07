@@ -42,7 +42,7 @@ python train.py --dataset huggan/my-awesome-dataset
 ```
 ## Pushing model to the Hub
 
-For this you can use `push_to_hub_keras` which generates a card for your model with training metrics, plot of the architecture and hyperparameters. For this, specify --output_dir and --model_name and use --push_to_hub flag like so:
+For this you can use `push_to_hub_keras` which generates a card for your model with training metrics, plot of the architecture and hyperparameters. For this, specify `--output_dir` and `--model_name` and use the `--push_to_hub` flag like so:
 ```
 python train.py --push_to_hub --output_dir /output --model_name awesome_gan_model
 
