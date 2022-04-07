@@ -3,6 +3,7 @@ import random
 from retry.api import retry_call
 from tqdm import tqdm
 from datetime import datetime
+from pathlib import Path
 from lightweight_gan import Trainer, NanException
 
 import torch
@@ -100,7 +101,12 @@ def train_from_folder(
     mixed_precision = "no",
     show_progress = False,
     wandb = False,
+    push_to_hub = False,
+    push_to_hub_model_id = None,
 ):
+    if push_to_hub and push_to_hub_model_id is None:
+        push_to_hub_model_id = Path(models_dir).name
+
     num_image_tiles = default(num_image_tiles, 4 if image_size > 512 else 8)
 
     model_args = dict(
@@ -133,6 +139,8 @@ def train_from_folder(
         clear_fid_cache = clear_fid_cache,
         mixed_precision = mixed_precision,
         wandb = wandb,
+        push_to_hub = push_to_hub,
+        push_to_hub_model_id = push_to_hub_model_id,
     )
 
     if generate:
