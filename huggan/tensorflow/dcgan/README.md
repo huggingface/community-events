@@ -12,9 +12,6 @@ To train on another dataset available on the hub, simply do (for instance):
 python train.py --dataset cifar-10
 ```
 
-`git clone https://github.com/<your Github username>/community-events.git`
-and edit to your liking.
-
 ## Training on your own data
 You can of course also train on your own images. For this, one can leverage Datasets' ImageFolder. Make sure to authenticate with the hub first, by running the huggingface-cli login command in a terminal, or the following in case you're working in a notebook:
 
