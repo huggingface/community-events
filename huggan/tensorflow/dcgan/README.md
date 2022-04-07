@@ -4,7 +4,7 @@ This folder contains a script to train DCGAN for unconditional image generation,
 The script leverages 🤗 Datasets for loading and processing data, and TensorFlow for training the model and 🤗 Hub for hosting it.
 
 ## Launching the script
-You can simply run `python train.py` with default parameters. It will download MNIST dataset, preprocess it and train a model on it, will save results of epochs in a local directory and push to 🤗 Hub.
+You can simply run `python train.py` with the default parameters. It will download the MNIST dataset, preprocess it and train a model on it, will save results after each epoch in a local directory and push the model to the 🤗 Hub.
 
 To train on another dataset available on the hub, simply do (for instance):
 
