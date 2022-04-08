@@ -102,10 +102,14 @@ def train_from_folder(
     show_progress = False,
     wandb = False,
     push_to_hub = False,
-    push_to_hub_model_id = None,
+    organization_name = None,
 ):
-    if push_to_hub and push_to_hub_model_id is None:
-        push_to_hub_model_id = Path(models_dir).name
+    if push_to_hub:
+        if name == 'default':
+            raise RuntimeError(
+                "You've chosen to push to hub, but have left the --name flag as 'default'."
+                " You should name your model something other than 'default'!"
+            )
 
     num_image_tiles = default(num_image_tiles, 4 if image_size > 512 else 8)
 
@@ -140,7 +144,7 @@ def train_from_folder(
         mixed_precision = mixed_precision,
         wandb = wandb,
         push_to_hub = push_to_hub,
-        push_to_hub_model_id = push_to_hub_model_id,
+        organization_name = organization_name
     )
 
     if generate:
