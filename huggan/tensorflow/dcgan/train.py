@@ -191,7 +191,7 @@ def preprocess_images(dataset, args):
     data_collator = DefaultDataCollator(return_tensors="tf")
     processed_dataset = dataset.map(preprocess)
     
-    tf_train_dataset = processed_dataset.to_tf_dataset(
+    tf_train_dataset = processed_dataset["train"].to_tf_dataset(
 	    columns=['pixel_values'],
 	    shuffle=True,
 	    batch_size=args.batch_size,
