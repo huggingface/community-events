@@ -9,7 +9,7 @@ You can simply run `python train.py --num_channels 1` with the default parameter
 To train on another dataset available on the hub, simply do (for instance):
 
 ```bash
-python train.py --dataset cifar-10
+python train.py --dataset cifar10
 ```
 
 ## Training on your own data
