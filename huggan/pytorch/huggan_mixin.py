@@ -25,6 +25,7 @@ class HugGANModelHubMixin(PyTorchModelHubMixin):
         git_user: Optional[str] = None,
         git_email: Optional[str] = None,
         config: Optional[dict] = None,
+        skip_lfs_files: bool = False,
         default_model_card: Optional[str] = TEMPLATE_MODEL_CARD_PATH
     ) -> str:
         """
@@ -112,13 +113,14 @@ class HugGANModelHubMixin(PyTorchModelHubMixin):
             use_auth_token=use_auth_token,
             git_user=git_user,
             git_email=git_email,
+            skip_lfs_files=skip_lfs_files
         )
         repo.git_pull(rebase=True)
 
         # Save the files in the cloned repo
         self.save_pretrained(repo_path_or_name, config=config)
 
-        model_card_path = Path(repo_path_or_name) / TEMPLATE_MODEL_CARD_PATH
+        model_card_path = Path(repo_path_or_name) / 'README.md'
         if not model_card_path.exists():
             model_card_path.write_text(TEMPLATE_MODEL_CARD_PATH.read_text())
 

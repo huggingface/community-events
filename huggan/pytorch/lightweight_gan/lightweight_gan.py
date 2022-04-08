@@ -1,8 +1,10 @@
 import os
 import json
+import tempfile
 from random import random
 import math
 from math import log2, floor
+from pathlib import Path
 from functools import partial
 from contextlib import contextmanager, ExitStack
 from pathlib import Path
@@ -29,6 +31,10 @@ from einops import rearrange, reduce, repeat
 from datasets import load_dataset
 
 from accelerate import Accelerator, DistributedDataParallelKwargs
+from huggingface_hub import hf_hub_download, create_repo
+
+from huggan.pytorch.huggan_mixin import HugGANModelHubMixin
+from huggan.utils.hub import get_full_repo_name
 
 # asserts
 
@@ -38,6 +44,7 @@ assert torch.cuda.is_available(), 'You need to have an Nvidia GPU with CUDA inst
 
 # NUM_CORES = multiprocessing.cpu_count()
 EXTS = ['jpg', 'jpeg', 'png']
+PYTORCH_WEIGHTS_NAME = 'model.pt'
 
 # helpers
 
@@ -684,7 +691,7 @@ class Discriminator(nn.Module):
 
         return out, out_32x32, aux_loss
 
-class LightweightGAN(nn.Module):
+class LightweightGAN(nn.Module, HugGANModelHubMixin):
     def __init__(
         self,
         *,
@@ -702,6 +709,22 @@ class LightweightGAN(nn.Module):
         lr = 2e-4,
     ):
         super().__init__()
+        
+        self.config = {
+            'latent_dim': latent_dim,
+            'image_size': image_size,
+            'optimizer': optimizer,
+            'fmap_max': fmap_max,
+            'fmap_inverse_coef': fmap_inverse_coef,
+            'transparent': transparent,
+            'greyscale': greyscale,
+            'disc_output_size': disc_output_size,
+            'attn_res_layers': attn_res_layers,
+            'freq_chan_attn': freq_chan_attn,
+            'ttur_mult': ttur_mult,
+            'lr': lr
+        }
+
         self.latent_dim = latent_dim
         self.image_size = image_size
 
@@ -771,6 +794,63 @@ class LightweightGAN(nn.Module):
     def forward(self, x):
         raise NotImplemented
 
+    def _save_pretrained(self, save_directory):
+        """
+        Overwrite this method in case you don't want to save complete model,
+        rather some specific layers
+        """
+        path = os.path.join(save_directory, PYTORCH_WEIGHTS_NAME)
+        model_to_save = self.module if hasattr(self, "module") else self
+        
+        # We update this to be a dict containing 'GAN', as that's what is expected
+        torch.save({'GAN': model_to_save.state_dict()}, path)
+
+    @classmethod
+    def _from_pretrained(
+        cls,
+        model_id,
+        revision,
+        cache_dir,
+        force_download,
+        proxies,
+        resume_download,
+        local_files_only,
+        use_auth_token,
+        map_location="cpu",
+        strict=False,
+        **model_kwargs,
+    ):
+        """
+        Overwrite this method in case you wish to initialize your model in a
+        different way.
+        """
+        map_location = torch.device(map_location)
+
+        if os.path.isdir(model_id):
+            print("Loading weights from local directory")
+            model_file = os.path.join(model_id, PYTORCH_WEIGHTS_NAME)
+        else:
+            model_file = hf_hub_download(
+                repo_id=model_id,
+                filename=PYTORCH_WEIGHTS_NAME,
+                revision=revision,
+                cache_dir=cache_dir,
+                force_download=force_download,
+                proxies=proxies,
+                resume_download=resume_download,
+                use_auth_token=use_auth_token,
+                local_files_only=local_files_only,
+            )
+        
+        # We update here to directly unpack config
+        model = cls(**model_kwargs['config'])
+
+        state_dict = torch.load(model_file, map_location=map_location)
+        model.load_state_dict(state_dict["GAN"], strict=strict)
+        model.eval()
+
+        return model
+
 # trainer
 
 class Trainer():
@@ -811,6 +891,8 @@ class Trainer():
         log = False,
         mixed_precision = "no",
         wandb = False,
+        push_to_hub = False,
+        organization_name = None,
         *args,
         **kwargs
     ):
@@ -826,8 +908,9 @@ class Trainer():
         self.results_dir = base_dir / results_dir
         self.models_dir = base_dir / models_dir
         self.fid_dir = base_dir / 'fid' / name
-
-        self.config_path = self.models_dir / name / '.config.json'
+        
+        # Note - in original repo config is private - ".config.json", but here, we make it public
+        self.config_path = self.models_dir / name / 'config.json'
 
         assert is_power_of_two(image_size), 'image size must be a power of 2 (64, 128, 256, 512, 1024)'
         assert all(map(is_power_of_two, attn_res_layers)), 'resolution layers of attention must all be powers of 2 (16, 32, 64, 128, 256, 512)'
@@ -888,6 +971,12 @@ class Trainer():
         self.mixed_precision = mixed_precision
         
         self.wandb = wandb
+        
+        self.push_to_hub = push_to_hub
+        self.organization_name = organization_name
+        self.repo_name = get_full_repo_name(self.name, self.organization_name)
+        if self.push_to_hub:
+            self.repo_url = create_repo(self.repo_name, exist_ok=True)
 
     @property
     def image_extension(self):
@@ -996,8 +1085,9 @@ class Trainer():
         dataloader = DataLoader(transformed_dataset["train"], per_device_batch_size, sampler = None, shuffle = False, drop_last = True, pin_memory = True)
         num_samples = len(transformed_dataset)
         ## end of HuggingFace dataset
-
-        self.loader = cycle(dataloader)
+        
+        # Note - in original repo, this is wrapped with cycle, but we will do that after accelerator prepares
+        self.loader = dataloader
 
         # auto set augmentation prob for user if dataset is detected to be low
         # num_samples = len(self.dataset)
@@ -1030,7 +1120,8 @@ class Trainer():
 
         # prepare
         G, D, D_aug, self.GAN.D_opt, self.GAN.G_opt, self.loader = self.accelerator.prepare(G, D, D_aug, self.GAN.D_opt, self.GAN.G_opt, self.loader)
-        
+        self.loader = cycle(self.loader)
+
         return G, D, D_aug
     
     def train(self, G, D, D_aug):
@@ -1181,6 +1272,10 @@ class Trainer():
         if self.accelerator.is_main_process:
             if self.steps % self.save_every == 0:
                 self.save(self.checkpoint_num)
+                
+                if self.push_to_hub:
+                    with tempfile.TemporaryDirectory() as temp_dir:
+                        self.GAN.push_to_hub(temp_dir, self.repo_url, config=self.GAN.config, skip_lfs_files=True)
 
             if self.steps % self.evaluate_every == 0 or (self.steps % 100 == 0 and self.steps < 20000):
                 self.evaluate(floor(self.steps / self.evaluate_every), num_image_tiles = self.num_image_tiles)

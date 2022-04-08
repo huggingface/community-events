@@ -4,3 +4,7 @@ torchvision
 datasets
 scipy
 wandb
+einops
+fire
+retry
+kornia==0.5.4
