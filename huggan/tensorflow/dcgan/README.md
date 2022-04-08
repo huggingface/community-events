@@ -4,7 +4,7 @@ This folder contains a script to train DCGAN for unconditional image generation,
 The script leverages 🤗 [Datasets](https://huggingface.co/docs/datasets/index) for loading and processing data, and TensorFlow for training the model and 🤗 [Hub](https://huggingface.co/) for hosting it.
 
 ## Launching the script
-You can simply run `python train.py --num_channels 1` with the default parameters. It will download the MNIST dataset, preprocess it and train a model on it, will save results after each epoch in a local directory and push the model to the 🤗 Hub.
+You can simply run `python train.py --num_channels 1` with the default parameters. It will download the [MNIST](https://huggingface.co/datasets/mnist) dataset, preprocess it and train a model on it, will save results after each epoch in a local directory and push the model to the 🤗 Hub.
 
 To train on another dataset available on the hub, simply do (for instance):
 
