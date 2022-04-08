@@ -1,6 +1,7 @@
 from pathlib import Path
 from re import TEMPLATE
 from typing import Optional, Union
+import os
 
 from huggingface_hub import PyTorchModelHubMixin, HfApi, HfFolder, Repository
 

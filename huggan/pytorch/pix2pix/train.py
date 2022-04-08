@@ -20,6 +20,7 @@ import numpy as np
 import time
 import datetime
 import sys
+import tempfile
 
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize, RandomVerticalFlip
 from torchvision.utils import save_image
@@ -36,6 +37,9 @@ from accelerate import Accelerator
 
 import torch.nn as nn
 import torch
+
+from huggan.utils.hub import get_full_repo_name
+from huggingface_hub import create_repo
 
 
 def parse_args(args=None):
@@ -104,10 +108,13 @@ def weights_init_normal(m):
 
 def training_function(config, args):
     accelerator = Accelerator(fp16=args.fp16, cpu=args.cpu, mixed_precision=args.mixed_precision)
-    
+
     os.makedirs("images/%s" % args.dataset_name, exist_ok=True)
     os.makedirs("saved_models/%s" % args.dataset_name, exist_ok=True)
-
+    
+    repo_name = get_full_repo_name(args.model_name, args.organization_name)
+    if args.push_to_hub:
+        repo_url = create_repo(repo_name, exist_ok=True)
     # Loss functions
     criterion_GAN = torch.nn.MSELoss()
     criterion_pixelwise = torch.nn.L1Loss()
@@ -282,11 +289,12 @@ def training_function(config, args):
             save_directory = args.pytorch_dump_folder_path
             if not save_directory.exists():
                 save_directory.mkdir(parents=True)
-
-            generator.push_to_hub(
-                repo_path_or_name=save_directory / args.model_name,
-                organization=args.organization_name,
-            )
+            with tempfile.TemporaryDirectory() as temp_dir:
+                generator.push_to_hub(
+                    repo_path_or_name=temp_dir,
+                    repo_url=repo_url,
+                    skip_lfs_files=True
+                )
 
 def main():
     args = parse_args()
