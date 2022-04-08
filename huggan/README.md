@@ -235,7 +235,7 @@ As can be seen, we leverage the [`with_transform`](https://huggingface.co/docs/d
 
 ### 2. Train a model and push to Hub
 
-Next, one can start training a model. This could be any model you'd like. However, we provide some example scripts to help you get started, in [PyTorch](pytorch). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment. 
+Next, one can start training a model. This could be any model you'd like. However, we provide some example scripts to help you get started, in both [PyTorch](pytorch) and [Tensorflow](tensorflow). An example is the [DCGAN](pytorch/dcgan) model for unconditional image generation. Simply follow the README that explains all the details of the relevant implementation, and run it in your environment. 
 
 The PyTorch example scripts all leverage 🤗 [Accelerate](https://huggingface.co/docs/accelerate/index), which provides an easy API to make your scripts run on any kind of distributed setting (multi-GPUs, TPUs etc.) and with mixed precision, while still letting you write your own training loop. 
 
