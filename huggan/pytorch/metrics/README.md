@@ -1,8 +1,8 @@
 # GAN metrics
 
-In order to track progress 📈 in (un)conditional image generation, a few quantitative metrics have been proposed. Below, we explain the most popular ones. For a more extensive overview, we refer the reader to (Borji, 2021)[https://arxiv.org/abs/2103.09396] - which is an up-to-date version of (Borji, 2018)[https://arxiv.org/abs/1802.03446]. The TLDR is that, despite the use of many popular metrics, objective and comprehensive evaluation of generative models is still an open problem 🤷‍♂️.
+In order to track progress 📈 in (un)conditional image generation, a few quantitative metrics have been proposed. Below, we explain the most popular ones. For a more extensive overview, we refer the reader to [Borji, 2021](https://arxiv.org/abs/2103.09396) - which is an up-to-date version of [Borji, 2018](https://arxiv.org/abs/1802.03446). The TLDR is that, despite the use of many popular metrics, objective and comprehensive evaluation of generative models is still an open problem 🤷‍♂️.
 
-Quantitative metrics are of course just a proxy of image quality. The most widely used (Inception Score and FID) have several drawbacks [(Barratt et al., 2018)](https://arxiv.org/abs/1801.01973), [Sajjadi et al., 2018](https://arxiv.org/abs/1806.00035), [Kynkäänniemi et al., 2019](https://arxiv.org/abs/1904.06991).
+Quantitative metrics are of course just a proxy of image quality. The most widely used (Inception Score and FID) have several drawbacks [Barratt et al., 2018](https://arxiv.org/abs/1801.01973), [Sajjadi et al., 2018](https://arxiv.org/abs/1806.00035), [Kynkäänniemi et al., 2019](https://arxiv.org/abs/1904.06991).
 
 ## Inception score
 
@@ -10,7 +10,7 @@ The Inception score was proposed in [Salimans et al., 2016](https://arxiv.org/ab
 
 ## Fréchet Inception Distance (FID)
 
-The FID metric was proposed in [(Heusel et al., 2018)](https://arxiv.org/abs/1706.08500), and is currently the most widely used metric for evaluating image generation. Rather than only evaluating the generated images (as the Inception score), the FID metric compares the generated images to real images.
+The FID metric was proposed in [Heusel et al., 2018](https://arxiv.org/abs/1706.08500), and is currently the most widely used metric for evaluating image generation. Rather than only evaluating the generated images (as the Inception score), the FID metric compares the generated images to real images.
 
 The Fréchet distance meaures the distance between 2 multivariate Gaussian distributions. What does that mean? Concretely, the FID metric uses a pre-trained neural network (the same one as the one of the Inception score, Inceptionv3), and first forwards both real and generated images through it in order to get feature maps. Next, one computes statistics (namely, the mean and standard deviation) of the feature maps for both distributions (generated and real images). Finally, the distance between both distributions is computed based on these statistics.
 
