@@ -283,7 +283,7 @@ def training_function(config, args):
             if not save_directory.exists():
                 save_directory.mkdir(parents=True)
 
-            generator.module.push_to_hub(
+            generator.push_to_hub(
                 repo_path_or_name=save_directory / args.model_name,
                 organization=args.organization_name,
             )
