@@ -101,17 +101,26 @@ class Generator(nn.Module):
     def __init__(self, nc=4, nz=100, ngf=64):
         super(Generator, self).__init__()
         self.network = nn.Sequential(
-            nn.ConvTranspose2d(nz, ngf * 4, 3, 1, 0, bias=False),
+            # input is Z, going into a convolution
+            nn.ConvTranspose2d( nz, ngf * 8, 4, 1, 0, bias=False),
+            nn.BatchNorm2d(ngf * 8),
+            nn.ReLU(True),
+            # state size. (ngf*8) x 4 x 4
+            nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 4),
             nn.ReLU(True),
-            nn.ConvTranspose2d(ngf * 4, ngf * 2, 3, 2, 1, bias=False),
+            # state size. (ngf*4) x 8 x 8
+            nn.ConvTranspose2d( ngf * 4, ngf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 2),
             nn.ReLU(True),
-            nn.ConvTranspose2d(ngf * 2, ngf, 4, 2, 0, bias=False),
+            # state size. (ngf*2) x 16 x 16
+            nn.ConvTranspose2d( ngf * 2, ngf, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf),
             nn.ReLU(True),
-            nn.ConvTranspose2d(ngf, nc, 4, 2, 1, bias=False),
-            nn.Tanh(),
+            # state size. (ngf) x 32 x 32
+            nn.ConvTranspose2d( ngf, nc, 4, 2, 1, bias=False),
+            nn.Tanh()
+            # state size. (nc) x 64 x 64
         )
 
     def forward(self, input):
@@ -123,17 +132,24 @@ class Discriminator(nn.Module):
     def __init__(self, nc, ndf):
         super(Discriminator, self).__init__()
         self.network = nn.Sequential(
+            # input is (nc) x 64 x 64
             spectral_norm(nn.Conv2d(nc, ndf, 4, 2, 1, bias=False)),
             nn.LeakyReLU(0.2, inplace=True),
-
+            # state size. (ndf) x 32 x 32
             spectral_norm(nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False)),
+            # nn.BatchNorm2d(ndf * 2),
             nn.LeakyReLU(0.2, inplace=True),
-
-            spectral_norm(nn.Conv2d(ndf * 2, ndf * 4, 3, 2, 1, bias=False)),
+            # state size. (ndf*2) x 16 x 16
+            spectral_norm(nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False)),
+            # nn.BatchNorm2d(ndf * 4),
             nn.LeakyReLU(0.2, inplace=True),
-
-            spectral_norm(nn.Conv2d(ndf * 4, 1, 3, 1, 0, bias=False)),
-            nn.Sigmoid(),
+            # state size. (ndf*4) x 8 x 8
+            spectral_norm(nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False)),
+            # nn.BatchNorm2d(ndf * 8),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf*8) x 4 x 4
+            spectral_norm(nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False)),
+            nn.Sigmoid()
         )
 
     def forward(self, input):
@@ -164,7 +180,7 @@ def main(args):
 
     dataset = load_dataset("AlekseyKorshuk/dooggies")
 
-    image_size = 24
+    image_size = 64
     transform = Compose(
         [
             Resize(image_size),
@@ -311,7 +327,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--niter", type=int, default=1000, help="number of epochs to train for"
     )
-    parser.add_argument("--save_every", type=int, default=10, help="how often to save")
+    parser.add_argument("--save_every", type=int, default=1, help="how often to save")
     parser.add_argument(
         "--lr", type=float, default=0.0002, help="learning rate, default=0.0002"
     )
