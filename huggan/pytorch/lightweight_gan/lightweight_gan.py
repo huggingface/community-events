@@ -36,9 +36,6 @@ from huggingface_hub import hf_hub_download, create_repo
 from huggan.pytorch.huggan_mixin import HugGANModelHubMixin
 from huggan.utils.hub import get_full_repo_name
 
-# asserts
-
-assert torch.cuda.is_available(), 'You need to have an Nvidia GPU with CUDA installed.'
 
 # constants
 
