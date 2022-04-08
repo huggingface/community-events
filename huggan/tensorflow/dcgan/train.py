@@ -16,8 +16,6 @@ from transformers import DefaultDataCollator
 from huggingface_hub import push_to_hub_keras
 
 
-
-
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="mnist", help="Dataset to load from the HuggingFace hub.")
@@ -174,7 +172,8 @@ def generate_and_save_images(model, epoch, test_input, output_dir, number_of_exa
 
 def train(dataset, epochs, output_dir, args):
   for epoch in range(epochs):
-    for image_batch in dataset:
+    print("Epoch:", epoch)
+    for image_batch in tqdm(dataset):
       train_step(image_batch)
 
     generate_and_save_images(generator,
