@@ -194,7 +194,7 @@ def main(args):
     net_d = Discriminator(args.nc, args.ndf).to(device)
     net_d.apply(weights_init)
 
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.BCELoss()
 
     fixed_noise = torch.randn(args.batch_size, args.nz, 1, 1, device=device)
     real_label = 1
