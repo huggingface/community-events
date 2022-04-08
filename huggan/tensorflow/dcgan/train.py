@@ -2,120 +2,21 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
-import huggingface_hub
 import tensorflow as tf
 from pathlib import Path
 import os
 import PIL
+from tqdm.auto import tqdm
 import argparse
+
 from tensorflow.keras import layers
-from huggingface_hub import push_to_hub_keras
+
 from datasets import load_dataset
 from transformers import DefaultDataCollator
+from huggingface_hub import push_to_hub_keras
 
 
 
-
-def stack_generator_layers(model, units):
-    model.add(layers.Conv2DTranspose(units, (4, 4), strides=2, padding='same', use_bias=False))
-    model.add(layers.BatchNormalization())
-    model.add(layers.LeakyReLU())  
-    return model 
-
-def create_generator(channel, hidden_size, latent_dim):
-    generator = tf.keras.Sequential()
-    generator.add(layers.Input((latent_dim,))) # 
-    generator.add(layers.Dense(hidden_size*4*7*7, use_bias=False, input_shape=(100,)))
-    generator.add(layers.LeakyReLU())
-
-    generator.add(layers.Reshape((7, 7, hidden_size*4)))
-
-    units = [hidden_size*2, hidden_size*1]
-    for unit in units:
-        generator = stack_generator_layers(generator, unit)
-
-    generator.add(layers.Conv2DTranspose(args.num_channels, (4, 4), strides=1, padding='same', use_bias=False, activation='tanh'))
-    return generator
-
-def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=False):
-    model.add(layers.Conv2D(units, (4, 4), strides=(2, 2), padding='same'))
-    if use_batch_norm:
-        model.add(layers.BatchNormalization())
-    if use_dropout:
-        model.add(layers.Dropout(0.1))
-    model.add(layers.LeakyReLU())
-    return model
-
-def create_discriminator(channel, hidden_size, args):
-    discriminator = tf.keras.Sequential()
-    discriminator.add(layers.Input((args.image_size, args.image_size, args.num_channels)))
-    discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True,  use_dropout = True)
-    discriminator = stack_discriminator_layers(discriminator, hidden_size * 2)
-    discriminator = stack_discriminator_layers(discriminator,True, hidden_size*4)
-    discriminator = stack_discriminator_layers(discriminator,True, hidden_size*16)
-
-    discriminator.add(layers.Flatten())
-    discriminator.add(layers.Dense(1))
-
-    return discriminator
-
-
-def discriminator_loss(real_image, generated_image):
-    real_loss = cross_entropy(tf.ones_like(real_image), real_image)
-    fake_loss = cross_entropy(tf.zeros_like(generated_image), generated_image)
-    total_loss = real_loss + fake_loss
-    return total_loss
-
-
-@tf.function
-def train_step(images):
-    noise = tf.random.normal([128, 100])
-
-    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
-      generated_images = generator(noise, training=True)
-
-      real_image = discriminator(images, training=True)
-      generated_image = discriminator(generated_images, training=True)
-      # calculate loss inside train step
-      gen_loss = cross_entropy(tf.ones_like(generated_image), generated_image)
-      disc_loss = discriminator_loss(real_image, generated_image)
-
-    gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
-    gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
-
-    generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
-    discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
-
-
-
-def generate_and_save_images(model, epoch, test_input, output_dir, number_of_examples_to_generate):
-  
-  predictions = model(test_input, training=False)
-
-  fig = plt.figure(figsize=(number_of_examples_to_generate*4, number_of_examples_to_generate*16))
-
-  for i in range(predictions.shape[0]):
-      plt.subplot(1, number_of_examples_to_generate, i+1)
-      if args.num_channels == 1:
-        plt.imshow(predictions[i, :, :, :], cmap='gray')
-      else:
-        plt.imshow(predictions[i, :, :, :])
-          
-      plt.axis('off')
-
-  plt.savefig(f'{output_dir}/image_at_epoch_{epoch}.png')
-
-
-def train(dataset, epochs, output_dir, args):
-  for epoch in range(epochs):
-    for image_batch in dataset:
-      train_step(image_batch)
-
-    generate_and_save_images(generator,
-                             epoch + 1,
-                             seed,
-                             output_dir,
-                             args.number_of_examples_to_generate)
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser()
@@ -179,12 +80,115 @@ def parse_args(args=None):
     return args
 
 
+def stack_generator_layers(model, units):
+    model.add(layers.Conv2DTranspose(units, (4, 4), strides=2, padding='same', use_bias=False))
+    model.add(layers.BatchNormalization())
+    model.add(layers.LeakyReLU())  
+    return model 
+
+
+def create_generator(channel, hidden_size, latent_dim):
+    generator = tf.keras.Sequential()
+    generator.add(layers.Input((latent_dim,))) # 
+    generator.add(layers.Dense(hidden_size*4*7*7, use_bias=False, input_shape=(100,)))
+    generator.add(layers.LeakyReLU())
+
+    generator.add(layers.Reshape((7, 7, hidden_size*4)))
+
+    units = [hidden_size*2, hidden_size*1]
+    for unit in units:
+        generator = stack_generator_layers(generator, unit)
+
+    generator.add(layers.Conv2DTranspose(args.num_channels, (4, 4), strides=1, padding='same', use_bias=False, activation='tanh'))
+    return generator
+
+
+def stack_discriminator_layers(model, units, use_batch_norm=False, use_dropout=False):
+    model.add(layers.Conv2D(units, (4, 4), strides=(2, 2), padding='same'))
+    if use_batch_norm:
+        model.add(layers.BatchNormalization())
+    if use_dropout:
+        model.add(layers.Dropout(0.1))
+    model.add(layers.LeakyReLU())
+    return model
+
+
+def create_discriminator(channel, hidden_size, args):
+    discriminator = tf.keras.Sequential()
+    discriminator.add(layers.Input((args.image_size, args.image_size, args.num_channels)))
+    discriminator = stack_discriminator_layers(discriminator, hidden_size, use_batch_norm = True,  use_dropout = True)
+    discriminator = stack_discriminator_layers(discriminator, hidden_size * 2)
+    discriminator = stack_discriminator_layers(discriminator,True, hidden_size*4)
+    discriminator = stack_discriminator_layers(discriminator,True, hidden_size*16)
+
+    discriminator.add(layers.Flatten())
+    discriminator.add(layers.Dense(1))
+
+    return discriminator
+
+
+def discriminator_loss(real_image, generated_image):
+    real_loss = cross_entropy(tf.ones_like(real_image), real_image)
+    fake_loss = cross_entropy(tf.zeros_like(generated_image), generated_image)
+    total_loss = real_loss + fake_loss
+    return total_loss
+
+
+@tf.function
+def train_step(images):
+    noise = tf.random.normal([128, 100])
+
+    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+      generated_images = generator(noise, training=True)
+
+      real_image = discriminator(images, training=True)
+      generated_image = discriminator(generated_images, training=True)
+      # calculate loss inside train step
+      gen_loss = cross_entropy(tf.ones_like(generated_image), generated_image)
+      disc_loss = discriminator_loss(real_image, generated_image)
+
+    gradients_of_generator = gen_tape.gradient(gen_loss, generator.trainable_variables)
+    gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
+
+    generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
+    discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
+
+
+def generate_and_save_images(model, epoch, test_input, output_dir, number_of_examples_to_generate):
+  
+  predictions = model(test_input, training=False)
+
+  fig = plt.figure(figsize=(number_of_examples_to_generate*4, number_of_examples_to_generate*16))
+
+  for i in range(predictions.shape[0]):
+      plt.subplot(1, number_of_examples_to_generate, i+1)
+      if args.num_channels == 1:
+        plt.imshow(predictions[i, :, :, :], cmap='gray')
+      else:
+        plt.imshow(predictions[i, :, :, :])
+          
+      plt.axis('off')
+
+  plt.savefig(f'{output_dir}/image_at_epoch_{epoch}.png')
+
+
+def train(dataset, epochs, output_dir, args):
+  for epoch in range(epochs):
+    for image_batch in dataset:
+      train_step(image_batch)
+
+    generate_and_save_images(generator,
+                             epoch + 1,
+                             seed,
+                             output_dir,
+                             args.number_of_examples_to_generate)
+
+
 def preprocess(examples):
     images = (np.asarray(examples["image"]).astype('float32')- 127.5) / 127.5
     images = np.expand_dims(images, -1)
     examples["pixel_values"] = images
     return examples
-
 
 
 def preprocess_images(dataset, args):
