@@ -28,7 +28,7 @@ This will create a local "images" directory, containing generated images over th
 To train on another dataset available on the hub, simply do (for instance):
 
 ```bash
-python train.py --dataset cifar-10
+python train.py --dataset cifar10
 ```
 
 In case you'd like to tweak the script to your liking, first fork the "community-events" [repo](https://github.com/huggingface/community-events) (see the button on the top right), then clone it locally:
