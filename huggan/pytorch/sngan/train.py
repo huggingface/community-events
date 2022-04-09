@@ -279,7 +279,6 @@ def main(args):
 
     # Optionally push to hub
     if accelerator.is_main_process and args.push_to_hub:
-        # os.makedirs(f"{args.output_dir}/{args.model_name}", exist_ok=True)
         generator.push_to_hub(
             repo_path_or_name=f"{args.output_dir}/{args.model_name}",
             organization=args.organization_name,
@@ -291,12 +290,6 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", type=str, default="mnist", help="Dataset to load from the HuggingFace hub.")
     parser.add_argument(
         "--num_workers", type=int, help="Number of data loading workers", default=0
-    )
-    parser.add_argument(
-        "--image_size",
-        type=int,
-        default=64,
-        help="Spatial size to use when resizing images for training.",
     )
     parser.add_argument("--batch_size", type=int, default=16, help="Input batch size")
     parser.add_argument("--latent_dim", type=int, default=100, help="Dimensionality of the latent space.")
@@ -362,6 +355,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     args.num_channels = 4
+    args.image_size = 64
     if args.push_to_hub:
         assert args.output_dir is not None, "Need an `output_dir` to create a repo when `--push_to_hub` is passed."
         assert args.model_name is not None, "Need a `model_name` to create a repo when `--push_to_hub` is passed."
