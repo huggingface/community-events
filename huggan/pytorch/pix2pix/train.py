@@ -77,12 +77,6 @@ def parse_args(args=None):
         help="Whether to push the model to the HuggingFace hub after training.",
         )
     parser.add_argument(
-        "--pytorch_dump_folder_path",
-        required="--push_to_hub" in sys.argv,
-        type=Path,
-        help="Path to save the model. Will be created if it doesn't exist already.",
-    )
-    parser.add_argument(
         "--model_name",
         required="--push_to_hub" in sys.argv,
         type=str,
@@ -286,9 +280,6 @@ def training_function(config, args):
 
         # Optionally push to hub
         if args.push_to_hub:
-            save_directory = args.pytorch_dump_folder_path
-            if not save_directory.exists():
-                save_directory.mkdir(parents=True)
             with tempfile.TemporaryDirectory() as temp_dir:
                 generator.push_to_hub(
                     repo_path_or_name=temp_dir,
@@ -299,9 +290,6 @@ def training_function(config, args):
 def main():
     args = parse_args()
     print(args)
-
-    # Make directory for saving generated images
-    os.makedirs("images", exist_ok=True)
 
     training_function({}, args)
 
