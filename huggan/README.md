@@ -201,6 +201,7 @@ Once you've uploaded your dataset, you can load it and create a dataloader for i
 ```python
 from datasets import load_dataset
 from torchvision.transforms import CenterCrop, Compose, Normalize, Resize, ToTensor
+from torch.utils.data import DataLoader
 
 # load your data
 dataset = load_dataset("dataset_name")
