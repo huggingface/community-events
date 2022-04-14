@@ -5,7 +5,7 @@ This folder contains a script to train [pix2pix](https://arxiv.org/abs/1611.0700
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting fp16/mixed precision.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/lucidrains/lightweight-gan/main/images/pix2pix_maps.png" alt="drawing" width="300"/>
+    <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/pix2pix_maps.png" alt="drawing" width="300"/>
 </p>
 
 Pix2pix trained on the [huggan/maps](https://huggingface.co/datasets/huggan/maps) dataset to translate satellite images into maps à la Google Maps.
