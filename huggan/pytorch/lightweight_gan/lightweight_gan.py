@@ -908,7 +908,6 @@ class Trainer():
             models_dir='models',
             base_dir='./',
             optimizer='adam',
-            num_workers=None,
             latent_dim=256,
             image_size=128,
             num_image_tiles=8,
@@ -935,6 +934,7 @@ class Trainer():
             calculate_fid_num_images=12800,
             clear_fid_cache=False,
             log=False,
+            cpu=False,
             mixed_precision="no",
             wandb=False,
             push_to_hub=False,
@@ -980,7 +980,6 @@ class Trainer():
 
         self.lr = lr
         self.optimizer = optimizer
-        self.num_workers = num_workers
         self.ttur_mult = ttur_mult
         self.batch_size = batch_size
         self.gradient_accumulate_every = gradient_accumulate_every
@@ -1014,8 +1013,9 @@ class Trainer():
         self.calculate_fid_num_images = calculate_fid_num_images
         self.clear_fid_cache = clear_fid_cache
 
-        self.syncbatchnorm = torch.cuda.device_count() > 1
+        self.syncbatchnorm = torch.cuda.device_count() > 1 and not cpu
 
+        self.cpu = cpu
         self.mixed_precision = mixed_precision
 
         self.wandb = wandb
@@ -1148,8 +1148,8 @@ class Trainer():
     def init_accelerator(self):
         # Initialize the accelerator. We will let the accelerator handle device placement.
         ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
-        self.accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], mixed_precision=self.mixed_precision)
-
+        self.accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], mixed_precision=self.mixed_precision, cpu=self.cpu)
+        
         if self.accelerator.is_local_main_process:
             # set up Weights and Biases if requested
             if self.wandb:

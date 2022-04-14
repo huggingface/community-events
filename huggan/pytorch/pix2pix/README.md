@@ -4,6 +4,12 @@ This folder contains a script to train [pix2pix](https://arxiv.org/abs/1611.0700
 
 The script leverages 🤗 Datasets for loading and processing data, and 🤗 Accelerate for instantly running on CPU, single, multi-GPUs or TPU, also supporting fp16/mixed precision.
 
+<p align="center">
+    <img src="https://raw.githubusercontent.com/lucidrains/lightweight-gan/main/images/pix2pix_maps.png" alt="drawing" width="300"/>
+</p>
+
+Pix2pix trained on the [huggan/maps](https://huggingface.co/datasets/huggan/maps) dataset to translate satellite images into maps à la Google Maps.
+
 ## Launching the script
 
 To train the model with the default parameters (200 epochs, 256x256 images, etc.) on [huggan/facades](https://huggingface.co/datasets/huggan/facades) on your environment, first run:
@@ -72,10 +78,10 @@ accelerate launch train.py --dataset huggan/my-awesome-dataset
 
 ## Pushing model to the Hub
 
-You can push your trained generator to the hub after training by specifying the `push_to_hub` flag, along with a `model_name` and `pytorch_dump_folder_path`. 
+You can push your trained generator to the hub during training by specifying the `push_to_hub` flag, along with a `model_name`. 
 
 ```bash
-accelerate launch train.py --push_to_hub --model_name pix2pix-facades --pytorch_dump_folder_path output
+accelerate launch train.py --push_to_hub --model_name pix2pix-facades
 ```
 
 This is made possible by making the generator inherit from `PyTorchModelHubMixin` available in the `huggingface_hub` library. 
