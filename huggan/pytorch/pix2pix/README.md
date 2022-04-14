@@ -8,7 +8,7 @@ The script leverages 🤗 Datasets for loading and processing data, and 🤗 Acc
     <img src="https://raw.githubusercontent.com/huggingface/community-events/main/huggan/assets/pix2pix_maps.png" alt="drawing" width="300"/>
 </p>
 
-Pix2pix trained on the [huggan/maps](https://huggingface.co/datasets/huggan/maps) dataset to translate satellite images into maps à la Google Maps.
+Pix2pix trained on the [huggan/maps](https://huggingface.co/datasets/huggan/maps) dataset to translate satellite images into maps à la Google Maps. First row: input, second row: prediction, third row: ground truth.
 
 ## Launching the script
 
