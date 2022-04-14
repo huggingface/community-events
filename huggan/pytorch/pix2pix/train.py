@@ -47,7 +47,6 @@ def parse_args(args=None):
     parser.add_argument("--dataset", type=str, default="huggan/facades", help="Dataset to use")
     parser.add_argument("--epoch", type=int, default=0, help="epoch to start training from")
     parser.add_argument("--n_epochs", type=int, default=200, help="number of epochs of training")
-    parser.add_argument("--dataset_name", type=str, default="facades", help="name of the dataset")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")
     parser.add_argument("--b1", type=float, default=0.5, help="adam: decay of first order momentum of gradient")
@@ -103,12 +102,13 @@ def weights_init_normal(m):
 def training_function(config, args):
     accelerator = Accelerator(fp16=args.fp16, cpu=args.cpu, mixed_precision=args.mixed_precision)
 
-    os.makedirs("images/%s" % args.dataset_name, exist_ok=True)
-    os.makedirs("saved_models/%s" % args.dataset_name, exist_ok=True)
+    os.makedirs("images/%s" % args.dataset, exist_ok=True)
+    os.makedirs("saved_models/%s" % args.dataset, exist_ok=True)
     
     repo_name = get_full_repo_name(args.model_name, args.organization_name)
     if args.push_to_hub:
-        repo_url = create_repo(repo_name, exist_ok=True)
+        if accelerator.is_main_process:
+            repo_url = create_repo(repo_name, exist_ok=True)
     # Loss functions
     criterion_GAN = torch.nn.MSELoss()
     criterion_pixelwise = torch.nn.L1Loss()
@@ -125,8 +125,8 @@ def training_function(config, args):
 
     if args.epoch != 0:
         # Load pretrained models
-        generator.load_state_dict(torch.load("saved_models/%s/generator_%d.pth" % (args.dataset_name, args.epoch)))
-        discriminator.load_state_dict(torch.load("saved_models/%s/discriminator_%d.pth" % (args.dataset_name, args.epoch)))
+        generator.load_state_dict(torch.load("saved_models/%s/generator_%d.pth" % (args.dataset, args.epoch)))
+        discriminator.load_state_dict(torch.load("saved_models/%s/discriminator_%d.pth" % (args.dataset, args.epoch)))
     else:
         # Initialize weights
         generator.apply(weights_init_normal)
@@ -175,14 +175,15 @@ def training_function(config, args):
     dataloader = DataLoader(train_ds, shuffle=True, batch_size=args.batch_size, num_workers=args.n_cpu)
     val_dataloader = DataLoader(val_ds, batch_size=10, shuffle=True, num_workers=1)
 
-    def sample_images(batches_done):
+    def sample_images(batches_done, accelerator):
         """Saves a generated sample from the validation set"""
         batch = next(iter(val_dataloader))
         real_A = batch["A"]
         real_B = batch["B"]
         fake_B = generator(real_A)
         img_sample = torch.cat((real_A.data, fake_B.data, real_B.data), -2)
-        save_image(img_sample, "images/%s/%s.png" % (args.dataset_name, batches_done), nrow=5, normalize=True)
+        if accelerator.is_main_process:
+            save_image(img_sample, "images/%s/%s.png" % (args.dataset, batches_done), nrow=5, normalize=True)
 
     generator, discriminator, optimizer_G, optimizer_D, dataloader, val_dataloader = accelerator.prepare(generator, discriminator, optimizer_G, optimizer_D, dataloader, val_dataloader)
 
@@ -193,6 +194,7 @@ def training_function(config, args):
     prev_time = time.time()
 
     for epoch in range(args.epoch, args.n_epochs):
+        print("Epoch:", epoch)
         for i, batch in enumerate(dataloader):
 
             # Model inputs
@@ -271,21 +273,27 @@ def training_function(config, args):
 
             # If at sample interval save image
             if batches_done % args.sample_interval == 0:
-                sample_images(batches_done)
+                sample_images(batches_done, accelerator)
 
         if args.checkpoint_interval != -1 and epoch % args.checkpoint_interval == 0:
-            # Save model checkpoints
-            torch.save(generator.state_dict(), "saved_models/%s/generator_%d.pth" % (args.dataset_name, epoch))
-            torch.save(discriminator.state_dict(), "saved_models/%s/discriminator_%d.pth" % (args.dataset_name, epoch))
+            if accelerator.is_main_process:
+                unwrapped_generator = accelerator.unwrap_model(generator)
+                unwrapped_discriminator = accelerator.unwrap_model(discriminator)
+                # Save model checkpoints
+                torch.save(unwrapped_generator.state_dict(), "saved_models/%s/generator_%d.pth" % (args.dataset, epoch))
+                torch.save(unwrapped_discriminator.state_dict(), "saved_models/%s/discriminator_%d.pth" % (args.dataset, epoch))
 
         # Optionally push to hub
         if args.push_to_hub:
-            with tempfile.TemporaryDirectory() as temp_dir:
-                generator.push_to_hub(
-                    repo_path_or_name=temp_dir,
-                    repo_url=repo_url,
-                    skip_lfs_files=True
-                )
+            if accelerator.is_main_process:
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    unwrapped_generator = accelerator.unwrap_model(generator)
+                    unwrapped_generator.push_to_hub(
+                        repo_path_or_name=temp_dir,
+                        repo_url=repo_url,
+                        commit_message=f"Training in progress, epoch {epoch}",
+                        skip_lfs_files=True
+                    )
 
 def main():
     args = parse_args()
