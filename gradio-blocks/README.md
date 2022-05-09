@@ -27,6 +27,31 @@ main components of the event consist of:
 - Understanding the Hugging Face ecosystem
 - Share Demos in a Hugging Face organization for the Blocks event
 
+What is Gradio?
+
+Gradio is a Python library that allows you to quickly build web-based machine learning demos, data science dashboards, or other kinds of web apps, entirely in Python. These web apps can be launched from wherever you use Python (jupyter notebooks, colab notebooks, Python terminal, etc.) and shared with anyone instantly using Gradio's auto-generated share links. To learn more about Gradio see the Get Started Guide: https://gradio.app/getting_started/
+
+Gradio can be installed via pip
+
+```pip install gradio```
+
+
+What is Blocks?
+
+gradio.Blocks is a low-level API that allows you to have full control over the data flows and layout of your application. You can build very complex, multi-step applications using Blocks. If you have already used gradio.Interface, you know that you can easily create fully-fledged machine learning demos with just a few lines of code. The Interface API is very convenient but in some cases may not be sufficiently flexible for your needs. For example, you might want to:
+
+Group together related demos as multiple tabs in one web app
+Change the layout of your demo instead of just having all of the inputs on the left and outputs on the right
+Have multi-step interfaces, in which the output of one model becomes the input to the next model, or have more flexible data flows in general
+Change a component's properties (for example, the choices in a Dropdown) or its visibilty based on user input
+
+to learn more about Blocks see the guide
+
+
+How Does Gradio and Hugging Face work together?
+
+Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ spaces currently on Hugging Face. Learn more about spaces here.
+
 **Event Plan**
 
 To participate in the event
