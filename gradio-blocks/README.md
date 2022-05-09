@@ -62,8 +62,15 @@ To participate in the event
 
 Participants will have a month to build and share Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given 
 
-potential ideas: 
+potential ideas for creating spaces:
 
-- papers from [https://paperswithcode.com/](https://paperswithcode.com/)
-- Vision, NLP, Audio based spaces
+
+- papers from https://paperswithcode.com/
+- themed spaces: Vision, NLP, Audio based spaces
+- Models from huggingface model hub
+- Models from other model hubs
+    - Tensorflow Hub
+    - Pytorch Hub
+    - ONNX model Hub
+    - PaddlePaddle Model Hub
 - participant ideas
