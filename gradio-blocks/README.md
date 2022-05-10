@@ -70,3 +70,17 @@ potential ideas for creating spaces:
     - ONNX model Hub
     - PaddlePaddle Model Hub
 - participant ideas
+
+
+**Creating a Gradio demo on Hugging Face Spaces**
+
+Once a model has been picked from the choices above, you can share a model in a Space using Gradio
+
+
+ Read more about how to add Gradio spaces [here](https://huggingface.co/blog/gradio-spaces).
+ 
+ 
+Steps to add Gradio Spaces to the Gradio Blocks Party org
+- Create a account on Hugging Face
+- Join the Gradio Blocks Party Org
+- Once approved add your space using the Gradio SDK
