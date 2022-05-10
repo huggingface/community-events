@@ -72,7 +72,7 @@ potential ideas for creating spaces:
 - participant ideas
 
 
-Prizes
+**Prizes**
 
 - HF PRO 1 month or 1 year!
 - 1st place 12 months, 2nd 6m, 3rd 3m, 4th 1m HF PRO.
