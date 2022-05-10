@@ -72,6 +72,19 @@ potential ideas for creating spaces:
 - participant ideas
 
 
+Prizes
+
+- HF PRO 1 month or 1 year!
+- 1st place 12 months, 2nd 6m, 3rd 3m, 4th 1m HF PRO.
+- Legendary prize, Lifetime HF PRO!!!
+- HF PRO badge on HF
+- Gradio badge on HF
+- Special event badge on HF
+- A lot more swag: t-shirts, hoodies, mugs, cluth
+- Embed the demo or highlight it
+- Time with someone on the Gradio team (unique ?)
+
+
 **Creating a Gradio demo on Hugging Face Spaces**
 
 Once a model has been picked from the choices above, you can share a model in a Space using Gradio
