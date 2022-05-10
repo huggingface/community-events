@@ -7,21 +7,6 @@ _**Timeline**: May 11th, 2022 - May 31st, 2022_
 
 Happy to invite you to the Gradio Blocks Party - a community event in which we will setup spaces for models using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 11th to 31st. We will be organizing this event on github and the huggingface discord channel.
 
-**Introduction**
-
-The goal of this event if for people to become more familiar with the blocks feature of Gradio. Some example spaces that already use blocks can be found at 
-
-- [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
-- [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
-- [https://huggingface.co/spaces/osanseviero/tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts)
-- [https://huggingface.co/spaces/akhaliq/CaptchaCracker](https://huggingface.co/spaces/akhaliq/CaptchaCracker)
-
-main components of the event consist of:
-
-- Learning about Gradio and the new Blocks Feature
-- How Gradio and Hugging Face Spaces work together
-- Understanding the Hugging Face ecosystem
-- Share Demos in a Hugging Face organization for the Blocks event
 
 **What is Gradio?**
 
@@ -50,6 +35,13 @@ Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with
 
 **Event Plan**
 
+main components of the event consist of:
+
+- Learning about Gradio and the new Blocks Feature
+- How Gradio and Hugging Face Spaces work together
+- Understanding the Hugging Face ecosystem
+- Share Demos in a Hugging Face organization for the Blocks event
+
 To participate in the event
 
 - Join the organization for Blocks event
@@ -72,8 +64,14 @@ potential ideas for creating spaces:
     - PaddlePaddle Model Hub: see example Gradio demos at https://huggingface.co/PaddlePaddle
 - participant ideas
 
+**Example spaces using Blocks**
+- [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
+- [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
+- [https://huggingface.co/spaces/osanseviero/tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts)
+- [https://huggingface.co/spaces/akhaliq/CaptchaCracker](https://huggingface.co/spaces/akhaliq/CaptchaCracker)
 
-**Prizes**
+
+**Prizes (tentative list)**
 
 - HF PRO 1 month or 1 year!
 - 1st place 12 months, 2nd 6m, 3rd 3m, 4th 1m HF PRO.
@@ -81,7 +79,7 @@ potential ideas for creating spaces:
 - HF PRO badge on HF
 - Gradio badge on HF
 - Special event badge on HF
-- A lot more swag: t-shirts, hoodies, mugs, cluth
+- A lot more swag: t-shirts, hoodies, mugs
 - Embed the demo or highlight it
 - Time with someone on the Gradio team (unique ?)
 
