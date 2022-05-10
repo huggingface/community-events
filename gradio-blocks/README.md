@@ -26,7 +26,7 @@ Change the layout of your demo instead of just having all of the inputs on the l
 Have multi-step interfaces, in which the output of one model becomes the input to the next model, or have more flexible data flows in general
 Change a component's properties (for example, the choices in a Dropdown) or its visibilty based on user input
 
-to learn more about Blocks see the guide
+to learn more about Blocks see the guide https://www.gradio.app/introduction_to_blocks/
 
 
 **How Does Gradio and Hugging Face work together?**
@@ -42,6 +42,14 @@ main components of the event consist of:
 - Understanding the Hugging Face ecosystem
 - Share Demos in a Hugging Face organization for the Blocks event
 
+
+**Example spaces using Blocks**
+- [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
+- [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
+- [https://huggingface.co/spaces/osanseviero/tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts)
+- [https://huggingface.co/spaces/akhaliq/CaptchaCracker](https://huggingface.co/spaces/akhaliq/CaptchaCracker)
+
+
 To participate in the event
 
 - Join the organization for Blocks event
@@ -49,7 +57,9 @@ To participate in the event
 - Join the discord
     - [discord](https://discord.com/invite/feTf9x3ZSB)
 
+
 Participants will have a month to build and share Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given 
+
 
 potential ideas for creating spaces:
 
@@ -63,12 +73,6 @@ potential ideas for creating spaces:
     - ONNX model Hub: see example Gradio demos at https://huggingface.co/onnx
     - PaddlePaddle Model Hub: see example Gradio demos at https://huggingface.co/PaddlePaddle
 - participant ideas
-
-**Example spaces using Blocks**
-- [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
-- [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
-- [https://huggingface.co/spaces/osanseviero/tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts)
-- [https://huggingface.co/spaces/akhaliq/CaptchaCracker](https://huggingface.co/spaces/akhaliq/CaptchaCracker)
 
 
 **Prizes (tentative list)**
@@ -88,11 +92,9 @@ potential ideas for creating spaces:
 
 Once a model has been picked from the choices above, you can share a model in a Space using Gradio
 
-
- Read more about how to add Gradio spaces [here](https://huggingface.co/blog/gradio-spaces).
- 
+Read more about how to add Gradio spaces [here](https://huggingface.co/blog/gradio-spaces).
  
 Steps to add Gradio Spaces to the Gradio Blocks Party org
 - Create a account on Hugging Face
-- Join the Gradio Blocks Party Org
+- Join the Gradio Blocks Party Organization by clicking Join Organization Button in the Org Page
 - Once approved add your space using the Gradio SDK
