@@ -65,10 +65,10 @@ potential ideas for creating spaces:
 - themed spaces: Vision, NLP, Audio based spaces
 - Models from huggingface model hub
 - Models from other model hubs
-    - Tensorflow Hub
-    - Pytorch Hub
-    - ONNX model Hub
-    - PaddlePaddle Model Hub
+    - Tensorflow Hub: see example Gradio demos at https://huggingface.co/tensorflow
+    - Pytorch Hub: see example Gradio demos at https://huggingface.co/pytorch
+    - ONNX model Hub: see example Gradio demos at https://huggingface.co/onnx
+    - PaddlePaddle Model Hub: see example Gradio demos at https://huggingface.co/PaddlePaddle
 - participant ideas
 
 
