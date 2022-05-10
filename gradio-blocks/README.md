@@ -46,7 +46,7 @@ to learn more about Blocks see the guide
 
 **How Does Gradio and Hugging Face work together?**
 
-Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ spaces currently on Hugging Face. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
+Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
 
 **Event Plan**
 
@@ -55,6 +55,7 @@ To participate in the event
 - Join the organization for Blocks event
     - [https://huggingface.co/Gradio-Blocks](https://huggingface.co/Gradio-Blocks)
 - Join the discord
+    - [discord](https://discord.com/invite/feTf9x3ZSB)
 
 Participants will have a month to build and share Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given 
 
