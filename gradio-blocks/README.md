@@ -5,7 +5,7 @@ _**Timeline**: May 11th, 2022 - May 31st, 2022_
 
 ---
 
-Happy to invite you to the Gradio Blocks Party - a community event in which we will setup spaces for models using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 11th to 31st. We will be organizing this event on github and the huggingface discord channel.
+Happy to invite you to the Gradio Blocks Party - a community event in which we will build cool machine learning demos using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 11th to 31st. We will be organizing this event on github and the huggingface discord channel.
 
 
 **What is Gradio?**
