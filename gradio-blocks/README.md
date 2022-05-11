@@ -80,7 +80,7 @@ potential ideas for creating spaces:
 - [Hugging Face PRO subscription](https://huggingface.co/pricing) 1 month or 1 year!
 - 1st place 12 months, 2nd 6m, 3rd 3m, 4th 1m HF PRO.
 - Legendary prize, Lifetime HF PRO!!!
-- HF PRO badge on HF
+- [Hugging Face PRO subscription](https://huggingface.co/pricing) badge on Hugging Face
 - Gradio badge on HF
 - Special event badge on HF
 - A lot more swag: t-shirts, hoodies, mugs
