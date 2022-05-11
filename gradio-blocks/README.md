@@ -79,17 +79,22 @@ potential ideas for creating spaces:
 - participant ideas, try out your own ideas
 
 
-**Prizes (tentative list)**
+**Prizes**
 
-- [Hugging Face PRO subscription](https://huggingface.co/pricing) 1 month or 1 year!
-- 1st place 12 months, 2nd 6m, 3rd 3m, 4th 1m HF PRO.
-- Legendary prize: Lifetime [Hugging Face PRO subscription](https://huggingface.co/pricing)! 🤯
-- [Hugging Face PRO subscription](https://huggingface.co/pricing) badge on Hugging Face
-- Gradio badge on HF
-- Special event badge on HF
-- Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice!
-- Embed the demo or highlight it
-- Gradio Team Office Hour
+- [Hugging Face PRO subscription](https://huggingface.co/pricing) 1 month for top 25 winners and 1 year for 1st place winner!
+- [Hugging Face PRO subscription](https://huggingface.co/pricing) badge on Hugging Face for winners
+- Gradio badge for everyone participating!
+- Blocks event badge on HF for all participants!
+- Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice for top 10 winners!
+- Embedding your Gradio Blocks demo in the Gradio Blog for 1st place winner
+- Gradio Team Office Hour for 1st place winner
+
+**Prizes Criteria**
+
+- Staff Picks
+- Most liked Spaces
+- Community Pick (voting)
+- Most Creative Space (voting)
 
 
 **Creating a Gradio demo on Hugging Face Spaces**
