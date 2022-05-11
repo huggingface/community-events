@@ -59,7 +59,7 @@ To participate in the event
     - [discord](https://discord.com/invite/feTf9x3ZSB)
 
 
-Participants will have a month to build and share Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given 
+Participants will be building and sharing Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given. 
 
 
 potential ideas for creating spaces:
@@ -73,7 +73,7 @@ potential ideas for creating spaces:
     - Pytorch Hub: see example Gradio demos at https://huggingface.co/pytorch
     - ONNX model Hub: see example Gradio demos at https://huggingface.co/onnx
     - PaddlePaddle Model Hub: see example Gradio demos at https://huggingface.co/PaddlePaddle
-- participant ideas
+- participant ideas, try out your own ideas
 
 
 **Prizes (tentative list)**
@@ -91,7 +91,7 @@ potential ideas for creating spaces:
 
 **Creating a Gradio demo on Hugging Face Spaces**
 
-Once a model has been picked from the choices above, you can share a model in a Space using Gradio
+Once a model has been picked from the choices above or feel free to try your own idea, you can share a model in a Space using Gradio
 
 Read more about how to add Gradio spaces [here](https://huggingface.co/blog/gradio-spaces).
  
