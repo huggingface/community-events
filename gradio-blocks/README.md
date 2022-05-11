@@ -77,7 +77,7 @@ potential ideas for creating spaces:
 
 **Prizes (tentative list)**
 
-- HF PRO 1 month or 1 year!
+- [Hugging Face PRO subscription](https://huggingface.co/pricing) 1 month or 1 year!
 - 1st place 12 months, 2nd 6m, 3rd 3m, 4th 1m HF PRO.
 - Legendary prize, Lifetime HF PRO!!!
 - HF PRO badge on HF
