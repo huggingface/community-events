@@ -26,7 +26,7 @@ Gradio can be installed via pip
 * Have multi-step interfaces, in which the output of one model becomes the input to the next model, or have more flexible data flows in general.
 * Change a component's properties (for example, the choices in a Dropdown) or its visibility based on user input.
 
-to learn more about Blocks see the guide https://www.gradio.app/introduction_to_blocks/
+To learn more about Blocks, see the [official guide](https://www.gradio.app/introduction_to_blocks/).
 
 
 **How Do Gradio and Hugging Face work together?**
