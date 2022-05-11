@@ -110,5 +110,5 @@ Read more about how to add Gradio spaces [here](https://huggingface.co/blog/grad
  
 Steps to add Gradio Spaces to the Gradio Blocks Party org
 1. Create an account on Hugging Face
-2. Join the Gradio Blocks Party Organization by clicking "Join Organization" button in the organization page
+2. Join the [Gradio Blocks Party Organization](https://huggingface.co/Gradio-Blocks) by clicking "Join Organization" button in the organization page
 3. Once your request is approved, add your space using the Gradio SDK
