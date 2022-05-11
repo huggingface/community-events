@@ -86,7 +86,7 @@ potential ideas for creating spaces:
 - Special event badge on HF
 - Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice!
 - Embed the demo or highlight it
-- Time with someone on the Gradio team (unique ?)
+- Gradio Team Office Hour
 
 
 **Creating a Gradio demo on Hugging Face Spaces**
