@@ -53,7 +53,9 @@ In this event, you will:
 
 
 ## Example spaces using Blocks
+
 <img width="1302" alt="Screen Shot 2022-05-11 at 3 03 29 PM" src="https://user-images.githubusercontent.com/81195143/167926383-0faf0561-ce3f-4415-a36e-9516b814157e.png">
+
 - [https://huggingface.co/spaces/multimodalart/mindseye-lite](https://huggingface.co/spaces/multimodalart/mindseye-lite)
 - [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
 - [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
