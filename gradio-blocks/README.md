@@ -21,7 +21,7 @@ Gradio can be installed via pip
 
 **What is Blocks?**
 
-`gradio.Blocks` is a low-level API that allows you to have full control over the data flows and layout of your application. You can build very complex, multi-step applications using Blocks. If you have already used gradio.Interface, you know that you can easily create fully-fledged machine learning demos with just a few lines of code. The Interface API is very convenient but in some cases may not be sufficiently flexible for your needs. For example, you might want to:
+`gradio.Blocks` is a low-level API that allows you to have full control over the data flows and layout of your application. You can build very complex, multi-step applications using Blocks. If you have already used `gradio.Interface`, you know that you can easily create fully-fledged machine learning demos with just a few lines of code. The Interface API is very convenient but in some cases may not be sufficiently flexible for your needs. For example, you might want to:
 
 * Group together related demos as multiple tabs in one web app.
 * Change the layout of your demo instead of just having all of the inputs on the left and outputs on the right.
