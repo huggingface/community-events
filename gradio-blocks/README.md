@@ -30,11 +30,12 @@ To learn more about Blocks, see the [official guide](https://www.gradio.app/intr
 
 **What is Hugging Face Spaces?**
 
-Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
+Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
 
 **How Do Gradio and Hugging Face work together?**
 
 Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. 
+
 
 **Event Plan**
 
@@ -48,6 +49,7 @@ In this event, you will:
 
 
 **Example spaces using Blocks**
+<img width="1302" alt="Screen Shot 2022-05-11 at 3 03 29 PM" src="https://user-images.githubusercontent.com/81195143/167926383-0faf0561-ce3f-4415-a36e-9516b814157e.png">
 - [https://huggingface.co/spaces/multimodalart/mindseye-lite](https://huggingface.co/spaces/multimodalart/mindseye-lite)
 - [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
 - [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
