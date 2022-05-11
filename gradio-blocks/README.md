@@ -48,6 +48,7 @@ In this event, you will:
 
 
 **Example spaces using Blocks**
+- [https://huggingface.co/spaces/multimodalart/mindseye-lite](https://huggingface.co/spaces/multimodalart/mindseye-lite)
 - [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
 - [https://huggingface.co/spaces/merve/gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)
 - [https://huggingface.co/spaces/osanseviero/tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts)
