@@ -83,7 +83,7 @@ potential ideas for creating spaces:
 - [Hugging Face PRO subscription](https://huggingface.co/pricing) badge on Hugging Face
 - Gradio badge on HF
 - Special event badge on HF
-- A lot more swag: t-shirts, hoodies, mugs
+- Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice!
 - Embed the demo or highlight it
 - Time with someone on the Gradio team (unique ?)
 
