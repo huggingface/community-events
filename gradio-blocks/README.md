@@ -1,5 +1,7 @@
 # Gradio Blocks Party  🥳
 
+![Untitled Design (1)](https://user-images.githubusercontent.com/81195143/167931943-f31e3361-55e5-4092-b0ad-5f6e85258b21.png)
+
 
 _**Timeline**: May 16th, 2022 - May 31st, 2022_
 
