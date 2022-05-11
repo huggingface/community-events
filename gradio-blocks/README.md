@@ -1,7 +1,7 @@
 # Gradio Blocks Party  🥳
 
 
-_**Timeline**: May 11th, 2022 - May 31st, 2022_
+_**Timeline**: May 16th, 2022 - May 31st, 2022_
 
 ---
 
