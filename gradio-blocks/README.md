@@ -35,7 +35,7 @@ Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with
 
 **Event Plan**
 
-main components of the event consist of:
+In this event, you will:
 
 - Learning about Gradio and the new Blocks Feature
 - How Gradio and Hugging Face Spaces work together
