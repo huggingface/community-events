@@ -7,10 +7,10 @@ _**Timeline**: May 16th, 2022 - May 31st, 2022_
 
 ---
 
-Happy to invite you to the Gradio Blocks Party - a community event in which we will build cool machine learning demos using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 16th to 31st. We will be organizing this event on github and the huggingface discord channel.
+Happy to invite you to the Gradio Blocks Party - a community event in which we will build cool machine learning demos using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 16th to 31st. We will be organizing this event on github and the huggingface discord channel. Prizes will be given at the end of the event, see: [Prizes](#prizes)
 
 
-**What is Gradio?**
+## What is Gradio?
 
 Gradio is a Python library that allows you to quickly build web-based machine learning demos, data science dashboards, or other kinds of web apps, entirely in Python. These web apps can be launched from wherever you use Python (jupyter notebooks, colab notebooks, Python terminal, etc.) and shared with anyone instantly using Gradio's auto-generated share links. To learn more about Gradio see the Get Started Guide: https://gradio.app/getting_started/
 
@@ -19,7 +19,7 @@ Gradio can be installed via pip
 ```pip install gradio```
 
 
-**What is Blocks?**
+## What is Blocks?
 
 `gradio.Blocks` is a low-level API that allows you to have full control over the data flows and layout of your application. You can build very complex, multi-step applications using Blocks. If you have already used `gradio.Interface`, you know that you can easily create fully-fledged machine learning demos with just a few lines of code. The Interface API is very convenient but in some cases may not be sufficiently flexible for your needs. For example, you might want to:
 
@@ -30,16 +30,16 @@ Gradio can be installed via pip
 
 To learn more about Blocks, see the [official guide](https://www.gradio.app/introduction_to_blocks/).
 
-**What is Hugging Face Spaces?**
+## What is Hugging Face Spaces?
 
 Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
 
-**How Do Gradio and Hugging Face work together?**
+##How Do Gradio and Hugging Face work together?
 
 Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. 
 
 
-**Event Plan**
+## Event Plan
 
 In this event, you will:
 
@@ -50,7 +50,7 @@ In this event, you will:
 5. Win Prizes
 
 
-**Example spaces using Blocks**
+## Example spaces using Blocks
 <img width="1302" alt="Screen Shot 2022-05-11 at 3 03 29 PM" src="https://user-images.githubusercontent.com/81195143/167926383-0faf0561-ce3f-4415-a36e-9516b814157e.png">
 - [https://huggingface.co/spaces/multimodalart/mindseye-lite](https://huggingface.co/spaces/multimodalart/mindseye-lite)
 - [https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)
@@ -84,7 +84,7 @@ potential ideas for creating spaces:
 - participant ideas, try out your own ideas
 
 
-**Prizes**
+## Prizes
 
 - [Hugging Face PRO subscription](https://huggingface.co/pricing) 1 month for top 25 winners and 1 year for 1st place winner!
 - [Hugging Face PRO subscription](https://huggingface.co/pricing) badge on Hugging Face for winners
@@ -94,7 +94,7 @@ potential ideas for creating spaces:
 - Embedding your Gradio Blocks demo in the Gradio Blog for 1st place winner
 - Gradio Team Office Hour for 1st place winner
 
-**Prizes Criteria**
+## Prizes Criteria
 
 - Staff Picks
 - Most liked Spaces
@@ -102,7 +102,7 @@ potential ideas for creating spaces:
 - Most Creative Space (voting)
 
 
-**Creating a Gradio demo on Hugging Face Spaces**
+## Creating a Gradio demo on Hugging Face Spaces
 
 Once a model has been picked from the choices above or feel free to try your own idea, you can share a model in a Space using Gradio
 
