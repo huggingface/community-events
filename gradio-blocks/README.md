@@ -32,16 +32,11 @@ pip install gradio
 * Have multi-step interfaces, in which the output of one model becomes the input to the next model, or have more flexible data flows in general.
 * Change a component's properties (for example, the choices in a Dropdown) or its visibility based on user input.
 
-To learn more about Blocks, see the [official guide](https://www.gradio.app/introduction_to_blocks/).
+To learn more about Blocks, see 
 
-## What is Hugging Face Spaces?
-
-Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
-
-## How Do Gradio and Hugging Face work together?
-
-Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. 
-
+- [Official guide](https://www.gradio.app/introduction_to_blocks/)
+- [Blocks Chapter](https://huggingface.co/course/chapter9/1) from Hugging Face Course
+- [Blocks example demos](https://github.com/gradio-app/gradio/tree/main/demo)
 
 ## Event Plan
 
@@ -52,6 +47,28 @@ In this event, you will:
 3. Submitting your demo on Spaces to the Gradio Blocks Party Organization
 4. Share your blocks demo with a permanent shareable link 
 5. Win Prizes
+
+Participants will be building and sharing Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given. 
+
+
+### To participate in the event
+
+- Join the organization for Blocks event
+    - [https://huggingface.co/Gradio-Blocks](https://huggingface.co/Gradio-Blocks)
+- Join the discord
+    - [discord](https://discord.com/invite/feTf9x3ZSB)
+
+
+
+## What is Hugging Face Spaces?
+
+Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
+
+## How Do Gradio and Hugging Face work together?
+
+Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. 
+
+
 
 
 ## Example spaces using Blocks
@@ -65,18 +82,9 @@ In this event, you will:
 - [https://huggingface.co/spaces/akhaliq/CaptchaCracker](https://huggingface.co/spaces/akhaliq/CaptchaCracker)
 
 
-To participate in the event
-
-- Join the organization for Blocks event
-    - [https://huggingface.co/Gradio-Blocks](https://huggingface.co/Gradio-Blocks)
-- Join the discord
-    - [discord](https://discord.com/invite/feTf9x3ZSB)
 
 
-Participants will be building and sharing Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given. 
-
-
-potential ideas for creating spaces:
+## Potential ideas for creating spaces:
 
 
 - papers from https://paperswithcode.com/
