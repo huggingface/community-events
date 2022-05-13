@@ -18,7 +18,9 @@ Gradio is a Python library that allows you to quickly build web-based machine le
 
 Gradio can be installed via pip
 
-```pip install gradio```
+```
+pip install gradio
+```
 
 
 ## What is Blocks?
