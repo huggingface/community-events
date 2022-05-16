@@ -69,7 +69,7 @@ In this event, you will:
 - app code: https://huggingface.co/spaces/akhaliq/CaptchaCracker/blob/main/app.py
 
 
-To participate in the event
+## To participate in the event
 
 - Join the organization for Blocks event
     - [https://huggingface.co/Gradio-Blocks](https://huggingface.co/Gradio-Blocks)
@@ -80,7 +80,7 @@ To participate in the event
 Participants will be building and sharing Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given. 
 
 
-potential ideas for creating spaces:
+## Potential ideas for creating spaces:
 
 
 - papers from https://paperswithcode.com/
@@ -109,6 +109,7 @@ potential ideas for creating spaces:
 - Most liked Spaces
 - Community Pick (voting)
 - Most Creative Space (voting)
+- Most Educational Space (voting)
 
 
 ## Creating a Gradio demo on Hugging Face Spaces
