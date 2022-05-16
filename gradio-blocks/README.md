@@ -87,13 +87,16 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
 
 
 ## Prizes
-
-- [Hugging Face PRO subscription](https://huggingface.co/pricing) 1 month for top 25 winners and 1 year for 1st place winner! (likes)
+- 1st place winner based on likes
+    - [Hugging Face PRO subscription](https://huggingface.co/pricing) for 1 year
+    - Embedding your Gradio Blocks demo in the Gradio Blog
+    - Gradio Team Office Hour
+- top 10 winners based on likes
+    - Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice
+- top 25 winners based on likes
+    - [Hugging Face PRO subscription](https://huggingface.co/pricing) for 1 month
 - Gradio badge for everyone participating!
 - Blocks event badge on HF for all participants!
-- Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice for top 10 winners! (likes)
-- Embedding your Gradio Blocks demo in the Gradio Blog for 1st place winner (likes)
-- Gradio Team Office Hour for 1st place winner (likes)
 
 ## Prizes Criteria
 
