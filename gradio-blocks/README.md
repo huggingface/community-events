@@ -15,7 +15,7 @@ Happy to invite you to the Gradio Blocks Party - a community event in which we w
 
 Gradio is a Python library that allows you to quickly build web-based machine learning demos, data science dashboards, or other kinds of web apps, entirely in Python. These web apps can be launched from wherever you use Python (jupyter notebooks, colab notebooks, Python terminal, etc.) and shared with anyone instantly using Gradio's auto-generated share links. To learn more about Gradio see the Getting Started Guide: https://gradio.app/getting_started/ and the new Course on Huggingface about Gradio: [Gradio Course](https://huggingface.co/course/chapter9/1?fw=pt).
 
-Gradio can be installed via pip and comes preinstalled in Hugging Face Spaces, the latest version of Gradio can be set in the README in spaces by setting the sdk_version for example `sdk_version: 3.0b1`
+Gradio can be installed via pip and comes preinstalled in Hugging Face Spaces, the latest version of Gradio can be set in the README in spaces by setting the sdk_version for example `sdk_version: 3.0b8`
 
 `pip install gradio` to install gradio locally
 
@@ -29,15 +29,15 @@ Gradio can be installed via pip and comes preinstalled in Hugging Face Spaces, t
 * Have multi-step interfaces, in which the output of one model becomes the input to the next model, or have more flexible data flows in general.
 * Change a component's properties (for example, the choices in a Dropdown) or its visibility based on user input.
 
-To learn more about Blocks, see the [official guide](https://www.gradio.app/introduction_to_blocks/).
+To learn more about Blocks, see the [official guide](https://www.gradio.app/introduction_to_blocks/) and the [docs](https://gradio.app/docs/).
 
 ## What is Hugging Face Spaces?
 
-Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
+Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about Spaces in the [docs](https://huggingface.co/docs/hub/spaces).
 
 ## How Do Gradio and Hugging Face work together?
 
-Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. Learn more about spaces here: https://huggingface.co/docs/hub/spaces
+Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. Learn more about spaces and gradio: https://huggingface.co/docs/hub/spaces
 
 ## Event Plan
 
