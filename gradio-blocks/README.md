@@ -14,11 +14,11 @@ Happy to invite you to the Gradio Blocks Party - a community event in which we w
 
 ## What is Gradio?
 
-Gradio is a Python library that allows you to quickly build web-based machine learning demos, data science dashboards, or other kinds of web apps, entirely in Python. These web apps can be launched from wherever you use Python (jupyter notebooks, colab notebooks, Python terminal, etc.) and shared with anyone instantly using Gradio's auto-generated share links. To learn more about Gradio see the Get Started Guide: https://gradio.app/getting_started/
+Gradio is a Python library that allows you to quickly build web-based machine learning demos, data science dashboards, or other kinds of web apps, entirely in Python. These web apps can be launched from wherever you use Python (jupyter notebooks, colab notebooks, Python terminal, etc.) and shared with anyone instantly using Gradio's auto-generated share links. To learn more about Gradio see the Getting Started Guide: https://gradio.app/getting_started/ and the new Course on Huggingface about Gradio: [Gradio Course](https://huggingface.co/course/chapter9/1?fw=pt).
 
-Gradio can be installed via pip
+Gradio can be installed via pip and comes preinstalled in Hugging Face Spaces, the latest version of Gradio can be set in the README in spaces by setting the sdk_version for example `sdk_version: 3.0b1`
 
-```pip install gradio```
+`pip install gradio` to install gradio locally
 
 
 ## What is Blocks?
