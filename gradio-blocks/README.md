@@ -35,14 +35,13 @@ To learn more about Blocks, see the [official guide](https://www.gradio.app/intr
 
 Spaces are a simple way to host ML demo apps directly on your profile or your organization’s profile on Hugging Face. This allows you to create your ML portfolio, showcase your projects at conferences or to stakeholders, and work collaboratively with other people in the ML ecosystem. Learn more about spaces [here](https://huggingface.co/docs/hub/spaces).
 
-##How Do Gradio and Hugging Face work together?
+## How Do Gradio and Hugging Face work together?
 
-Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. 
-
+Hugging Face Spaces is a free hosting option for Gradio demos. Spaces comes with 3 SDK options: Gradio, Streamlit and Static HTML demos. Spaces can be public or private and the workflow is similar to github repos. There are over 2000+ Gradio spaces currently on Hugging Face. Learn more about spaces here: https://huggingface.co/docs/hub/spaces
 
 ## Event Plan
 
-In this event, you will:
+main components of the event consist of:
 
 1. Learning about Gradio and the new Blocks Feature
 2. Building your own Blocks demo using Gradio and Hugging Face Spaces
@@ -84,8 +83,7 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
 
 
 - Trending papers from https://paperswithcode.com/
-- themed spaces: Vision, NLP, Audio based spaces
-- Models from huggingface model hub
+- Models from huggingface model hub: https://huggingface.co/models
 - Models from other model hubs
     - Tensorflow Hub: see example Gradio demos at https://huggingface.co/tensorflow
     - Pytorch Hub: see example Gradio demos at https://huggingface.co/pytorch
@@ -116,7 +114,7 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
 
 Once a model has been picked from the choices above or feel free to try your own idea, you can share a model in a Space using Gradio
 
-Read more about how to add Gradio spaces [here](https://huggingface.co/blog/gradio-spaces).
+Read more about how to add [Gradio spaces](https://huggingface.co/blog/gradio-spaces).
  
 Steps to add Gradio Spaces to the Gradio Blocks Party org
 1. Create an account on Hugging Face
