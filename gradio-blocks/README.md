@@ -83,7 +83,7 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
 ## Potential ideas for creating spaces:
 
 
-- papers from https://paperswithcode.com/
+- Trending papers from https://paperswithcode.com/
 - themed spaces: Vision, NLP, Audio based spaces
 - Models from huggingface model hub
 - Models from other model hubs
@@ -120,8 +120,8 @@ Read more about how to add Gradio spaces [here](https://huggingface.co/blog/grad
  
 Steps to add Gradio Spaces to the Gradio Blocks Party org
 1. Create an account on Hugging Face
-2. Join the [Gradio Blocks Party Organization](https://huggingface.co/Gradio-Blocks) by clicking "Join Organization" button in the organization page
-3. Once your request is approved, add your space using the Gradio SDK
+2. Join the Gradio Blocks Party Organization by clicking "Join Organization" button in the organization page or using the shared link above
+3. Once your request is approved, add your space using the Gradio SDK and share the link with the community!
 
 ## LeaderBoard for Most Popular Blocks Event Spaces based on Likes
 
