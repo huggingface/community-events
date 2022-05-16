@@ -95,7 +95,6 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
     - Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice
 - top 25 winners based on likes
     - [Hugging Face PRO subscription](https://huggingface.co/pricing) for 1 month
-- Gradio badge for everyone participating!
 - Blocks event badge on HF for all participants!
 
 ## Prizes Criteria
@@ -105,6 +104,8 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
 - Community Pick (voting)
 - Most Creative Space (voting)
 - Most Educational Space (voting)
+- CEO's pick (one prize for a particularly impactful demo), picked by @clem
+- CTO's pick (one prize for a particularly technically impressive demo), picked by @julien
 
 
 ## Creating a Gradio demo on Hugging Face Spaces
