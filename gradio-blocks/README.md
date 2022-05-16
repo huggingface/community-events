@@ -77,7 +77,7 @@ In this event, you will:
     - [discord](https://discord.com/invite/feTf9x3ZSB)
 
 
-Participants will be building and sharing Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated for creativity and prizes will be given. 
+Participants will be building and sharing Gradio demos using the Blocks feature. We will share a list of ideas of spaces that can be created using blocks or participants are free to try out their own ideas. At the end of the event, spaces will be evaluated and prizes will be given.
 
 
 ## Potential ideas for creating spaces:
