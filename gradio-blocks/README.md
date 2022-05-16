@@ -54,12 +54,12 @@ main components of the event consist of:
 
 <img width="1180" alt="mindseye-lite" src="https://user-images.githubusercontent.com/81195143/168619604-cf1ac733-c10e-487f-add4-8da48002dcff.png">
 
-- [dalle-mini](https://huggingface.co/spaces/dalle-mini/dalle-mini): [Code](https://huggingface.co/spaces/dalle-mini/dalle-mini/blob/main/app/gradio/app.py)
-- [mindseye-lite](https://huggingface.co/spaces/multimodalart/mindseye-lite): [Code](https://huggingface.co/spaces/multimodalart/mindseye-lite/blob/main/app.py)
-- [ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks): [Code](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks/blob/main/app.py)
-- [gr-blocks](https://huggingface.co/spaces/merve/gr-blocks): [Code](https://huggingface.co/spaces/merve/gr-blocks/blob/main/app.py)
-- [tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts): [Code](https://huggingface.co/spaces/osanseviero/tortoisse-tts/blob/main/app.py)
-- [CaptchaCracker](https://huggingface.co/spaces/osanseviero/tortoisse-tts): [Code](https://huggingface.co/spaces/akhaliq/CaptchaCracker/blob/main/app.py)
+- [dalle-mini](https://huggingface.co/spaces/dalle-mini/dalle-mini)([Code](https://huggingface.co/spaces/dalle-mini/dalle-mini/blob/main/app/gradio/app.py))
+- [mindseye-lite](https://huggingface.co/spaces/multimodalart/mindseye-lite)([Code](https://huggingface.co/spaces/multimodalart/mindseye-lite/blob/main/app.py))
+- [ArcaneGAN-blocks](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks)([Code](https://huggingface.co/spaces/akhaliq/ArcaneGAN-blocks/blob/main/app.py))
+- [gr-blocks](https://huggingface.co/spaces/merve/gr-blocks)([Code](https://huggingface.co/spaces/merve/gr-blocks/blob/main/app.py))
+- [tortoisse-tts](https://huggingface.co/spaces/osanseviero/tortoisse-tts)([Code](https://huggingface.co/spaces/osanseviero/tortoisse-tts/blob/main/app.py))
+- [CaptchaCracker](https://huggingface.co/spaces/osanseviero/tortoisse-tts)([Code](https://huggingface.co/spaces/akhaliq/CaptchaCracker/blob/main/app.py))
 
 
 ## To participate in the event
