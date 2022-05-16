@@ -1,4 +1,4 @@
-# Gradio Blocks Party  🥳
+# Welcome to the [Gradio](https://gradio.app/) Blocks Party 🥳
 
 ![image (1)](https://user-images.githubusercontent.com/81195143/167954125-9854bf6b-4ae5-4735-8fdd-830fec41efa1.png)
 
