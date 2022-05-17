@@ -3,11 +3,11 @@
 ![image (1)](https://user-images.githubusercontent.com/81195143/167954125-9854bf6b-4ae5-4735-8fdd-830fec41efa1.png)
 
 
-_**Timeline**: May 16th, 2022 - May 31st, 2022_
+_**Timeline**: May 17th, 2022 - May 31st, 2022_
 
 ---
 
-Happy to invite you to the Gradio Blocks Party - a community event in which we will build cool machine learning demos using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 16th to 31st. We will be organizing this event on [Github](https://github.com/huggingface/community-events) and the [Hugging Face discord channel](https://discord.com/invite/feTf9x3ZSB). Prizes will be given at the end of the event, see: [Prizes](#prizes)
+Happy to invite you to the Gradio Blocks Party - a community event in which we will build cool machine learning demos using the new Gradio Blocks feature. Blocks allows you to build web-based demos in a flexible way using the Gradio library. The event will take place from May 17th to 31st. We will be organizing this event on [Github](https://github.com/huggingface/community-events) and the [Hugging Face discord channel](https://discord.com/invite/feTf9x3ZSB). Prizes will be given at the end of the event, see: [Prizes](#prizes)
 
 <img src="https://user-images.githubusercontent.com/81195143/168656398-ace7acc9-ef7a-4e90-a9cd-c7d15dd800e1.gif" width="1160" height="600"/>
 
@@ -90,7 +90,6 @@ Participants will be building and sharing Gradio demos using the Blocks feature.
 - 1st place winner based on likes
     - [Hugging Face PRO subscription](https://huggingface.co/pricing) for 1 year
     - Embedding your Gradio Blocks demo in the Gradio Blog
-    - Gradio Team Office Hour
 - top 10 winners based on likes
     - Swag from [Hugging Face merch shop](https://huggingface.myshopify.com/): t-shirts, hoodies, mugs of your choice
 - top 25 winners based on likes
