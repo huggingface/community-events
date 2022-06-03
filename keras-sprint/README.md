@@ -1,5 +1,7 @@
 # Official Repository for Keras Sprint Event
 
+![](https://huggingface.co/spaces/keras-io/README/resolve/main/keras-hf.png)
+
 Keras Sprint by Hugging Face aims to reproduce [official Keras examples](https://keras.io/examples/) and build demos to them on [Hugging Face Spaces](https://huggingface.co/spaces).
 
 keras-sprint folder contains the examples to guide you for the sprint. It contains two end-to-end example of a successful submission for the event. 
