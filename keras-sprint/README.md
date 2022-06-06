@@ -4,7 +4,7 @@
 
 Keras Sprint by Hugging Face aims to reproduce [official Keras examples](https://keras.io/examples/) and build demos to them on [Hugging Face Spaces](https://huggingface.co/spaces).
 
-keras-sprint folder contains the examples to guide you for the sprint. It contains two end-to-end example of a successful submission for the event. 
+Here you can find examples to guide you for the sprint. It contains two end-to-end examples of a successful submission for the event. 
 
 ### Useful Resources
 - To learn more about Keras sprint, check out [contribution guide](https://huggingface2.notion.site/Keras-Sprint-Contribution-Guide-ab1543412f3a4f7194896d6048585676).
