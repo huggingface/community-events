@@ -14,6 +14,7 @@ Currently, it contains the following examples:
 | [DCGAN](dcgan)  | [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)  |
 | [pix2pix](pix2pix) | [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004) |
 | [CycleGAN](cyclegan)  | [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
-| [Lightweight GAN](lightweight_gan) | [Towards Faster and Stabilized GAN Training for High-fidelity Few-shot Image Synthesis](https://openreview.net/forum?id=1Fqg133qRaI)
+| [Lightweight GAN](lightweight_gan) | [Towards Faster and Stabilized GAN Training for High-fidelity Few-shot Image Synthesis](https://openreview.net/forum?id=1Fqg133qRaI) |
+| [SN-GAN](pytorch/sngan)      | [Spectral Normalization for Generative Adversarial Networks](https://arxiv.org/abs/1802.05957) |
 
 
