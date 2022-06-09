@@ -8,3 +8,4 @@ This is a collection of all past sessions that have been held as part of the Hug
 Session 2: ViT - An Image is Worth 16x16 Words| [Notion Notebook](https://www.notion.so/Session-2-ViT-An-Image-is-Worth-16x16-Words-7581678d66324ff59120bac97dd501de) |
 Session 3: Polarized Self-Attention | [Notion Notebook](https://www.notion.so/Session-3-Polarized-Self-Attention-ed6b0700d9c9484cb9ffc7f77e4fbc0f)|
 Session 4: Swin Transformer | [Notion Notebook](https://www.notion.so/Session-4-Swin-Transformer-c13809a560124e10a1f3aacffaaf6ec4)
+Session 5: HuggingFace ecosystem for Vision | [Notebook](computer-vision-study-group/Notebooks/HuggingFace_vision_ecosystem_overview_(June_2022).ipynb)
