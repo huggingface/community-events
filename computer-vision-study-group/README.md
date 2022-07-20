@@ -9,4 +9,4 @@ This is a collection of all past sessions that have been held as part of the Hug
 | Session 3: Polarized Self-Attention | [Notion Notebook](https://www.notion.so/Session-3-Polarized-Self-Attention-ed6b0700d9c9484cb9ffc7f77e4fbc0f)|
 | Session 4: Swin Transformer | [Notion Notebook](https://www.notion.so/Session-4-Swin-Transformer-c13809a560124e10a1f3aacffaaf6ec4)|
 | Session 5: Introduction to Neural Radiance Fields | [Slides](https://docs.google.com/presentation/d/e/2PACX-1vTQVnoTJGhRxDscNV1Mg2aYhvXP8cKODpB5Ii72NWoetCGrTLBJWx_UD1oPXHrzPtj7xO8MS_3TQaSH/pub?start=false&loop=false&delayms=3000)|
-| Session 7: Masked Autoencoders Are Scalable Vision Learners | [Slides](https://docs.google.com/presentation/d/1fGcD4epWX1BVjlkkSvGAAxGZ9ld9sc8p/edit?usp=sharing&ouid=107713715535632275189&rtpof=true&sd=true)|
+| Session 6: Masked Autoencoders Are Scalable Vision Learners | [Slides](https://docs.google.com/presentation/d/1fGcD4epWX1BVjlkkSvGAAxGZ9ld9sc8p/edit?usp=sharing&ouid=107713715535632275189&rtpof=true&sd=true)|
