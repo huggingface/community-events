@@ -332,6 +332,8 @@ git lfs install
 git clone https://huggingface.co/hf-test/xls-r-ab-test
 ```
 
+[comment]: TODO - VB: Need to update this based on an actual run. Still by and large reflects CTC runs.
+
 3. **Add your training script and `run`-command to the repository**
 
 We encourage participants to add all relevant files for training directly to the 
@@ -365,29 +367,42 @@ such as [Common Voice 7](https://huggingface.co/datasets/mozilla-foundation/comm
 Let's copy the following code snippet in a file called `run.sh`
 
 ```bash
-echo '''python run_speech_recognition_ctc.py \
-	--dataset_name="mozilla-foundation/common_voice_7_0" \
-	--model_name_or_path="hf-test/xls-r-dummy" \
-	--dataset_config_name="ab" \
-	--output_dir="./" \
-	--overwrite_output_dir \
-	--max_steps="10" \
-	--per_device_train_batch_size="2" \
-	--learning_rate="3e-4" \
-	--save_total_limit="1" \
+echo '''python run_speech_recognition_seq2seq.py \
+	--model_name_or_path="openai/whisper-small" \
+	--dataset_name="mozilla-foundation/common_voice_11_0" \
+	--dataset_config_name="hi" \
+	--language="hindi" \
+	--train_split_name="train+validation" \
+	--eval_split_name="test" \
+	--max_steps="5000" \
+	--output_dir="./whisper-small-hi" \
+	--per_device_train_batch_size="16" \
+	--gradient_accumulation_steps="2" \
+	--per_device_eval_batch_size="16" \
+	--logging_steps="25" \
+	--learning_rate="1e-5" \
+	--warmup_steps="500" \
 	--evaluation_strategy="steps" \
-	--text_column_name="sentence" \
+	--eval_steps="1000" \
+	--save_strategy="steps" \
+	--save_steps="1000" \
+	--generation_max_length="225" \
+	--preprocessing_num_workers="16" \
 	--length_column_name="input_length" \
-	--save_steps="5" \
-	--layerdrop="0.0" \
-	--freeze_feature_encoder \
+	--max_duration_in_seconds="30" \
+	--text_column_name="sentence" \
+	--freeze_feature_encoder="False" \
 	--gradient_checkpointing \
-	--fp16 \
 	--group_by_length \
-	--push_to_hub \
-	--use_auth_token \
-	--do_train --do_eval''' > run.sh
+	--fp16 \
+	--overwrite_output_dir \
+	--do_train \
+	--do_eval \
+	--predict_with_generate \
+	--use_auth_token''' > run.sh
 ```
+
+[comment] TODO: VB Need to add actuall commits here so that people can check out progress.
 
 4. **Start training**
 
@@ -412,70 +427,67 @@ However as you can see on the model card [hf-test/xls-r-ab-test](https://hugging
 not surprising given that we trained for just 10 steps on a randomly initialized
 model.
 
-For real model training, it is recommended to use one of the actual pre-trained XLS-R models:
+For real model training, it is recommended to use one of the actual pre-trained Whisper models:
 
-- [300M parameters version](https://huggingface.co/facebook/wav2vec2-xls-r-300m)
-- [1B parameters version](https://huggingface.co/facebook/wav2vec2-xls-r-1b)
-- [2B parameters version](https://huggingface.co/facebook/wav2vec2-xls-r-2b)
+- [Whisper base](https://huggingface.co/openai/whisper-base)
+- [Whisper medium](https://huggingface.co/openai/whisper-medium)
+- [Whisper large](https://huggingface.co/openai/whisper-large)
 
 Also, the hyper-parameters should be carefully chosen depending on the dataset.
-As an example, we will fine-tune the 300M parameters model on Swedish on a single 
-TITAN RTX 24GB GPU.
 
-The model will be called `"xls-r-300m-sv"`. 
+The model will be called `"whisper-small-hi"`. 
 Following the above steps we first create the model:
 
 ```bash
-huggingface-cli repo create xls-r-300m-sv
+huggingface-cli repo create whisper-small-hi
 ```
 
 , clone it locally (assuming the `<username>` is `hf-test`)
 
 ```bash
-git clone hf-test/xls-r-300m-sv
+git clone hf-test/whisper-small-hi
 ```
 
 , and, define the following hyperparameters for training
 
 ```bash
-echo '''python run_speech_recognition_ctc.py \
-	--dataset_name="mozilla-foundation/common_voice_7_0" \
-	--model_name_or_path="facebook/wav2vec2-xls-r-300m" \
-	--dataset_config_name="sv-SE" \
-	--output_dir="./" \
-	--overwrite_output_dir \
-	--num_train_epochs="50" \
-	--per_device_train_batch_size="8" \
-	--per_device_eval_batch_size="8" \
-	--gradient_accumulation_steps="4" \
-	--learning_rate="7.5e-5" \
-	--warmup_steps="2000" \
-	--length_column_name="input_length" \
+echo '''python run_speech_recognition_seq2seq.py \
+	--model_name_or_path="openai/whisper-small" \
+	--dataset_name="mozilla-foundation/common_voice_11_0" \
+	--dataset_config_name="hi" \
+	--language="hindi" \
+	--train_split_name="train+validation" \
+	--eval_split_name="test" \
+	--max_steps="5000" \
+	--output_dir="./whisper-small-hi" \
+	--per_device_train_batch_size="16" \
+	--gradient_accumulation_steps="2" \
+	--per_device_eval_batch_size="16" \
+	--logging_steps="25" \
+	--learning_rate="1e-5" \
+	--warmup_steps="500" \
 	--evaluation_strategy="steps" \
+	--eval_steps="1000" \
+	--save_strategy="steps" \
+	--save_steps="1000" \
+	--generation_max_length="225" \
+	--preprocessing_num_workers="16" \
+	--length_column_name="input_length" \
+	--max_duration_in_seconds="30" \
 	--text_column_name="sentence" \
-	--chars_to_ignore , ? . ! \- \; \: \" “ % ‘ ” � — ’ … – \
-	--save_steps="500" \
-	--eval_steps="500" \
-	--logging_steps="100" \
-	--layerdrop="0.0" \
-	--activation_dropout="0.1" \
-	--save_total_limit="3" \
-	--freeze_feature_encoder \
-	--feat_proj_dropout="0.0" \
-	--mask_time_prob="0.75" \
-	--mask_time_length="10" \
-	--mask_feature_prob="0.25" \
-	--mask_feature_length="64" \
+	--freeze_feature_encoder="False" \
 	--gradient_checkpointing \
-	--use_auth_token \
-	--fp16 \
 	--group_by_length \
-	--do_train --do_eval \
-	--push_to_hub''' > run.sh
+	--fp16 \
+	--overwrite_output_dir \
+	--do_train \
+	--do_eval \
+	--predict_with_generate \
+	--use_auth_token''' > run.sh
 ```
 
 The training takes *ca.* 7 hours and yields a reasonable test word 
-error rate of 27% as can be seen on the automatically generated [model card](https://huggingface.co/hf-test/xls-r-300m-sv).
+error rate of 27% as can be seen on the automatically generated [model card](https://huggingface.co/sanchit-gandhi/whisper-small-hi).
 
 The above-chosen hyperparameters probably work quite well on a range of different 
 datasets and languages but are by no means optimal. It is up to you to find a good set of 
@@ -486,16 +498,17 @@ hyperparameters.
 
 Finally, we have arrived at the most fun part of the challenge - sitting back and
 watching the model transcribe audio. If possible, every participant should evaluate 
-the speech recognition system on the test set of Common Voice 7 and 
+the speech recognition system on the test set of Common Voice 11 and 
 ideally also on the real-world audio data (if available).
 For languages that have neither a Common Voice evaluation dataset nor a real world 
 evaluation dataset, please contact the organizers on Discord so that we can work 
 together to find some evaluation data.
 
-As a first step, one should copy the official `eval.py` script to her/his model 
-repository. Let's use our previously trained [xls-r-300m-sv](https://huggingface.co/hf-test/xls-r-300m-sv) again as an example.
+As a first step, one should copy the official `eval.py` script to their model 
+repository. Let's use our previously trained [whisper-small-hi](
+sanchit-gandhi/whisper-small-hi) again as an example.
 
-Assuming that we have a clone of the model's repo under `~/xls-r-300m-sv`, we can 
+Assuming that we have a clone of the model's repo under `~/whisper-small-hi`, we can 
 copy the `eval.py` script to the repo.
 
 ```bash
@@ -517,20 +530,19 @@ is in the correct format. If you have any questions, please ask openly in Discor
 
 Great, now that we have adapted the `eval.py` script, we can lean back and run the 
 evaluation. 
-First, one should evaluate the model on Common Voice 7's test data. This might 
-already have been done for your acoustic model during training but in case you 
-added an *n-gram* language model after having fine-tuned the acoustic model, you
-should now see a nice improvement.
+First, one should evaluate the model on Common Voice 7's test data.
 
-The command to evaluate our test model [xls-r-300m-sv](https://huggingface.co/hf-test/xls-r-300m-sv) on Common Voice 7's test data is the following:
+The command to evaluate our test model [whisper-small-hi](https://huggingface.co/sanchit-gandhi/whisper-small-hi) on Common Voice 11's test data is the following:
 
 ```bash
-cd xls-r-300m-sv
+cd whisper-small-hi
 ./eval.py --model_id ./ --dataset mozilla-foundation/common_voice_7_0 --config sv-SE --split test --log_outputs
 ```
 
 To log each of the model's predictions with the target transcriptions, you can just 
 add the `--log_outputs` flag.
+
+[comment]: # VB: Need to add logic in the script to create a file name and so on. will update this when there is more info.
 
 Running this command should automatically create the file:
 `mozilla-foundation_common_voice_7_0_sv-SE_test_eval_results.txt` that contains 
@@ -541,7 +553,8 @@ If your language has real-world audio data, it will most likely have audio input
 of multiple minutes. 🤗Transformer's [ASR pipeline](https://huggingface.co/docs/transformers/main/en/main_classes/pipelines#transformers.AutomaticSpeechRecognitionPipeline) supports audio chunking out-of-the-box. You only need to specify 
 how song each audio chunk should be (`chunk_length_s`) and how much audio stride 
 (`stride_length_s`) each chunk should use.
-For more information on the chunking works, please have a look at [this nice blog post](TODO: ).
+
+[comment] # VB: Verify this and update with the actual model
 
 In the case of `xls-r-300m-sv`, the following command can be run:
 
@@ -552,16 +565,18 @@ cd xls-r-300m-sv
 
 Great, now you should have successfully evaluated your model. Finally, there is one 
 **important** thing you should do so that your model is taken into account 
-for the final evaluation. You should add two tags to your model, one being `robust-speech-event`, one being the ISO code of your chosen language, *e.g.* `"sv"` for the 
+for the final evaluation. You should add two tags to your model, one being `whisper-fine-tuning-sprint`, one being the ISO code of your chosen language, *e.g.* `"hi"` for the 
 exemplary model we used above. You can find a list of all available languages and 
 their ISO code [here](https://huggingface.co/languages).
 
 To add the tags, simply edit the README.md of your model repository and add
 
 ```
-- "sv"
-- "robust-speech-event"
+- "hi"
+- "whisper-fine-tuning-sprint"
 ```
+
+[comment] # TODO: VB create an example of the TODO.
 
 under `tags:` as done [here](https://huggingface.co/hf-test/xls-r-300m-sv/commit/a495fd70c96bb7d019729be9273a265c2557345e).
 
@@ -582,8 +597,8 @@ The dataset `WER_REAL_AUDIO_TEST` is hidden and will only be published
 at the end of the robust speech challenge.
 
 If there is no real audio data for your language the final score will be 
-computed solely based on the Common Voice 7 test dataset. If there is also
-no Common Voice 7 test dataset for your language, we will see together how to 
+computed solely based on the Common Voice 11 test dataset. If there is also
+no Common Voice 11 test dataset for your language, we will see together how to 
 score your model - if this is the case, please don't be discouraged. We are 
 especially excited about speech recognition systems of such low-resource 
 languages and will make sure that we'll decide on a good approach to evaluating 
@@ -605,7 +620,10 @@ The following table summarizes what platform to use for which problem.
 - Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issues on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
-- Questions regarding access to the OVHcloud GPU, please ask in the Discord channel **#ovh-support**.
+
+[comment] # VB: Need to create this once we have the provider ironed out.
+
+- Questions regarding access to the cloud GPUs, please ask in the Discord channel **#cloud-support**.
 - Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel **#events**.
 
 ## Talks
