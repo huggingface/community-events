@@ -116,18 +116,32 @@ If one wants to combine multiple datasets for training, it might make sense to t
 the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
 
 In addition, participants can also make use of their audio data. Here, please make sure that you **are allowed to use the audio data**. E.g., if audio data 
-is taken from media platforms, such as YouTube, it should be verified that the media platform and the owner of the data have given her/his approval to use the audio 
+is taken from media platforms, such as YouTube, it should be verified that the media platform and the owner of the data have given their approval to use the audio 
 data in the context of machine learning research. If you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face 
 team on discord.
 
 Next, let's talk about preprocessing. Audio data and transcriptions have to be brought into the correct format when 
-training the acoustic model (example shown in [How to fine-tune an acoustic model](#how-to-finetune-an-acoustic-model)).
-It is recommended that this is done by using 🤗 Datasets `.map()` function as shown 
-[here](https://github.com/huggingface/transformers/blob/9a2dabae7002258e41419491c73dd43ad61b5de7/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py#L444). As can be 
-see we can pass some characters that will be removed from the transcriptions, *e.g.*: `--chars_to_ignore , ? . ! - \; \: \" “ % ‘ ” � \`
-on the official ["Single GPU Example"](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition#single-gpu-ctc).
+training the acoustic model (example shown in [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)).
+It is recommended that this is done by using 🤗 Datasets `.map()` function as shown below.
+
+```python
+def remove_special_characters(batch):
+    if chars_to_ignore_regex is not None:
+        batch["target_text"] = re.sub(chars_to_ignore_regex, "", batch[text_column_name]).lower() + " "
+    else:
+        batch["target_text"] = batch[text_column_name].lower() + " "
+    return batch
+
+
+raw_datasets = raw_datasets.map(
+    remove_special_characters,
+    remove_columns=[text_column_name],
+    desc="remove special characters from datasets",
+    )
+```
+
 The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
-it is done in the [official blog post](https://github.com/huggingface/transformers/blob/9a2dabae7002258e41419491c73dd43ad61b5de7/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py#L444).
+it is done in the [official script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py).
 **However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
 These rules are not this straightforward and therefore often have to be evaluated case-by-case.
 It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
@@ -232,25 +246,23 @@ To verify that all libraries are correctly installed, you can run the following 
 It verifies that both `transformers` and `datasets` have been correclty installed.
 
 ```python
-from transformers import AutoModelForCTC, AutoProcessor
+import torch
+from transformers import WhisperFeatureExtractor, WhisperModel
 from datasets import load_dataset
 
-dummy_dataset = load_dataset("common_voice", "ab", split="test")
+model = WhisperModel.from_pretrained("openai/whisper-base")
+feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-base")
 
-model = AutoModelForCTC.from_pretrained("hf-internal-testing/tiny-random-wav2vec2")
-model.to("cuda")
+ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
 
-processor = AutoProcessor.from_pretrained("hf-internal-testing/tiny-random-wav2vec2")
+inputs = feature_extractor(ds[0]["audio"]["array"], return_tensors="pt")
+input_features = inputs.input_features
 
-input_values = processor(dummy_dataset[0]["audio"]["array"], return_tensors="pt", sampling_rate=16_000).input_values
-input_values = input_values.to("cuda")
-
-logits = model(input_values).logits
-
-assert logits.shape[-1] == 32
+decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
+last_hidden_state = model(input_features, decoder_input_ids=decoder_input_ids).last_hidden_state
 ```
 
-## How to finetune an acoustic model
+## How to finetune a whisper model
 
 In this section, we show you how to fine-tune a pre-trained [XLS-R Model](https://huggingface.co/docs/transformers/model_doc/xls_r) on the [Common Voice 7 dataset](https://huggingface.co/datasets/mozilla-foundation/common_voice_7_0). 
 
@@ -470,68 +482,6 @@ datasets and languages but are by no means optimal. It is up to you to find a go
 hyperparameters.
 
 
-## How to finetune with OVH cloud
-
-[![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://youtu.be/XkMnYocAEO0) For a more detailed guide on setting up OVHcloud please watch this video: https://youtu.be/XkMnYocAEO0
-
-### Creating an OVHCloud account
-*TIP*: If you haven't created a project on OVHcloud yet, make sure you've received your GPU voucher code *beforehand*, 
-so that you can skip entering the credit card information.
-1. If you're a US citizen, create an account via [OVHcloud.CA](https://ovhcloud.ca/). 
-If you're from anywhere else in the world, create an account via [OVHcloud.COM](https://ovhcloud.com/).
-2. Once logged in, click `Public Cloud` from the top menu and then click `Create your first OVH Public Cloud project`. 
-Then enter a project name (e.g. "huggingface"), enter your voucher code, and click `Continue` -> `Create my project`.
-*Note: if you see a request for credit card details during the last step, and you can't skip it, then your voucher code 
-is invalid. Please report it to the [#ovh-support](https://discord.gg/p4qqDV3M) channel on Discord.*
-
-### Setting up an AI notebook
-1. Go to the `Public Cloud` page and select `Project Management` -> `Users & Roles` from the menu on the left. 
-2. Click `+ Add user`. Write a user description (e.g. `AI Trainer`), and select an `AI Training Operator` user role. 
-Click `Confirm`.
-3. Write down the *username* and *password* (at the top of the screen) somewhere. They will be needed during step 7.
-4. Select `AI & Machine Learning` -> `AI Training` from the menu on the left. 
-Click `+ Launch a new job` on the AI Training page.
-5. On the `Launch a new job` page:
-   * In `1. Choose a region` select a region closest to you.
-   * In `2. Enter the Docker image` select `Custom image` -> `baaastijn/ovh_huggingface`.
-   * You can skip steps `3.` and `4.` if you will be using the Hugging Face Hub to store the models after training.
-   * In `5. Configure your job` select **1** `GPU`.
-   * Validate the info and Create the job.
-6. On the `AI Training Jobs` screen wait until the job's status changes from `Pending` to `Running`.
-7. Click `HTTP Access` from the Job's details page and log in with the AI training user you've created earlier. 
-Once logged in, you can close the page and click `HTTP Access` to launch a JupyterLab notebook.
-8. Awesome, now you have a free GPU-enabled Jupyter instance!
-
-**Note**: If you're an experienced Docker user, feel free to create a custom docker image with all of the needed packages 
-like the one in step 5. The Dockerfile for it is available here: 
-[baaastijn/Dockerimages](https://github.com/baaastijn/Dockerimages/tree/main/Hugginface_challenge_speech).
-Once you've built your image, push it to https://hub.docker.com/ and select it during the OVHcloud job creation.
-
-For more quick tutorials about OVHcloud AI products, check out the showcase https://vimeo.com/showcase/8903300
-
-## How to combine n-gram with acoustic model
-
-Having trained a speech recognition model with CTC as shown in the section above, 
-one can further improve the model's performance by adding an **n-gram language model**
-to the decoding process of the model. By doing so, we are replacing the naive greedy decoding 
-with **n-gram-boosted** beam search decoding.
-
-N-gram language models can be built on CPU in just a few minutes. *N-gram-boosted* beam search decoding noticeably slows down the 
-inference time, but also yields significant word error rates improvements - usually between 10-40 %.
-
-You can find an in-detail blog post on how to build an *n-gram* [here](https://huggingface.co/blog/wav2vec2-with-ngram).
-The blog post can be opened in a google colab and by adapting three lines of the example for your use case, one can directly
-create an *n-gram* in the google colab.
-The blog post gives in-detail instructions on how to build an n-gram and how to add it to your trained speech recognition model.
-
-- why one should add an *n-gram* to her/his speech recognition system,
-- how to build an *n-gram*, and,
-- how to add the built *n-gram* the speech recognition system for seamless decoding
-
-Our previously trained model - [xls-r-300m-sv](https://huggingface.co/hf-test/xls-r-300m-sv) - enjoys a 30% word error rate reduction after 
-having added an n-gram. As shown in the example of the blog post, we strongly advise participants to upload all files required for combining 
-the *n-gram* with a trained speech recognition model directly into the same model repository.
-
 ## Evaluation
 
 Finally, we have arrived at the most fun part of the challenge - sitting back and
@@ -641,7 +591,7 @@ your model.
 
 ## Prizes
 
-TODO(Patrick, Omar, ...)
+[comment]: # VB/ Sanchit: Put prizes here when decided.
 
 ## Communication and Problems
 
@@ -652,63 +602,16 @@ in the community profits.
 
 The following table summarizes what platform to use for which problem.
 
-- Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @anton-l and @patrickvonplaten.
-- Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issues on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @anton-l and @patrickvonplaten.
-- Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @anton-l and @patrickvonplaten.
+- Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
+- Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issues on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
+- Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
 - Questions regarding access to the OVHcloud GPU, please ask in the Discord channel **#ovh-support**.
-- Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel **#sprint-discussions**.
+- Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel **#events**.
 
 ## Talks
 
-We are very excited to be hosting 2 days of talks from Kensho-Technologies, Mozilla's Common Voice, Meta AI Research and Hugging Face.
-
-### Thursday, January 20th
-
- Speaker        | Topic                           | Time                  |  Video |
-|-------------|---------------------------------|------------------------|------------------------|
-| Patrick von Platen, Hugging Face | Introduction to Robust Speech Challenge | 4h30pm - 5h00pm UTC     | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=X9e5Tto-Iuk)
-| Raymond Grossman and Jeremy Lopez, Kensho-Technologies | Pyctcdecode & Speech2text decoding | 5h30pm - 6h00pm UTC      | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=mp7fHMTnK9A)
-
-### Friday, January 21th
-
- Speaker        | Topic                           | Time                  | Video |
-|-------------|---------------------------------|------------------------|------------------------|
-| Gabriel Habayeb, Mozilla Common Voice | Unlocking global speech with Mozilla Common Voice | 4h30pm - 5h00pm UTC      | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=Vvn984QmAVg)
-| Changhan Wang, Meta AI Research | XLS-R: Large-Scale Cross-lingual Speech Representation Learning on 128 Languages | 5h30pm - 6h00pm UTC      | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=ic_J7ZCROBM)
-
-### Talks & Speakers
-
-#### Patrick von Platen, Research Engineer, Hugging Face
-- Talk: Introduction to Robust Speech Challenge
-- Abstract: In this talk, Patrick outlines the Robust Speech Challenge and gives tips and tricks on how to train and evaluate speech recognition systems with 🤗 Transformers and 🤗 Datasets, and PyTorch.
-- Speaker info: Patrick von Platen is a research engineer at Hugging Face and one of the core maintainers of the popular Transformers library. He specializes in speech recognition, encoder-decoder models, and long-range sequence modeling. Before joining Hugging Face, Patrick researched speech recognition at Uber AI, Cambridge University, and RWTH Aachen University.
-
-#### Raymond Grossman, Jeremy Lopez, Machine Learning Engineer, Kensho Technologies
-- Talk: PyCTCDecode & Speech2text decoding
-- Abstract: PyCTCDecode is a fast and feature-rich CTC beam search decoder for speech recognition written in Python, providing n-gram (kenlm) language model support similar to PaddlePaddle's decoder, but incorporating many new features such as byte pair encoding and real-time decoding to support models like Nvidia's Conformer-CTC or Facebook's Wav2Vec2.
-- Speaker info : 
-	- Raymond works as a machine learning engineer at Kensho Technologies, specializing in speech and natural language domains. Before coming to Kensho, he studied mathematics at Princeton and was an avid Kaggler under the moniker @ToTrainThemIsMyCause. 
-	- Jeremy is a machine learning engineer at Kensho Technologies and has worked on a variety of different topics including search and speech recognition. Before working at Kensho, he earned a PhD in experimental particle physics at MIT and continued doing physics research as a postdoc at the University of Colorado Boulder.
-
-#### Gabriel Habayeb, Data Engineer, Common Voice @ Mozilla
-- Talk: Unlocking global speech with Mozilla Common Voice
-- Abstract: Hear from Common Voice Data Engineer Gabriel Habayeb (Mozilla Foundation) as he talks about how Common Voice makes it easy to crowdsource voice data in global languages, as well as getting key insights into the dataset itself, how we maintain quality, use metadata - and our plans for the future!
-- Speaker info: Gabriel is a software developer with the Common Voice team at the Mozilla Foundation with a focus on data engineering. Before joining the Foundation, he spent the last six years working across different industries, including education, enterprise and not-for-profit organizations.
-
-#### Changhan Wang, Main author of XLS-R and Research Engineer, Meta AI Research
-- Talk: XLS-R: Large-Scale Cross-lingual Speech Representation Learning on 128 Languages
-- Abstract: In this talk, Changhan will present XLS-R, a large-scale model for cross-lingual speech representation learning based on wav2vec 2.0. XLS-R has up to 2B parameters and was trained on nearly half a million hours of publicly available speech audio in 128 languages, an order of magnitude more public data than the largest known prior work. On the CoVoST-2 speech translation benchmark, XLS-R improves the previous state of the art by an average of 7.4 BLEU over 21 translation directions into English. For speech recognition, XLS-R improves over the best known prior work on BABEL, MLS, CommonVoice as well as VoxPopuli, lowering error rates by 14-34% relative on average. XLS-R also sets a new state of the art on VoxLingua107 language identification. The XLS-R team hopes to work together with the open-source community to improve speech processing tasks for many more languages of the world.
+[comment]: # VB: Add Talk schedule when up.
 
 ## General Tips and Tricks
 
-- Memory efficient training:
-
-In case, you are getting out-of-memory errors on your GPU, we recommend to use 
-[bitsandbytes](https://github.com/TimDettmers/bitsandbytes) to replace the 
-native memory-intensive Adam optimizer with the one of `bitsandbytes`. You
-can simply run the script `./run_speech_recognition_ctc_bnb.py` provided in this 
-folder that makes use of `bitsandbytes` instead of the official one.
-
-- Dataset streaming
-
-TODO(Patrick)
+[comment]: # VB/ Sanchit: Add tips for faster convergence/ memory efficient training
