@@ -141,9 +141,17 @@ meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`f
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
-## How to install relevant libraries
+## How to install relevant libraries & setup environment
 
-The following libraries are required to fine-tune a speech model with 🤗 Transformers and 🤗 Datasets in PyTorch.
+Before installing the required libraries, we'd need to install install and update `ffmpeg` to version 4:
+
+```bash
+add-apt-repository -y ppa:jonathonf/ffmpeg-4
+apt update
+apt install -y ffmpeg
+```
+
+Now, on to installing the relevant libraries for our fine-tuning runs. The following libraries are required to fine-tune Whisper with 🤗 Transformers and 🤗 Datasets in PyTorch.
 
 - [PyTorch](https://pytorch.org/)
 - [Transformers](https://github.com/huggingface/transformers)
@@ -175,59 +183,18 @@ python -c "import torch; print(torch.cuda.is_available())"
 If the above command doesn't print ``True``, in the first step, please follow the
 instructions [here](https://pytorch.org/) to install PyTorch with CUDA.
 
-We strongly recommend making use of the provided PyTorch examples scripts in [transformers/examples/pytorch/speech-recognition](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition) to train your speech recognition
-system.
-In all likelihood, you will adjust one of the example scripts, so we recommend forking and cloning the 🤗 Transformers repository as follows. 
+We strongly recommend making use of the provided PyTorch Seq2Seq Speech Recognition script in [transformers/examples/pytorch/speech-recognition](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) to fine-tune your Whisper model.
 
-1. Fork the [repository](https://github.com/huggingface/transformers) by
-   clicking on the 'Fork' button on the repository's page. This creates a copy of the code
-   under your GitHub user account.
+Alright, on-to the home stretch, let's install all the required packages into our virtual environment.
 
-2. Clone your fork to your local disk, and add the base repository as a remote:
-
-   ```bash
-   $ git clone https://github.com/<your Github handle>/transformers.git
-   $ cd transformers
-   $ git remote add upstream https://github.com/huggingface/transformers.git
-   ```
-
-3. Create a new branch to hold your development changes. This is especially useful to share code changes with your team:
-
-   ```bash
-   $ git checkout -b a-descriptive-name-for-my-project
-   ```
-
-4. Set up a PyTorch environment by running the following command your virtual environment:
-
-   ```bash
-   $ pip install -e ".[torch-speech]"
-   ```
-
-   (If transformers was already installed in the virtual environment, remove
-   it with `pip uninstall transformers` before reinstalling it in editable
-   mode with the `-e` flag.)
-
-   If you have already cloned that repo, you might need to `git pull` to get the most recent changes in the `transformers`
-   library.
-
-   Running this command will automatically install `torch` and the most relevant 
-   libraries required for fine-tuning a speech recognition system.
-
-Next, you should also install the 🤗 Datasets library. We strongly recommend installing the 
-library from source to profit from the most current additions during the community week.
-
-Simply run the following steps:
-
+```bash
+pip install datasets>=2.6.1
+pip install git+https://github.com/huggingface/transformers
+pip install librosa
+pip install evaluate>=0.30
+pip install jiwer
 ```
-$ cd ~/
-$ git clone https://github.com/huggingface/datasets.git
-$ cd datasets
-$ pip install -e ".[streaming]"
-```
-
-If you plan on contributing a specific dataset during 
-the community week, please fork the datasets repository and follow the instructions 
-[here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
+<!-- TODO: VB - these are based on a colab env install, double check this if it works on a fresh VM too.-->
 
 To verify that all libraries are correctly installed, you can run the following command in a Python shell.
 It verifies that both `transformers` and `datasets` have been correclty installed.
@@ -247,353 +214,25 @@ input_features = inputs.input_features
 
 decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
 last_hidden_state = model(input_features, decoder_input_ids=decoder_input_ids).last_hidden_state
+
+assert last_hidden_state.shape[-1] == 512
 ```
+
+Note: If you plan on contributing a specific dataset during 
+the community week, please fork the datasets repository and follow the instructions 
+[here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
 
 ## How to finetune a whisper model
 
-In this section, we show you how to fine-tune a pre-trained [XLS-R Model](https://huggingface.co/docs/transformers/model_doc/xls_r) on the [Common Voice 7 dataset](https://huggingface.co/datasets/mozilla-foundation/common_voice_7_0). 
-
-We recommend fine-tuning one of the following pre-trained XLS-R checkpoints:
-
-- [300M parameters version](https://huggingface.co/facebook/wav2vec2-xls-r-300m)
-- [1B parameters version](https://huggingface.co/facebook/wav2vec2-xls-r-1b)
-- [2B parameters version](https://huggingface.co/facebook/wav2vec2-xls-r-2b)
-
-To begin with, please note that to use the Common Voice dataset, you 
-have to accept that **your email address** and **username** are shared with the 
-mozilla-foundation. To get access to the dataset please click on "*Access repository*" [here](https://huggingface.co/datasets/mozilla-foundation/common_voice_7_0).
-
-Next, we recommended that you get familiar with the XLS-R model and its capabilities.
-In collaboration with [Fairseq's Wav2Vec2 team](https://github.com/pytorch/fairseq/tree/main/examples/wav2vec), 
-we've written ["Fine-tuning XLS-R for Multi-Lingual ASR with 🤗 Transformers"](https://huggingface.co/blog/fine-tune-xlsr-wav2vec2) which gives an in-detail explanation of how XLS-R functions and how it can be fine-tuned.
-
-The blog can also be opened and directly fine-tuned in a google colab notebook.
-In this section, we will explain how to fine-tune the model on a local machine.
-
-1. **Log in**
-
-To begin with, you should check that you are correctly logged in and that you have `git-lfs` installed so that your fine-tuned model can automatically be uploaded.
-
-Run:
-
-```bash
-huggingface-cli login
-```
-
-to login. It is recommended to login with your access token that can be found under your hugging face profile (icon in the top right corner on [hf.co](http://hf.co/), then Settings -> Access Tokens -> User Access Tokens -> New Token (if haven't generated one already)
-
-You can then copy-paste this token to log in locally.
-
-2. **Create your model repository**
-
-First, let's make sure that `git-lfs` is correctly installed. To so, simply run:
-
-```bash
-git-lfs -v
-```
-
-The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1.15.4)`. If your console states that the `git-lfs` command was not found, please make
-sure to install it [here](https://git-lfs.github.com/) or simply via: 
-
-```bash
-sudo apt-get install git-lfs
-```
-
-Now you can create your model repository which will contain all relevant files to 
-reproduce your training. You can either directly create the model repository on the 
-Hub (Settings -> New Model) or via the CLI. Here we choose to use the CLI instead.
-
-Assuming that we want to call our model repository *xls-r-ab-test*, we can run the 
-following command:
-
-```bash
-huggingface-cli repo create xls-r-ab-test
-```
-
-You can now see the model on the Hub, *e.g.* under https://huggingface.co/hf-test/xls-r-ab-test .
-
-Let's clone the repository so that we can define our training script inside.
-
-```bash
-git lfs install
-git clone https://huggingface.co/hf-test/xls-r-ab-test
-```
-
-[comment]: TODO - VB: Need to update this based on an actual run. Still by and large reflects CTC runs.
-
-3. **Add your training script and `run`-command to the repository**
-
-We encourage participants to add all relevant files for training directly to the 
-directory so that everything is fully reproducible.
-
-Let's first copy-paste the official training script from our clone 
-of `transformers` to our just created directory:
-
-```bash
-cp ~/transformers/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py ./
-```
-
-Next, we'll create a bash file to define the hyper-parameters and configurations 
-for training. More detailed information on different settings (single-GPU vs. multi-GPU) can be found [here](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition#connectionist-temporal-classification).
-
-For demonstration purposes, we will use a dummy XLS-R model `model_name_or_path="hf-test/xls-r-dummy"` on the very low-resource language of "Abkhaz" of [Common Voice 7](https://huggingface.co/datasets/mozilla-foundation/common_voice_7_0): `dataset_config_name="ab"` for just a single epoch.
-
-Before starting to train, let's make sure we have installed all the required libraries. You might want to run:
-
-```bash
-pip install -r ~/transformers/examples/pytorch/speech-recognition/requirements.txt
-```
-
-Alright, finally we can define the training script. We'll simply use some 
-dummy hyper-parameters and configurations for demonstration purposes.
-
-Note that we add the flag `--use_auth_token` so that datasets requiring access, 
-such as [Common Voice 7](https://huggingface.co/datasets/mozilla-foundation/common_voice_7_0) can be downloaded. In addition, we add the `--push_to_hub` flag to make use of the 
-[Trainers `push_to-hub` functionality](https://huggingface.co/docs/transformers/main/en/main_classes/trainer#transformers.Trainer.push_to_hub) so that your model will be automatically uploaded to the Hub.
-
-Let's copy the following code snippet in a file called `run.sh`
-
-```bash
-echo '''python run_speech_recognition_seq2seq.py \
-	--model_name_or_path="openai/whisper-small" \
-	--dataset_name="mozilla-foundation/common_voice_11_0" \
-	--dataset_config_name="hi" \
-	--language="hindi" \
-	--train_split_name="train+validation" \
-	--eval_split_name="test" \
-	--max_steps="5000" \
-	--output_dir="./whisper-small-hi" \
-	--per_device_train_batch_size="16" \
-	--gradient_accumulation_steps="2" \
-	--per_device_eval_batch_size="16" \
-	--logging_steps="25" \
-	--learning_rate="1e-5" \
-	--warmup_steps="500" \
-	--evaluation_strategy="steps" \
-	--eval_steps="1000" \
-	--save_strategy="steps" \
-	--save_steps="1000" \
-	--generation_max_length="225" \
-	--preprocessing_num_workers="16" \
-	--length_column_name="input_length" \
-	--max_duration_in_seconds="30" \
-	--text_column_name="sentence" \
-	--freeze_feature_encoder="False" \
-	--gradient_checkpointing \
-	--group_by_length \
-	--fp16 \
-	--overwrite_output_dir \
-	--do_train \
-	--do_eval \
-	--predict_with_generate \
-	--use_auth_token''' > run.sh
-```
-
-[comment] TODO: VB Need to add actuall commits here so that people can check out progress.
-
-4. **Start training**
-
-Now all that is left to do is to start training the model by executing the 
-run file.
-
-```bash
-bash run.sh
-```
-
-The training should not take more than a couple of minutes. 
-During the training intermediate saved checkpoints are automatically uploaded to
-your model repository as can be seen [on this commit](https://huggingface.co/hf-test/xls-r-ab-test/commit/0eb19a0fca4d7d163997b59663d98cd856022aa6) . 
-
-At the end of the training, the [Trainer](https://huggingface.co/docs/transformers/main/en/main_classes/trainer) automatically creates a nice model card and all 
-relevant files are uploaded.
-
-5. **Tips for real model training**
-
-The above steps illustrate how a model can technically be fine-tuned.
-However as you can see on the model card [hf-test/xls-r-ab-test](https://huggingface.co/hf-test/xls-r-ab-test), our demonstration has a very poor performance which is
-not surprising given that we trained for just 10 steps on a randomly initialized
-model.
-
-For real model training, it is recommended to use one of the actual pre-trained Whisper models:
-
-- [Whisper base](https://huggingface.co/openai/whisper-base)
-- [Whisper medium](https://huggingface.co/openai/whisper-medium)
-- [Whisper large](https://huggingface.co/openai/whisper-large)
-
-Also, the hyper-parameters should be carefully chosen depending on the dataset.
-
-The model will be called `"whisper-small-hi"`. 
-Following the above steps we first create the model:
-
-```bash
-huggingface-cli repo create whisper-small-hi
-```
-
-, clone it locally (assuming the `<username>` is `hf-test`)
-
-```bash
-git clone hf-test/whisper-small-hi
-```
-
-, and, define the following hyperparameters for training
-
-```bash
-echo '''python run_speech_recognition_seq2seq.py \
-	--model_name_or_path="openai/whisper-small" \
-	--dataset_name="mozilla-foundation/common_voice_11_0" \
-	--dataset_config_name="hi" \
-	--language="hindi" \
-	--train_split_name="train+validation" \
-	--eval_split_name="test" \
-	--max_steps="5000" \
-	--output_dir="./whisper-small-hi" \
-	--per_device_train_batch_size="16" \
-	--gradient_accumulation_steps="2" \
-	--per_device_eval_batch_size="16" \
-	--logging_steps="25" \
-	--learning_rate="1e-5" \
-	--warmup_steps="500" \
-	--evaluation_strategy="steps" \
-	--eval_steps="1000" \
-	--save_strategy="steps" \
-	--save_steps="1000" \
-	--generation_max_length="225" \
-	--preprocessing_num_workers="16" \
-	--length_column_name="input_length" \
-	--max_duration_in_seconds="30" \
-	--text_column_name="sentence" \
-	--freeze_feature_encoder="False" \
-	--gradient_checkpointing \
-	--group_by_length \
-	--fp16 \
-	--overwrite_output_dir \
-	--do_train \
-	--do_eval \
-	--predict_with_generate \
-	--use_auth_token''' > run.sh
-```
-
-The training takes *ca.* 7 hours and yields a reasonable test word 
-error rate of 27% as can be seen on the automatically generated [model card](https://huggingface.co/sanchit-gandhi/whisper-small-hi).
-
-The above-chosen hyperparameters probably work quite well on a range of different 
-datasets and languages but are by no means optimal. It is up to you to find a good set of 
-hyperparameters.
-
+<!-- TODO: VB - Add a fine-tuning guide here after testing the script on lambda labs GPU -->
 
 ## Evaluation
 
-Finally, we have arrived at the most fun part of the challenge - sitting back and
-watching the model transcribe audio. If possible, every participant should evaluate 
-the speech recognition system on the test set of Common Voice 11 and 
-ideally also on the real-world audio data (if available).
-For languages that have neither a Common Voice evaluation dataset nor a real world 
-evaluation dataset, please contact the organizers on Discord so that we can work 
-together to find some evaluation data.
-
-As a first step, one should copy the official `eval.py` script to their model 
-repository. Let's use our previously trained [whisper-small-hi](
-sanchit-gandhi/whisper-small-hi) again as an example.
-
-Assuming that we have a clone of the model's repo under `~/whisper-small-hi`, we can 
-copy the `eval.py` script to the repo.
-
-```bash
-cp ~/transformers/examples/research_projects/robust-speech-event/eval.py ~/xls-r-300m-sv
-```
-
-Next, we should adapt `eval.py` so that it fits our evaluation data. Here it is 
-important to keep the `eval.py` file in the following format:
-
-- 1. The following input arguments should not be changed and keep their original functionality/meaning (being to load the model and dataset): `"--model_id"`, `"--dataset"`, `"--config"`, `"--split"`. We recommend to not change any of the code written under `if __name__ == "__main__":`.
-- 2. The function `def log_results(result: Dataset, args: Dict[str, str])` should also not be changed. The function expects the above names attached to the `args` object as well as a `datasets.Dataset` object, called `result` which includes all predictions and target transcriptions under the names `"predictions"` and `"targets"` respectively.
-- 3. All other code can be changed and adapted. Participants are especially invited to change the `def normalize_text(text: str) -> str:` function as this might be a very language and model-training specific function.
-- 4. **Important**: It is not allowed to "cheat" in any way when in comes to pre-and postprocessing. In short, "cheating" refers to any of the following:
-	- a. Somehow giving the model access to the target transcriptions to improve performance. The model is not allowed to use the target transcriptions to generate its predictions.
-	- b. Pre-processing the target transcriptions in a way that makes the target transcriptions lose their original meaning. This corresponds to what has already been said in [Data and Preprocessing](#data-and-preprocessing) and is somewhat of a grey zone. It means that one should not remove characters that would make a word to lose its meaning. E.g., it is not allowed to replace all `e` in English with `i` and simply make the model learn that `e` and `i` are the same letter for a better word error rate. This would destroy the meaning of words such as `fell -> fill`. However, it is totally fine to normalize (*e.g.* lowercase) all letters, remove punctuation. There can be a lot of language-specific exceptions and in case you are not sure whether your target transcription pre-processing is allowed, please ask on the Discord channel.
-
-Uff, that was a lot of text describing how to make sure your `eval.py` script 
-is in the correct format. If you have any questions, please ask openly in Discord.
-
-Great, now that we have adapted the `eval.py` script, we can lean back and run the 
-evaluation. 
-First, one should evaluate the model on Common Voice 7's test data.
-
-The command to evaluate our test model [whisper-small-hi](https://huggingface.co/sanchit-gandhi/whisper-small-hi) on Common Voice 11's test data is the following:
-
-```bash
-cd whisper-small-hi
-./eval.py --model_id ./ --dataset mozilla-foundation/common_voice_7_0 --config sv-SE --split test --log_outputs
-```
-
-To log each of the model's predictions with the target transcriptions, you can just 
-add the `--log_outputs` flag.
-
-[comment]: # VB: Need to add logic in the script to create a file name and so on. will update this when there is more info.
-
-Running this command should automatically create the file:
-`mozilla-foundation_common_voice_7_0_sv-SE_test_eval_results.txt` that contains 
-both the word- and character error rate.
-
-In a few days, we will give everybody access to some real-world audio data for as many languages as possible.
-If your language has real-world audio data, it will most likely have audio input 
-of multiple minutes. 🤗Transformer's [ASR pipeline](https://huggingface.co/docs/transformers/main/en/main_classes/pipelines#transformers.AutomaticSpeechRecognitionPipeline) supports audio chunking out-of-the-box. You only need to specify 
-how song each audio chunk should be (`chunk_length_s`) and how much audio stride 
-(`stride_length_s`) each chunk should use.
-
-[comment] # VB: Verify this and update with the actual model
-
-In the case of `xls-r-300m-sv`, the following command can be run:
-
-```bash 
-cd xls-r-300m-sv
-./eval.py --model_id hf-test/xls-r-300m-sv --dataset <to-be-announced> --config sv --split validation --chunk_length_s 5.0 --stride_length_s 1.0 --log_outputs
-```
-
-Great, now you should have successfully evaluated your model. Finally, there is one 
-**important** thing you should do so that your model is taken into account 
-for the final evaluation. You should add two tags to your model, one being `whisper-fine-tuning-sprint`, one being the ISO code of your chosen language, *e.g.* `"hi"` for the 
-exemplary model we used above. You can find a list of all available languages and 
-their ISO code [here](https://huggingface.co/languages).
-
-To add the tags, simply edit the README.md of your model repository and add
-
-```
-- "hi"
-- "whisper-fine-tuning-sprint"
-```
-
-[comment] # TODO: VB create an example of the TODO.
-
-under `tags:` as done [here](https://huggingface.co/hf-test/xls-r-300m-sv/commit/a495fd70c96bb7d019729be9273a265c2557345e).
-
-To verify that you've added the tags correctly make sure that your model 
-appears when clicking on [this link](https://huggingface.co/models?other=robust-speech-event).
-
-Great that's it! This should give you all the necessary information to evaluate
-your model. For the final evaluation, we will verify each evaluation result to 
-determine the final score and thereby the winning models for each language.
-
-The final score is calculated as follows:
-
-```bash
-FINAL_SCORE = 1/3 * WER_Common_Voice_7_test + 1/3 * WER_REAL_AUDIO_DEV + 1/3 * WER_REAL_AUDIO_TEST
-```
-
-The dataset `WER_REAL_AUDIO_TEST` is hidden and will only be published 
-at the end of the robust speech challenge.
-
-If there is no real audio data for your language the final score will be 
-computed solely based on the Common Voice 11 test dataset. If there is also
-no Common Voice 11 test dataset for your language, we will see together how to 
-score your model - if this is the case, please don't be discouraged. We are 
-especially excited about speech recognition systems of such low-resource 
-languages and will make sure that we'll decide on a good approach to evaluating 
-your model.
+<!-- TODO: VB - To add after we have decided on the final evaluation criteria -->
 
 ## Prizes
 
-[comment]: # VB/ Sanchit: Put prizes here when decided.
+<!-- TODO: Sanchit/ Omar/ VB - Put prizes here when decided. -->
 
 ## Communication and Problems
 
