@@ -2,26 +2,21 @@
 
 Welcome to the Whisper fine-tuning sprint 🎙️ !
 
-The goal of this event is to build **robust**, **real-world** speech recognition (ASR) systems in as many languages as possible 🌏🌍🌎.
-If necessary and available, free access to a V100s 32 GB GPU will kindly be provided by the [PUT CLOUD PROVIDER HERE](https://PUTCLOUDPROVIDERHERE.COM) 🚀.
+The goal of this event is to build upon the success of Whisper architecture at speech recognition (ASR) systems and replicate it in as many languages as possible 🌏🌍🌎.
+Free compute will be provided for those that cannot train models with their compute resources 🚀.
 This document summarizes all the relevant information required for the speech community event 📋.
 
-To sign-up, please see [this forum post](https://LINK_ACTUAL_FORUM) 🤗. Please make sure to:
-- Read it in detail
-- Fill the [google form](https://forms.gle/F2bpouvhDpKKisM39)
+To sign-up, please read this README thoroughly 🤗. Please make sure to:
+- Fill the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
 - Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel.
-
-[comment]: # TODO: VB - create a post on the forum and link it above. Update the URL to cloud provider when decided.
 
 ## Table of Contents
 
-- [TLDR;](#tldr)
+- [TLDR](#tldr)
 - [Important dates](#important-dates)
 - [How to install pytorch, transformers, datasets](#how-to-install-relevant-libraries)
 - [Data and Preprocessing](#data-and-preprocessing)
-- [How to fine-tune an acoustic model](#how-to-finetune-an-acoustic-model)
-- [How to fine-tune with OVH could](#how-to-finetune-with-ovh-cloud)
-- [How to combine n-gram language models with acoustic model](#how-to-combine-n-gram-with-acoustic-model)
+- [How to fine-tune a Whisper model](#how-to-finetune-an-acoustic-model)
 - [Evaluation](#evaluation)
 - [Prizes](#prizes)
 - [Communication and Problems](#communication-and-problems)
@@ -30,27 +25,24 @@ To sign-up, please see [this forum post](https://LINK_ACTUAL_FORUM) 🤗. Please
 
 ## TLDR
 
-Participants are encouraged to leverage pre-trained speech recognition checkpoints,
+Throughout the sprint participants are encouraged to leverage *any* available pre-trained [Whisper checkpoint](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper),
 preferably [openai/whisper-large](https://huggingface.co/openai/whisper-large), 
-to train a speech recognition system in a language of their choice.
+to fine-tune Whisper in a language of their choice.
 
-Speech recognition systems should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**.
+All models fine-tuned during the sprint should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**.
 For more information on how to install the above libraries, please read through 
 [How to install pytorch, transformers, datasets](#how-to-install-relevant-libraries).
 
-Participants can make use of whatever data they think is useful to build a 
-speech recognition system for **real-world** audio data - 
+Participants can make use of whatever data they think is useful to fine-tune Whisper - 
 **except** the Common Voice `"test"` split of their chosen language.
 The section [Data and preprocessing](#data-and-preprocessing) explains 
 in more detail what audio data can be used, how to find suitable audio data, and 
 how the audio data can be processed.
 
 For training, it is recommended to use the [official training script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) or a modification thereof. A step-by-step guide on how to fine-tune 
-an acoustic model for a speech recognition system can be found under [How to fine-tune an acoustic model](#how-to-finetune-an-acoustic-model).
-If possible it is encouraged to fine-tune the acoustic models on local GPU machines, but 
-if those are not available, the CLOUD_PROVIDER could team kindly provides a limited 
-number of GPUs for the event. Simply fill out [this google form](https://forms.gle/F2bpouvhDpKKisM39) to get access to a GPU.
-[comment]: # For more information on how to train an acoustic model on one of OVH's GPU - see [How to fine-tune a speech recognition model with OVHcould](#how-to-fine-tune-with-ovh-cloud).
+a Whisper model for a speech recognition system can be found under [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model).
+If possible it is encouraged to fine-tune the Whisper models on local GPU machines, but 
+if those are not available, we'll work towards providing you a GPU instance. Simply fill out [this google form](https://forms.gle/F2bpouvhDpKKisM39) to get access to a GPU.
 
 During the event, the speech recognition system will be evaluated on both the Common Voice `"test"` split 
 of the participants' chosen language as well as the *real-world* `"dev"` data provided by 
@@ -59,32 +51,23 @@ At the end of the whisper fine-tuning sprint, the speech recognition system will
 *real-world* `"test"` data provided by the Hugging Face team. Each participant should add an 
 `eval.py` script to her/his model repository in a specific format that lets one easily 
 evaluate the speech recognition system on both Common Voice's `"test"` data as well as the *real-world* audio 
-data. Please read through the [Evaluation](#evaluation) section to make sure your evaluation script is in the correct format. Speech recognition systems
+data. Please read through the [Evaluation](#evaluation) section to make sure your evaluation script is in the correct format. Models
 with evaluation scripts in an incorrect format can sadly not be considered for the Challenge.
 
 At the end of the event, the best performing speech recognition system 
 will receive a prize 🏆 - more information regarding the prizes can be found under [Prizes](#prizes).
 
 We believe that framing the event as a competition is more fun, but at the core, the event is about
-creating speech recognition systems in as many languages as possible as a community.
+fine-tuning Whisper in as many languages as possible as a community.
 This can be achieved by working together, helping each other to solve bugs, share important findings, etc...🤗
 
 **Note**:
 Please, read through the section on [Communication & Problems](#communication-and-problems) to make sure you 
 know how to ask for help, etc...
 All important announcements will be made on discord. Please make sure that 
-you've joined [this discord channel](https://hf.co/join/discord)
-
-Also, please make sure that you have been added to the [Speech Event Organization](https://CREATE_AN_ORGANISATION_ON_HUB). 
-You should have received an invite by email. If you didn't receive an invite, please contact the organizers, *e.g.* Sanchit or VB directly on discord.
-
-[comment]: # VB: create an organisation on the hub.
+you've joined [#events channel](https://hf.co/join/discord)
 
 ## Important dates
-
-![timeline](https://github.com/patrickvonplaten/scientific_images/raw/master/Robush%20Speech%20Challenge.png)
-
-[comment]: # VB - Create an infographic for the timeline.
 
 ## Data and preprocessing
 
@@ -151,8 +134,7 @@ So the golden rule here is to not remove any characters that could change the me
 be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
 meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
 
-Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum, as was 
-done, *e.g.* [here](https://discuss.huggingface.co/t/spanish-asr-fine-tuning-wav2vec2/4586).
+Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
 ## How to install relevant libraries
 
@@ -620,16 +602,14 @@ The following table summarizes what platform to use for which problem.
 - Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issues on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
-
-[comment] # VB: Need to create this once we have the provider ironed out.
-
-- Questions regarding access to the cloud GPUs, please ask in the Discord channel **#cloud-support**.
 - Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel **#events**.
+
+<!-- TODO: VB - Add a note about cloud issues when we have the cloud provider identified -->
 
 ## Talks
 
-[comment]: # VB: Add Talk schedule when up.
+<!-- TODO: VB - Add Talk schedule when up. -->
 
 ## General Tips and Tricks
 
-[comment]: # VB/ Sanchit: Add tips for faster convergence/ memory efficient training
+<!-- TODO: VB - Add tips for faster convergence/ memory efficient training. -->
