@@ -69,6 +69,11 @@ you've joined [#events channel](https://hf.co/join/discord)
 
 ## Important dates
 
+- *Talks*: 1st & 2nd December 2022
+- *Sprint start*: 5th December 2022
+- *Sprint end*: 19th December 2022
+- *Whisper benchmark & results*: 26th December 2022 
+
 ## Data and preprocessing
 
 In this section, we will quickly go over how to find suitable training data and 
