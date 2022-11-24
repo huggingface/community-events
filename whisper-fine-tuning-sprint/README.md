@@ -1,22 +1,23 @@
 # Whisper fine-tuning sprint 🤗
 
-Welcome to the Whisper fine-tuning sprint 🎙️ !
+Welcome to the Whisper fine-tuning sprint 🎙️!
 
 The goal of this event is to build upon the success of Whisper architecture at speech recognition (ASR) systems and replicate it in as many languages as possible 🌏🌍🌎.
-Free compute will be provided for those that cannot train models with their compute resources 🚀.
+Free computing will be provided for those that cannot train models with their compute resources 🚀.
+
 This document summarizes all the relevant information required for the speech community event 📋.
 
-To sign-up, please read this README thoroughly 🤗. Please make sure to:
-- Fill the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
+To sign-up, please read this README thoroughly 🤗 & make sure to:
+- Fill out the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
 - Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel.
 
 ## Table of Contents
 
 - [TLDR](#tldr)
 - [Important dates](#important-dates)
-- [How to install pytorch, transformers, datasets](#how-to-install-relevant-libraries)
+- [How to install PyTorch, transformers, datasets](#how-to-install-relevant-libraries)
 - [Data and Preprocessing](#data-and-preprocessing)
-- [How to fine-tune a Whisper model](#how-to-finetune-an-acoustic-model)
+- [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)
 - [Evaluation](#evaluation)
 - [Prizes](#prizes)
 - [Communication and Problems](#communication-and-problems)
@@ -42,7 +43,7 @@ how the audio data can be processed.
 For training, it is recommended to use the [official training script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) or a modification thereof. A step-by-step guide on how to fine-tune 
 a Whisper model for a speech recognition system can be found under [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model).
 If possible it is encouraged to fine-tune the Whisper models on local GPU machines, but 
-if those are not available, we'll work towards providing you a GPU instance. Simply fill out [this google form](https://forms.gle/F2bpouvhDpKKisM39) to get access to a GPU.
+if those are not available, we'll work towards providing you with a GPU instance. Simply fill out [this google form](https://forms.gle/F2bpouvhDpKKisM39) to get access to a GPU.
 
 During the event, the speech recognition system will be evaluated on both the Common Voice `"test"` split 
 of the participants' chosen language as well as the *real-world* `"dev"` data provided by 
@@ -54,12 +55,12 @@ evaluate the speech recognition system on both Common Voice's `"test"` data as w
 data. Please read through the [Evaluation](#evaluation) section to make sure your evaluation script is in the correct format. Models
 with evaluation scripts in an incorrect format can sadly not be considered for the Challenge.
 
-At the end of the event, the best performing speech recognition system 
+At the end of the event, the best-performing speech recognition system 
 will receive a prize 🏆 - more information regarding the prizes can be found under [Prizes](#prizes).
 
 We believe that framing the event as a competition is more fun, but at the core, the event is about
 fine-tuning Whisper in as many languages as possible as a community.
-This can be achieved by working together, helping each other to solve bugs, share important findings, etc...🤗
+This can be achieved by working together, helping each other to solve bugs, sharing important findings, etc...🤗
 
 **Note**:
 Please, read through the section on [Communication & Problems](#communication-and-problems) to make sure you 
@@ -96,7 +97,7 @@ load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test")
 
 However, we strongly encourage participants to make use of Common Voice's other splits, *e.g.* `"train"` and `"validation"`.
 For most languages, the Common Voice dataset offers already a decent amount of training data. It is usually 
-always advantageous to collect additional data. To do so, the participants are in a first step encouraged to search the
+always advantageous to collect additional data. To do so, the participants are in first step encouraged to search the
 Hugging Face Hub for additional audio data, for example by selecting the category 
 ["speech-processing"](https://huggingface.co/datasets?task_categories=task_categories:speech-processing&sort=downloads).
 All datasets that are available on the Hub can be downloaded via the 🤗 Datasets library in the same way Common Voice is downloaded.
@@ -141,9 +142,9 @@ meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`f
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
-## How to install relevant libraries & setup environment
+## How to install relevant libraries & setup the environment
 
-Before installing the required libraries, we'd need to install install and update `ffmpeg` to version 4:
+Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
 
 ```bash
 add-apt-repository -y ppa:jonathonf/ffmpeg-4
@@ -185,7 +186,7 @@ instructions [here](https://pytorch.org/) to install PyTorch with CUDA.
 
 We strongly recommend making use of the provided PyTorch Seq2Seq Speech Recognition script in [transformers/examples/pytorch/speech-recognition](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) to fine-tune your Whisper model.
 
-Alright, on-to the home stretch, let's install all the required packages into our virtual environment.
+Alright, onto the home stretch, let's install all the required packages into our virtual environment.
 
 ```bash
 pip install datasets>=2.6.1
@@ -197,7 +198,7 @@ pip install jiwer
 <!-- TODO: VB - these are based on a colab env install, double check this if it works on a fresh VM too.-->
 
 To verify that all libraries are correctly installed, you can run the following command in a Python shell.
-It verifies that both `transformers` and `datasets` have been correclty installed.
+It verifies that both `transformers` and `datasets` have been correctly installed.
 
 ```python
 import torch
@@ -238,7 +239,7 @@ the community week, please fork the datasets repository and follow the instructi
 
 If you encounter any problems or have any questions, you should use one of the following platforms
 depending on your type of problem. Hugging Face is an "open-source-first" organization meaning 
-that we'll try to solve all problems in the most public and most transparent way possible so that everybody
+that we'll try to solve all problems in the most public and transparent way possible so that everybody
 in the community profits.
 
 The following table summarizes what platform to use for which problem.
