@@ -233,7 +233,8 @@ We can now verify that `transformers` and `datasets` have been correctly install
 python
 ```
 
-Then run the following code cell:
+Running the following code cell will load a "dummy" dataset from the Hub and perform a forward pass of the 
+"tiny" Whisper model:
 
 ```python
 import torch
