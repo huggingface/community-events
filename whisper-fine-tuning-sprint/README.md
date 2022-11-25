@@ -2,8 +2,9 @@
 
 Welcome to the Whisper fine-tuning event 🎙️!
 
-The goal of this event is to fine-tune the Whisper model in order to build state-of-the-art speech recognition systems in as many languages as possible 🌏🌍🌎. 
-If necessary and available, free access to a A100 40 GB GPUs will kindly be provided by our cloud compute partners, [Lambda Labs](https://lambdalabs.com) 🚀.
+The goal of this event is to fine-tune Whisper and build state-of-the-art speech recognition systems in as many languages as possible 🌏🌍🌎. 
+We will work together as a community to achieve this, helping others and learning where we can 🤗. If necessary and 
+available, free access to A100 40 GB GPUs will kindly be provided by our cloud compute partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
@@ -27,24 +28,14 @@ and make sure to:
 
 ## TLDR
 
-Throughout the sprint participants are encouraged to leverage *any* available pre-trained [Whisper checkpoint](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper),
-preferably [openai/whisper-large](https://huggingface.co/openai/whisper-large), 
-to fine-tune Whisper in a language of their choice.
+Whisper achieves strong performance on many datasets, domains and languages. Through fine-tuning, the 
+performance of this model can be boosted further for specific languages.
 
-All models fine-tuned during the sprint should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**.
-For more information on how to install the above libraries, please read through 
-[How to install pytorch, transformers, datasets](#how-to-install-relevant-libraries).
+In this event, we're bringing the community together to fine-tune Whisper in as many languages as possible. Our aim is 
+to achieve state-of-the-art on the languages spoken by the community. Together, we can democratise speech recognition for all.
 
-Participants can make use of whatever data they think is useful to fine-tune Whisper - 
-**except** the Common Voice `"test"` split of their chosen language.
-The section [Data and preprocessing](#data-and-preprocessing) explains 
-in more detail what audio data can be used, how to find suitable audio data, and 
-how the audio data can be processed.
-
-For training, it is recommended to use the [official training script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) or a modification thereof. A step-by-step guide on how to fine-tune 
-a Whisper model for a speech recognition system can be found under [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model).
-If possible it is encouraged to fine-tune the Whisper models on local GPU machines, but 
-if those are not available, we'll work towards providing you with a GPU instance. Simply fill out [this google form](https://forms.gle/F2bpouvhDpKKisM39) to get access to a GPU.
+We are providing scripts, notebooks, blog posts, talks and compute (where available), so you have all the resources you 
+need to participate.
 
 During the event, the speech recognition system will be evaluated on both the Common Voice `"test"` split 
 of the participants' chosen language as well as the *real-world* `"dev"` data provided by 
