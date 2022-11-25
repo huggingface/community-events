@@ -124,10 +124,8 @@ nvidia-smi
 This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda Labs GPUs!
 If you get an error running this command, refer to your device manual for installing the required NVIDIA driver.
 
-We recommend installing the required libraries in a [Python virtual environment](https://docs.python.org/3/library/venv.html). 
-If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
-
-Create a virtual environment with the version of Python you're going
+We recommend installing the required libraries in a Python virtual environment. If you're unfamiliar with Python virtual 
+environments, check out the official user guide: [installing-using-pip-and-virtual-environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 
 Let's define a variable that denotes the name of the environment we're going to create:
 
@@ -135,7 +133,7 @@ Let's define a variable that denotes the name of the environment we're going to 
 env_name=<your-venv-name>
 ```
 
-We can create a virtual environment with this name using the following command:
+We can create a virtual environment (venv) with this name using the following command:
 
 ```bash
 python3 -m venv $env_name
