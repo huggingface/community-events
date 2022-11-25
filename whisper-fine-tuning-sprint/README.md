@@ -3,25 +3,27 @@
 Welcome to the Whisper fine-tuning event 🎙️!
 
 The goal of this event is to fine-tune the Whisper model in order to build state-of-the-art speech recognition systems in as many languages as possible 🌏🌍🌎. 
-If necessary and available, free access to a A100 40 GB GPUs will kindly be provided by our cloud partners, [Lambda Labs](https://lambdalabs.com) 🚀.
+If necessary and available, free access to a A100 40 GB GPUs will kindly be provided by our cloud compute partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
 - Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. TODO(VB): add specific instructions for going to the role-assignments channel and accept audio
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. TODO: VB - add specific instructions for going to the role-assignments channel and accept audio
 
 ## Table of Contents
 
 - [TLDR](#tldr)
-- [Important dates](#important-dates)
-- [How to install PyTorch, transformers, datasets](#how-to-install-relevant-libraries)
-- [Data and Preprocessing](#data-and-preprocessing)
-- [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)
+- [Important Dates](#important-dates)
+- [Introduction](#introduction)
+- [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
+- [Set Up an Environment](#set-up-an-environment)
+- [Data and Pre-Processing](#data-and-pre-processing)
+- [Fine-Tune a Whisper Model](#fine-tune-whisper)
 - [Evaluation](#evaluation)
 - [Prizes](#prizes)
 - [Communication and Problems](#communication-and-problems)
 - [Talks](#talks)
-- [General Tips & Tricks](#general-tips-and-tricks)
+- [Tips and Tricks](#tips-and-tricks)
 
 ## TLDR
 
@@ -67,14 +69,17 @@ know how to ask for help, etc...
 All important announcements will be made on discord. Please make sure that 
 you've joined [#events channel](https://hf.co/join/discord)
 
-## Important dates
+## Important Dates
+<!--- TODO: SG - this section can probably be collapsed into a subsection under TLDR or intro, otherwise think about where it fits as a section --->
 
 - *Talks*: 1st & 2nd December 2022
 - *Sprint start*: 5th December 2022
 - *Sprint end*: 19th December 2022
 - *Whisper benchmark & results*: 26th December 2022 
 
-## Data and preprocessing
+## Introduction
+
+## Data and Pre-Processing
 
 In this section, we will quickly go over how to find suitable training data and 
 how to preprocess it.
@@ -141,7 +146,10 @@ meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`f
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
-## How to install relevant libraries & setup the environment
+## Launch a Lambda Cloud GPU
+Placeholder section for Cloud GPU
+
+## Set Up an Environment
 
 Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
 
@@ -222,7 +230,7 @@ Note: If you plan on contributing a specific dataset during
 the community week, please fork the datasets repository and follow the instructions 
 [here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
 
-## How to finetune a whisper model
+## Fine-Tune Whisper
 
 <!-- TODO: VB - Add a fine-tuning guide here after testing the script on lambda labs GPU -->
 
@@ -254,6 +262,6 @@ The following table summarizes what platform to use for which problem.
 
 <!-- TODO: VB - Add Talk schedule when up. -->
 
-## General Tips and Tricks
+## Tips and Tricks
 
 <!-- TODO: VB - Add tips for faster convergence/ memory efficient training. -->
