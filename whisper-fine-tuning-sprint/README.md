@@ -13,9 +13,8 @@ and make sure to:
 
 ## Table of Contents
 
-- [TLDR](#tldr)
-- [Important Dates](#important-dates)
 - [Introduction](#introduction)
+- [Important Dates](#important-dates)
 - [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
 - [Set Up an Environment](#set-up-an-environment)
 - [Data and Pre-Processing](#data-and-pre-processing)
@@ -26,119 +25,52 @@ and make sure to:
 - [Talks](#talks)
 - [Tips and Tricks](#tips-and-tricks)
 
-## TLDR
-
-Whisper achieves strong performance on many datasets, domains and languages. Through fine-tuning, the 
-performance of this model can be boosted further for specific languages.
+## Introduction
+Whisper is a pre-trained model for automatic speech recognition (ASR) published in [September 2022](https://openai.com/blog/whisper/) 
+by the authors Radford et al. from OpenAI. Pre-trained on 680,000 hours of labelled data, it demonstrates a strong ability 
+to generalise to different datasets and domains. Through fine-tuning, the performance of this model can be significantly 
+boosted for a given language.
 
 In this event, we're bringing the community together to fine-tune Whisper in as many languages as possible. Our aim is 
-to achieve state-of-the-art on the languages spoken by the community. Together, we can democratise speech recognition for all.
+to achieve state-of-the-art on the languages spoken by the community. Together, we can democratise speech recognition 
+for all.
 
-We are providing scripts, notebooks, blog posts, talks and compute (where available), so you have all the resources you 
-need to participate.
+We are providing training scripts, notebooks, blog posts, talks and compute (where available), so you have all the 
+resources you need to participate! You are free to chose your level of participation, from using the template script and setting 
+it to your language, right the way through to exploring advanced training methods. We encourage you to participate to 
+level that 
 
-During the event, the speech recognition system will be evaluated on both the Common Voice `"test"` split 
-of the participants' chosen language as well as the *real-world* `"dev"` data provided by 
-the Hugging Face team. 
-At the end of the whisper fine-tuning sprint, the speech recognition system will also be evaluated on the
-*real-world* `"test"` data provided by the Hugging Face team. Each participant should add an 
-`eval.py` script to her/his model repository in a specific format that lets one easily 
-evaluate the speech recognition system on both Common Voice's `"test"` data as well as the *real-world* audio 
-data. Please read through the [Evaluation](#evaluation) section to make sure your evaluation script is in the correct format. Models
-with evaluation scripts in an incorrect format can sadly not be considered for the Challenge.
+Speech recognition systems will be evaluated on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
+dataset for the participant's chosen language. At the end of the event, we'll verify the results, and the 
+best-performing speech recognition system in each language will receive a prize 🏆.
 
-At the end of the event, the best-performing speech recognition system 
-will receive a prize 🏆 - more information regarding the prizes can be found under [Prizes](#prizes).
+We believe that framing the event as a competition is fun! But at the core, the event is about
+fine-tuning Whisper in as many languages as possible as a community. We want to foster an environment where we 
+work together, help each other solve bugs, share important findings and ultimately learn something new.
 
-We believe that framing the event as a competition is more fun, but at the core, the event is about
-fine-tuning Whisper in as many languages as possible as a community.
-This can be achieved by working together, helping each other to solve bugs, sharing important findings, etc...🤗
-
-**Note**:
-Please, read through the section on [Communication & Problems](#communication-and-problems) to make sure you 
-know how to ask for help, etc...
-All important announcements will be made on discord. Please make sure that 
-you've joined [#events channel](https://hf.co/join/discord)
+This README contains all the information you need for the event. It is structured such that you can read it sequentially, 
+section-by-section. We recommend that you read the document once from start to finish before running any code. This will 
+give you an idea of where to look for the relevant information and an idea of how the event is going to run.
 
 ## Important Dates
-<!--- TODO: SG - this section can probably be collapsed into a subsection under TLDR or intro, otherwise think about where it fits as a section --->
 
-- *Talks*: 1st & 2nd December 2022
 - *Sprint start*: 5th December 2022
 - *Sprint end*: 19th December 2022
-- *Whisper benchmark & results*: 26th December 2022 
-
-## Introduction
-
-## Data and Pre-Processing
-
-In this section, we will quickly go over how to find suitable training data and 
-how to preprocess it.
-
-To begin with, **all data except Common Voice's `"test"` data can be used as training data.**
-The exception includes all Common Voice versions as the test data split of later Common Voice versions often
-overlaps with the one of previous versions, *e.g.* the test data of Common Voice 7 in English is 
-to a big part identical to the test data of Common Voice 6 in English:
-
-```python
-load_dataset("mozilla-foundation/common_voice_11_0", "en", split="test") 
-```
-
-includes more or less the same data as
-
-```python
-load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test") 
-```
-
-However, we strongly encourage participants to make use of Common Voice's other splits, *e.g.* `"train"` and `"validation"`.
-For most languages, the Common Voice dataset offers already a decent amount of training data. It is usually 
-always advantageous to collect additional data. To do so, the participants are in first step encouraged to search the
-Hugging Face Hub for additional audio data, for example by selecting the category 
-["speech-processing"](https://huggingface.co/datasets?task_categories=task_categories:speech-processing&sort=downloads).
-All datasets that are available on the Hub can be downloaded via the 🤗 Datasets library in the same way Common Voice is downloaded.
-If one wants to combine multiple datasets for training, it might make sense to take a look at 
-the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
-
-In addition, participants can also make use of their audio data. Here, please make sure that you **are allowed to use the audio data**. E.g., if audio data 
-is taken from media platforms, such as YouTube, it should be verified that the media platform and the owner of the data have given their approval to use the audio 
-data in the context of machine learning research. If you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face 
-team on discord.
-
-Next, let's talk about preprocessing. Audio data and transcriptions have to be brought into the correct format when 
-training the acoustic model (example shown in [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)).
-It is recommended that this is done by using 🤗 Datasets `.map()` function as shown below.
-
-```python
-def remove_special_characters(batch):
-    if chars_to_ignore_regex is not None:
-        batch["target_text"] = re.sub(chars_to_ignore_regex, "", batch[text_column_name]).lower() + " "
-    else:
-        batch["target_text"] = batch[text_column_name].lower() + " "
-    return batch
-
-
-raw_datasets = raw_datasets.map(
-    remove_special_characters,
-    remove_columns=[text_column_name],
-    desc="remove special characters from datasets",
-    )
-```
-
-The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
-it is done in the [official script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py).
-**However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
-These rules are not this straightforward and therefore often have to be evaluated case-by-case.
-It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
-symbols and punctuation marks. A list of such symbols can *e.g.* be found [here](https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks) - however here we already must be careful. We should **not** remove a symbol that would change the meaning of the words, *e.g.* in English, 
-we should not remove the single quotation mark `'` since it would change the meaning of the word `"it's"` to `"its"` which would then be incorrect. 
-So the golden rule here is to not remove any characters that could change the meaning of a word into another word. This is not always obvious and should 
-be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
-meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
-
-Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
+- *Whisper benchmark & results*: 26th December 2022 (tentative) TODO: VB, SG - decide a timeline for evaluation
 
 ## Launch a Lambda Cloud GPU
-Placeholder section for Cloud GPU
+Where possible, we encourage you to fine-tune Whisper on a local GPU machine. If you are running on a local GPU machine, 
+you can skip ahead to the next section: [Set Up an Environment](#set-up-an-environment). However, if you do not have 
+access to one, we'll endeavour to provide you with a cloud GPU instance.
+
+We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
+40 GB GPUs, so you'll be loaded with some serious firepower! This section is split into two halves:
+1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
+2. [Creating a Cloud Instance](#creating-a-cloud-instance)
+
+### Signing-Up with Lambda Labs
+
+### Creating a Cloud Instance
 
 ## Set Up an Environment
 
@@ -221,7 +153,93 @@ Note: If you plan on contributing a specific dataset during
 the community week, please fork the datasets repository and follow the instructions 
 [here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
 
+## Data and Pre-Processing
+
+In this section, we will quickly go over how to find suitable training data and 
+how to preprocess it.
+
+To begin with, **all data except Common Voice's `"test"` data can be used as training data.**
+The exception includes all Common Voice versions as the test data split of later Common Voice versions often
+overlaps with the one of previous versions, *e.g.* the test data of Common Voice 7 in English is 
+to a big part identical to the test data of Common Voice 6 in English:
+
+```python
+load_dataset("mozilla-foundation/common_voice_11_0", "en", split="test") 
+```
+
+includes more or less the same data as
+
+```python
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test") 
+```
+
+However, we strongly encourage participants to make use of Common Voice's other splits, *e.g.* `"train"` and `"validation"`.
+For most languages, the Common Voice dataset offers already a decent amount of training data. It is usually 
+always advantageous to collect additional data. To do so, the participants are in first step encouraged to search the
+Hugging Face Hub for additional audio data, for example by selecting the category 
+["speech-processing"](https://huggingface.co/datasets?task_categories=task_categories:speech-processing&sort=downloads).
+All datasets that are available on the Hub can be downloaded via the 🤗 Datasets library in the same way Common Voice is downloaded.
+If one wants to combine multiple datasets for training, it might make sense to take a look at 
+the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
+
+In addition, participants can also make use of their audio data. Here, please make sure that you **are allowed to use the audio data**. E.g., if audio data 
+is taken from media platforms, such as YouTube, it should be verified that the media platform and the owner of the data have given their approval to use the audio 
+data in the context of machine learning research. If you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face 
+team on discord.
+
+Next, let's talk about preprocessing. Audio data and transcriptions have to be brought into the correct format when 
+training the acoustic model (example shown in [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)).
+It is recommended that this is done by using 🤗 Datasets `.map()` function as shown below.
+
+```python
+def remove_special_characters(batch):
+    if chars_to_ignore_regex is not None:
+        batch["target_text"] = re.sub(chars_to_ignore_regex, "", batch[text_column_name]).lower() + " "
+    else:
+        batch["target_text"] = batch[text_column_name].lower() + " "
+    return batch
+
+
+raw_datasets = raw_datasets.map(
+    remove_special_characters,
+    remove_columns=[text_column_name],
+    desc="remove special characters from datasets",
+    )
+```
+
+The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
+it is done in the [official script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py).
+**However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
+These rules are not this straightforward and therefore often have to be evaluated case-by-case.
+It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
+symbols and punctuation marks. A list of such symbols can *e.g.* be found [here](https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks) - however here we already must be careful. We should **not** remove a symbol that would change the meaning of the words, *e.g.* in English, 
+we should not remove the single quotation mark `'` since it would change the meaning of the word `"it's"` to `"its"` which would then be incorrect. 
+So the golden rule here is to not remove any characters that could change the meaning of a word into another word. This is not always obvious and should 
+be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
+meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
+
+Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
+
 ## Fine-Tune Whisper
+
+Throughout the event, participants are encouraged to leverage the official pre-trained [Whisper checkpoints](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper).
+The Whisper checkpoints come in five configurations of varying model sizes.
+The smallest four are trained on either English-only or multilingual data.
+The largest checkpoint is multilingual only. The checkpoints are summarised in the following table with links to the 
+models on the Hugging Face Hub:
+
+| Size   | Layers | Width | Heads | Parameters | English-only                                         | Multilingual                                      |
+|--------|--------|-------|-------|------------|------------------------------------------------------|---------------------------------------------------|
+| tiny   | 4      | 384   | 6     | 39 M       | [✓](https://huggingface.co/openai/whisper-tiny.en)   | [✓](https://huggingface.co/openai/whisper-tiny.)  |
+| base   | 6      | 512   | 8     | 74 M       | [✓](https://huggingface.co/openai/whisper-base.en)   | [✓](https://huggingface.co/openai/whisper-base)   |
+| small  | 12     | 768   | 12    | 244 M      | [✓](https://huggingface.co/openai/whisper-small.en)  | [✓](https://huggingface.co/openai/whisper-small)  |
+| medium | 24     | 1024  | 16    | 769 M      | [✓](https://huggingface.co/openai/whisper-medium.en) | [✓](https://huggingface.co/openai/whisper-medium) |
+| large  | 32     | 1280  | 20    | 1550 M     | x                                                    | [✓](https://huggingface.co/openai/whisper-large)  |
+
+We recommend using the tiny model for rapid prototyping. We advise that the small or medium checkpoints are used for 
+fine-tuning. These checkpoints achieve comparable performance to the large checkpoint with very little fine-tuning, but 
+can be trained much faster (and hence for much longer!).
+<!--- TODO: SG - review this after lambda testing --->
 
 <!-- TODO: VB - Add a fine-tuning guide here after testing the script on lambda labs GPU -->
 
