@@ -59,12 +59,15 @@ give you an idea of where to look for the relevant information and an idea of ho
 - *Whisper benchmark & results*: 26th December 2022 (tentative) TODO: VB, SG - decide a timeline for evaluation
 
 ## Launch a Lambda Cloud GPU
-Where possible, we encourage you to fine-tune Whisper on a local GPU machine. If you are running on a local GPU machine, 
-you can skip ahead to the next section: [Set Up an Environment](#set-up-an-environment). However, if you do not have 
-access to one, we'll endeavour to provide you with a cloud GPU instance.
+Where possible, we encourage you to fine-tune Whisper on a local GPU machine. This will mean a faster set-up and more 
+familiarity with your device. If you are running on a local GPU machine, you can skip ahead to the next section: [Set Up an Environment](#set-up-an-environment). 
+However, if you do not have access to a GPU, we'll endeavour to provide you with a cloud GPU instance.
 
 We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
-40 GB GPUs, so you'll be loaded with some serious firepower! This section is split into two halves:
+40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Labs Cloud API makes it easy to spin-up and launch 
+a GPU instance. In this Section, we'll go through the steps for spinning up an instance one-by-one.
+
+This section is split into two halves:
 
 1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
