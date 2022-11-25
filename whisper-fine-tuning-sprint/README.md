@@ -73,45 +73,194 @@ We've partnered up with Lambda Labs to provide cloud compute for this event. The
 TODO: SG - add section once we've figured out how the 'teams' function is going to work with Mitesh
 
 ### Creating a Cloud Instance
-TODO: SG
+Estimated time to complete: 5 mins
+
+1. Head over to [lambdalabs.com](https://lambdalabs.com)
+2. Hover your cursor over the box "GPU Cloud" and click "Sign-In". 
+3. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
+4. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
+5. Launching an instance:
+   1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)" TODO: SG - SXM4 or PCle?
+   2. In "Select region", select the region with availability closest to you.
+   3. In "Select filesystem", select "Don't attach a filesystem".
+6. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
+   1. If you’ve not already created an SSH key pair, you can do so with the following command from your local device: 
+      ```bash
+      ssh-keygen
+      ```
+   2. You can find your public SSH key using the command: 
+      ```bash
+      cat ~/.ssh/id_rsa.pub
+      ```
+   4. Copy and paste the output of this command into the first text box
+   5. Give your SSH key a memorable name (e.g. `sanchits-mbp`)
+   6. Click "Add SSH Key"
+7. Select the SSH key from the drop-down menu and click "Launch instance"
+8. Read the terms of use and agree
+9. We can now see on the "GPU instances" page that our device is booting up!
+10. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
+11. Now open a new command line window, paste the SSH login, and hit Enter.
+12. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
+13. Great! You're now SSH'd into your A100 device! We can now move on to setting up an environment.
+
+TODO: SG - video for launching an instance
 
 ## Set Up an Environment
+Estimated time to complete: 5 mins
 
-Speech recognition systems should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
+The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
 section, we'll cover how to set up an environment with the required libraries.
+
+First, we need to make sure we have the required NVIDIA drivers installed. We can check that we have these drivers 
+through the following command:
+
+```bash
+nvidia-smi
+```
+
+This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda Labs GPUs!
+If you get an error running this command, refer to your device manual for installing the required NVIDIA driver.
+
+We recommend installing the required libraries in a [Python virtual environment](https://docs.python.org/3/library/venv.html). 
+If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
+
+Create a virtual environment with the version of Python you're going
+
+Let's define a variable that denotes the name of the environment we're going to create:
+
+```bash
+env_name=<your-venv-name>
+```
+
+We can create a virtual environment with this name using the following command:
+
+```bash
+python3 -m venv $env_name
+```
+
+We'll instruct our bash shell to activate the venv by default by placing the venv source command in `.bashrc`:
+
+```bash
+echo "source ~/$env_name/bin/activate" >> ~/.bashrc
+```
+
+Re-launching the bash shell will activate the venv:
+
+```bash
+bash
+```
+
+Great! We can see that our venv name is at the start of our command line - this means that we're operating from 
+within the venv. We can now go ahead and start installing the required Python packages to our venv.
+
+We strongly recommend that you install 🤗 Transformers from source to profit from new library additions during the 
+community week. This will also copy the PyTorch examples scripts to your system for training the Whisper model and 
+allow you to make any desired changes.
+
+We recommend forking and cloning the 🤗 Transformers repository as follows:
+
+1. Fork the [repository](https://github.com/huggingface/transformers) by
+   clicking on the 'Fork' button on the repository's page. This creates a copy of the code
+   under your GitHub user account.
+
+2. Clone your fork to your local disk:
+
+   ```bash
+   git clone https://github.com/<your Github handle>/transformers.git
+   ```
+3. Add the base repository as a remote and pull the most recent changes:
+   
+   ```bash
+   cd transformers
+   git remote add upstream https://github.com/huggingface/transformers.git
+   git pull upstream main
+   ```
+
+4. Create a new branch to hold your development changes. This is especially useful to share code changes with your team:
+
+   ```bash
+   git checkout -b a-descriptive-name-for-my-project
+   ```
+
+5. Set up a PyTorch environment by running the following command in your venv:
+
+   ```bash
+   pip install -e ".[torch-speech]"
+   ```
+
+   (If transformers was already installed in the virtual environment, remove
+   it with `pip uninstall transformers` before reinstalling it in editable
+   mode with the `-e` flag.)
+
+   Running this command will automatically install `torch` and the relevant 
+   libraries required for running Whisper in 🤗 Transformers.
+
+6. There are a few additional dependencies we require for fine-tuning (e.g. `librosa` and `evaluate`). We can install 
+   these packages using the `requirements.txt` file located in the examples' directory:
+
+   ```bash
+   pip install -r ~/transformers/examples/pytorch/speech-recognition/requirements.txt
+   ```
+
+Great! Installing 🤗 Transformers from source has provided us with almost all the packages we need 
+to fine-tune Whisper!
+
+We can check that above steps installed the correct version of PyTorch to match our CUDA version.
+The following command should return `True`:
 
 ```bash
 python -c "import torch; print(torch.cuda.is_available())"
 ```
 
-If the above command doesn't print ``True``, in the first step, please follow the
-instructions [here](https://pytorch.org/) to install PyTorch with CUDA.
+If the command doesn't return `True`, follow the official instructions for installing 
+PyTorch with CUDA: https://pytorch.org/get-started/locally/
 
-To verify that all libraries are correctly installed, you can run the following command in a Python shell.
-It verifies that both `transformers` and `datasets` have been correctly installed.
+Great! The last package we need to install is 🤗 Datasets. Again, we'll install it from source: 
+
+```bash
+cd ~/
+git clone https://github.com/huggingface/datasets.git
+cd datasets
+pip install -e ".[streaming]"
+```
+
+If you plan on contributing to the 🤗 Datasets library during the community week, fork the datasets repository and follow the instructions 
+for opening a PR: [#how-to-create-a-pull-request](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
+
+We can now verify that `transformers` and `datasets` have been correctly installed. First, launch a Python shell:
+
+```bash
+python
+```
+
+Then run the following code cell:
 
 ```python
 import torch
-from transformers import WhisperFeatureExtractor, WhisperModel
+from transformers import WhisperFeatureExtractor, WhisperForConditionalGeneration
 from datasets import load_dataset
 
-model = WhisperModel.from_pretrained("openai/whisper-base")
-feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-base")
+model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
+feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-tiny")
 
 ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
 
-inputs = feature_extractor(ds[0]["audio"]["array"], return_tensors="pt")
+inputs = feature_extractor(ds[0]["audio"]["array"], sampling_rate=16000, return_tensors="pt")
 input_features = inputs.input_features
 
 decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
-last_hidden_state = model(input_features, decoder_input_ids=decoder_input_ids).last_hidden_state
+logits = model(input_features, decoder_input_ids=decoder_input_ids).logits
 
-assert last_hidden_state.shape[-1] == 512
+assert logits.shape[-1] == 51865
 ```
 
-Note: If you plan on contributing a specific dataset during 
-the community week, please fork the datasets repository and follow the instructions 
-[here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
+If the final `assert` statement passes, the libraries have been installed correctly. Finally, exit the Python shell:
+```python
+quit()
+```
+
+TODO: SG - do we need to install:
+* tensorboard
 
 ## Data and Pre-Processing
 
