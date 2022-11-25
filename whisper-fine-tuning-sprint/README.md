@@ -38,7 +38,7 @@ for all.
 We are providing training scripts, notebooks, blog posts, talks and compute (where available), so you have all the 
 resources you need to participate! You are free to chose your level of participation, from using the template script and setting 
 it to your language, right the way through to exploring advanced training methods. We encourage you to participate to 
-level that 
+level that suits you best. We'll be on hand to facilitate this!
 
 Speech recognition systems will be evaluated on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
 dataset for the participant's chosen language. At the end of the event, we'll verify the results, and the 
@@ -65,47 +65,20 @@ access to one, we'll endeavour to provide you with a cloud GPU instance.
 
 We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
 40 GB GPUs, so you'll be loaded with some serious firepower! This section is split into two halves:
+
 1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
 
 ### Signing-Up with Lambda Labs
+TODO: SG - add section once we've figured out how the 'teams' function is going to work with Mitesh
 
 ### Creating a Cloud Instance
+TODO: SG
 
 ## Set Up an Environment
 
-Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
-
-```bash
-add-apt-repository -y ppa:jonathonf/ffmpeg-4
-apt update
-apt install -y ffmpeg
-```
-
-Now, on to installing the relevant libraries for our fine-tuning runs. The following libraries are required to fine-tune Whisper with 🤗 Transformers and 🤗 Datasets in PyTorch.
-
-- [PyTorch](https://pytorch.org/)
-- [Transformers](https://github.com/huggingface/transformers)
-- [Datasets](https://github.com/huggingface/datasets)
-
-We recommend installing the above libraries in a [virtual environment](https://docs.python.org/3/library/venv.html). 
-If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/). Create a virtual environment with the version of Python you're going
-to use and activate it.
-
-You should be able to run the command:
-
-```bash
-python3 -m venv <your-venv-name>
-```
-
-You can activate your venv by running
-
-```bash
-source ~/<your-venv-name>/bin/activate
-```
-
-To begin with please make sure you have PyTorch and CUDA correctly installed. 
-The following command should return ``True``:
+Speech recognition systems should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
+section, we'll cover how to set up an environment with the required libraries.
 
 ```bash
 python -c "import torch; print(torch.cuda.is_available())"
@@ -113,19 +86,6 @@ python -c "import torch; print(torch.cuda.is_available())"
 
 If the above command doesn't print ``True``, in the first step, please follow the
 instructions [here](https://pytorch.org/) to install PyTorch with CUDA.
-
-We strongly recommend making use of the provided PyTorch Seq2Seq Speech Recognition script in [transformers/examples/pytorch/speech-recognition](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) to fine-tune your Whisper model.
-
-Alright, onto the home stretch, let's install all the required packages into our virtual environment.
-
-```bash
-pip install datasets>=2.6.1
-pip install git+https://github.com/huggingface/transformers
-pip install librosa
-pip install evaluate>=0.30
-pip install jiwer
-```
-<!-- TODO: VB - these are based on a colab env install, double check this if it works on a fresh VM too.-->
 
 To verify that all libraries are correctly installed, you can run the following command in a Python shell.
 It verifies that both `transformers` and `datasets` have been correctly installed.
