@@ -1,81 +1,119 @@
-# Whisper fine-tuning sprint 🤗
+# Whisper Fine-Tuning Event 🤗
 
-Welcome to the Whisper fine-tuning sprint 🎙️!
+Welcome to the Whisper fine-tuning event 🎙️!
 
-The goal of this event is to build upon the success of Whisper architecture at speech recognition (ASR) systems and replicate it in as many languages as possible 🌏🌍🌎.
-Free computing will be provided for those that cannot train models with their compute resources 🚀.
+The goal of this event is to fine-tune Whisper and build state-of-the-art speech recognition systems in as many languages as possible 🌏🌍🌎. 
+We will work together as a community to achieve this, helping others and learning where we can 🤗. If necessary and 
+available, free access to A100 40 GB GPUs will kindly be provided by our cloud compute partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 
-This document summarizes all the relevant information required for the speech community event 📋.
-
-To sign-up, please read this README thoroughly 🤗 & make sure to:
-- Fill out the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel.
+This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
+and make sure to:
+- Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. TODO: VB - add specific instructions for going to the role-assignments channel and accept audio
 
 ## Table of Contents
 
-- [TLDR](#tldr)
-- [Important dates](#important-dates)
-- [How to install PyTorch, transformers, datasets](#how-to-install-relevant-libraries)
-- [Data and Preprocessing](#data-and-preprocessing)
-- [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)
+- [Introduction](#introduction)
+- [Important Dates](#important-dates)
+- [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
+- [Set Up an Environment](#set-up-an-environment)
+- [Data and Pre-Processing](#data-and-pre-processing)
+- [Fine-Tune a Whisper Model](#fine-tune-whisper)
 - [Evaluation](#evaluation)
 - [Prizes](#prizes)
 - [Communication and Problems](#communication-and-problems)
 - [Talks](#talks)
-- [General Tips & Tricks](#general-tips-and-tricks)
+- [Tips and Tricks](#tips-and-tricks)
 
-## TLDR
+## Introduction
+Whisper is a pre-trained model for automatic speech recognition (ASR) published in [September 2022](https://openai.com/blog/whisper/) 
+by the authors Radford et al. from OpenAI. Pre-trained on 680,000 hours of labelled data, it demonstrates a strong ability 
+to generalise to different datasets and domains. Through fine-tuning, the performance of this model can be significantly 
+boosted for a given language.
 
-Throughout the sprint participants are encouraged to leverage *any* available pre-trained [Whisper checkpoint](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper),
-preferably [openai/whisper-large](https://huggingface.co/openai/whisper-large), 
-to fine-tune Whisper in a language of their choice.
+In this event, we're bringing the community together to fine-tune Whisper in as many languages as possible. Our aim is 
+to achieve state-of-the-art on the languages spoken by the community. Together, we can democratise speech recognition 
+for all.
 
-All models fine-tuned during the sprint should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**.
-For more information on how to install the above libraries, please read through 
-[How to install pytorch, transformers, datasets](#how-to-install-relevant-libraries).
+We are providing training scripts, notebooks, blog posts, talks and compute (where available), so you have all the 
+resources you need to participate! You are free to chose your level of participation, from using the template script and setting 
+it to your language, right the way through to exploring advanced training methods. We encourage you to participate to 
+level that suits you best. We'll be on hand to facilitate this!
 
-Participants can make use of whatever data they think is useful to fine-tune Whisper - 
-**except** the Common Voice `"test"` split of their chosen language.
-The section [Data and preprocessing](#data-and-preprocessing) explains 
-in more detail what audio data can be used, how to find suitable audio data, and 
-how the audio data can be processed.
+Speech recognition systems will be evaluated on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
+dataset for the participant's chosen language. At the end of the event, we'll verify the results, and the 
+best-performing speech recognition system in each language will receive a prize 🏆.
 
-For training, it is recommended to use the [official training script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) or a modification thereof. A step-by-step guide on how to fine-tune 
-a Whisper model for a speech recognition system can be found under [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model).
-If possible it is encouraged to fine-tune the Whisper models on local GPU machines, but 
-if those are not available, we'll work towards providing you with a GPU instance. Simply fill out [this google form](https://forms.gle/F2bpouvhDpKKisM39) to get access to a GPU.
+We believe that framing the event as a competition is fun! But at the core, the event is about
+fine-tuning Whisper in as many languages as possible as a community. We want to foster an environment where we 
+work together, help each other solve bugs, share important findings and ultimately learn something new.
 
-During the event, the speech recognition system will be evaluated on both the Common Voice `"test"` split 
-of the participants' chosen language as well as the *real-world* `"dev"` data provided by 
-the Hugging Face team. 
-At the end of the whisper fine-tuning sprint, the speech recognition system will also be evaluated on the
-*real-world* `"test"` data provided by the Hugging Face team. Each participant should add an 
-`eval.py` script to her/his model repository in a specific format that lets one easily 
-evaluate the speech recognition system on both Common Voice's `"test"` data as well as the *real-world* audio 
-data. Please read through the [Evaluation](#evaluation) section to make sure your evaluation script is in the correct format. Models
-with evaluation scripts in an incorrect format can sadly not be considered for the Challenge.
+This README contains all the information you need for the event. It is structured such that you can read it sequentially, 
+section-by-section. We recommend that you read the document once from start to finish before running any code. This will 
+give you an idea of where to look for the relevant information and an idea of how the event is going to run.
 
-At the end of the event, the best-performing speech recognition system 
-will receive a prize 🏆 - more information regarding the prizes can be found under [Prizes](#prizes).
+## Important Dates
 
-We believe that framing the event as a competition is more fun, but at the core, the event is about
-fine-tuning Whisper in as many languages as possible as a community.
-This can be achieved by working together, helping each other to solve bugs, sharing important findings, etc...🤗
-
-**Note**:
-Please, read through the section on [Communication & Problems](#communication-and-problems) to make sure you 
-know how to ask for help, etc...
-All important announcements will be made on discord. Please make sure that 
-you've joined [#events channel](https://hf.co/join/discord)
-
-## Important dates
-
-- *Talks*: 1st & 2nd December 2022
 - *Sprint start*: 5th December 2022
 - *Sprint end*: 19th December 2022
-- *Whisper benchmark & results*: 26th December 2022 
+- *Whisper benchmark & results*: 26th December 2022 (tentative) TODO: VB, SG - decide a timeline for evaluation
 
-## Data and preprocessing
+## Launch a Lambda Cloud GPU
+Where possible, we encourage you to fine-tune Whisper on a local GPU machine. If you are running on a local GPU machine, 
+you can skip ahead to the next section: [Set Up an Environment](#set-up-an-environment). However, if you do not have 
+access to one, we'll endeavour to provide you with a cloud GPU instance.
+
+We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
+40 GB GPUs, so you'll be loaded with some serious firepower! This section is split into two halves:
+
+1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
+2. [Creating a Cloud Instance](#creating-a-cloud-instance)
+
+### Signing-Up with Lambda Labs
+TODO: SG - add section once we've figured out how the 'teams' function is going to work with Mitesh
+
+### Creating a Cloud Instance
+TODO: SG
+
+## Set Up an Environment
+
+Speech recognition systems should be trained using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
+section, we'll cover how to set up an environment with the required libraries.
+
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+```
+
+If the above command doesn't print ``True``, in the first step, please follow the
+instructions [here](https://pytorch.org/) to install PyTorch with CUDA.
+
+To verify that all libraries are correctly installed, you can run the following command in a Python shell.
+It verifies that both `transformers` and `datasets` have been correctly installed.
+
+```python
+import torch
+from transformers import WhisperFeatureExtractor, WhisperModel
+from datasets import load_dataset
+
+model = WhisperModel.from_pretrained("openai/whisper-base")
+feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-base")
+
+ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
+
+inputs = feature_extractor(ds[0]["audio"]["array"], return_tensors="pt")
+input_features = inputs.input_features
+
+decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
+last_hidden_state = model(input_features, decoder_input_ids=decoder_input_ids).last_hidden_state
+
+assert last_hidden_state.shape[-1] == 512
+```
+
+Note: If you plan on contributing a specific dataset during 
+the community week, please fork the datasets repository and follow the instructions 
+[here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
+
+## Data and Pre-Processing
 
 In this section, we will quickly go over how to find suitable training data and 
 how to preprocess it.
@@ -142,88 +180,26 @@ meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`f
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
-## How to install relevant libraries & setup the environment
+## Fine-Tune Whisper
 
-Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
+Throughout the event, participants are encouraged to leverage the official pre-trained [Whisper checkpoints](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper).
+The Whisper checkpoints come in five configurations of varying model sizes.
+The smallest four are trained on either English-only or multilingual data.
+The largest checkpoint is multilingual only. The checkpoints are summarised in the following table with links to the 
+models on the Hugging Face Hub:
 
-```bash
-add-apt-repository -y ppa:jonathonf/ffmpeg-4
-apt update
-apt install -y ffmpeg
-```
+| Size   | Layers | Width | Heads | Parameters | English-only                                         | Multilingual                                      |
+|--------|--------|-------|-------|------------|------------------------------------------------------|---------------------------------------------------|
+| tiny   | 4      | 384   | 6     | 39 M       | [✓](https://huggingface.co/openai/whisper-tiny.en)   | [✓](https://huggingface.co/openai/whisper-tiny.)  |
+| base   | 6      | 512   | 8     | 74 M       | [✓](https://huggingface.co/openai/whisper-base.en)   | [✓](https://huggingface.co/openai/whisper-base)   |
+| small  | 12     | 768   | 12    | 244 M      | [✓](https://huggingface.co/openai/whisper-small.en)  | [✓](https://huggingface.co/openai/whisper-small)  |
+| medium | 24     | 1024  | 16    | 769 M      | [✓](https://huggingface.co/openai/whisper-medium.en) | [✓](https://huggingface.co/openai/whisper-medium) |
+| large  | 32     | 1280  | 20    | 1550 M     | x                                                    | [✓](https://huggingface.co/openai/whisper-large)  |
 
-Now, on to installing the relevant libraries for our fine-tuning runs. The following libraries are required to fine-tune Whisper with 🤗 Transformers and 🤗 Datasets in PyTorch.
-
-- [PyTorch](https://pytorch.org/)
-- [Transformers](https://github.com/huggingface/transformers)
-- [Datasets](https://github.com/huggingface/datasets)
-
-We recommend installing the above libraries in a [virtual environment](https://docs.python.org/3/library/venv.html). 
-If you're unfamiliar with Python virtual environments, check out the [user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/). Create a virtual environment with the version of Python you're going
-to use and activate it.
-
-You should be able to run the command:
-
-```bash
-python3 -m venv <your-venv-name>
-```
-
-You can activate your venv by running
-
-```bash
-source ~/<your-venv-name>/bin/activate
-```
-
-To begin with please make sure you have PyTorch and CUDA correctly installed. 
-The following command should return ``True``:
-
-```bash
-python -c "import torch; print(torch.cuda.is_available())"
-```
-
-If the above command doesn't print ``True``, in the first step, please follow the
-instructions [here](https://pytorch.org/) to install PyTorch with CUDA.
-
-We strongly recommend making use of the provided PyTorch Seq2Seq Speech Recognition script in [transformers/examples/pytorch/speech-recognition](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py) to fine-tune your Whisper model.
-
-Alright, onto the home stretch, let's install all the required packages into our virtual environment.
-
-```bash
-pip install datasets>=2.6.1
-pip install git+https://github.com/huggingface/transformers
-pip install librosa
-pip install evaluate>=0.30
-pip install jiwer
-```
-<!-- TODO: VB - these are based on a colab env install, double check this if it works on a fresh VM too.-->
-
-To verify that all libraries are correctly installed, you can run the following command in a Python shell.
-It verifies that both `transformers` and `datasets` have been correctly installed.
-
-```python
-import torch
-from transformers import WhisperFeatureExtractor, WhisperModel
-from datasets import load_dataset
-
-model = WhisperModel.from_pretrained("openai/whisper-base")
-feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-base")
-
-ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
-
-inputs = feature_extractor(ds[0]["audio"]["array"], return_tensors="pt")
-input_features = inputs.input_features
-
-decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
-last_hidden_state = model(input_features, decoder_input_ids=decoder_input_ids).last_hidden_state
-
-assert last_hidden_state.shape[-1] == 512
-```
-
-Note: If you plan on contributing a specific dataset during 
-the community week, please fork the datasets repository and follow the instructions 
-[here](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
-
-## How to finetune a whisper model
+We recommend using the tiny model for rapid prototyping. We advise that the small or medium checkpoints are used for 
+fine-tuning. These checkpoints achieve comparable performance to the large checkpoint with very little fine-tuning, but 
+can be trained much faster (and hence for much longer!).
+<!--- TODO: SG - review this after lambda testing --->
 
 <!-- TODO: VB - Add a fine-tuning guide here after testing the script on lambda labs GPU -->
 
@@ -255,6 +231,6 @@ The following table summarizes what platform to use for which problem.
 
 <!-- TODO: VB - Add Talk schedule when up. -->
 
-## General Tips and Tricks
+## Tips and Tricks
 
 <!-- TODO: VB - Add tips for faster convergence/ memory efficient training. -->
