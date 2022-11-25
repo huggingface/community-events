@@ -1,15 +1,14 @@
-# Whisper fine-tuning sprint 🤗
+# Whisper Fine-Tuning Event 🤗
 
-Welcome to the Whisper fine-tuning sprint 🎙️!
+Welcome to the Whisper fine-tuning event 🎙️!
 
-The goal of this event is to build upon the success of Whisper architecture at speech recognition (ASR) systems and replicate it in as many languages as possible 🌏🌍🌎.
-Free computing will be provided for those that cannot train models with their compute resources 🚀.
+The goal of this event is to fine-tune the Whisper model in order to build state-of-the-art speech recognition systems in as many languages as possible 🌏🌍🌎. 
+If necessary and available, free access to a A100 40 GB GPUs will kindly be provided by our cloud partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 
-This document summarizes all the relevant information required for the speech community event 📋.
-
-To sign-up, please read this README thoroughly 🤗 & make sure to:
-- Fill out the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel.
+This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
+and make sure to:
+- Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. TODO(VB): add specific instructions for going to the role-assignments channel and accept audio
 
 ## Table of Contents
 
