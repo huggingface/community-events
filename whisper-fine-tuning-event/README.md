@@ -19,7 +19,6 @@ and make sure to:
 - [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
 - [Set Up an Environment](#set-up-an-environment)
 - [Data and Pre-Processing](#data-and-pre-processing)
-- [Streaming Mode](#streaming-mode)
 - [Fine-Tune a Whisper Model](#fine-tune-whisper)
 - [Evaluation](#evaluation)
 - [Building a Demo](#building-a-demo)
@@ -43,7 +42,7 @@ it to your language, right the way through to exploring advanced training method
 level that suits you best. We'll be on hand to facilitate this!
 
 Participants are allowed to fine-tune their systems on the training data of their choice, including datasets from the 
-Hugging Face Hub, web-scraped data from the internet, or private datasets. Speech recognition systems will be evaluated 
+Hugging Face Hub, web-scraped data from the internet, or private datasets. Whisper models will be evaluated 
 on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
 dataset for the participant's chosen language.
 
@@ -228,37 +227,110 @@ TODO: SG - do we need to install:
 
 ## Data and Pre-Processing
 
-In this Section, we will quickly go over how to find suitable training data and 
-how to preprocess it.
+In this Section, we will cover how to find suitable training data and the necessary steps to pre-process it.
 
-To begin with, **all data except Common Voice's `"test"` data can be used as training data.**
-The exception includes all Common Voice versions as the test data split of later Common Voice versions often
-overlaps with the one of previous versions, *e.g.* the test data of Common Voice 7 in English is 
-to a big part identical to the test data of Common Voice 6 in English:
+### Data
 
-```python
-load_dataset("mozilla-foundation/common_voice_11_0", "en", split="test") 
-```
+Whisper models will be evaluated on the `"test"` split of the Common Voice 11 dataset. Any data can 
+be used to fine-tune the Whisper model **except Common Voice's `"test"` split**. This exception 
+extends to all Common Voice versions, as the test split of legacy Common Voice releases often overlaps with the 
+latest one. For instance, the test split of Common Voice 10 is largely the same as that of Common Voice 11.
 
-includes more or less the same data as
+So, the test data:
 
 ```python
-load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test") 
+load_dataset("mozilla-foundation/common_voice_11_0", "en", split="test", use_auth_token=True)
 ```
 
-However, we strongly encourage participants to make use of Common Voice's other splits, *e.g.* `"train"` and `"validation"`.
-For most languages, the Common Voice dataset offers already a decent amount of training data. It is usually 
-always advantageous to collect additional data. To do so, the participants are in first step encouraged to search the
-Hugging Face Hub for additional audio data, for example by selecting the category 
-["speech-processing"](https://huggingface.co/datasets?task_categories=task_categories:speech-processing&sort=downloads).
-All datasets that are available on the Hub can be downloaded via the 🤗 Datasets library in the same way Common Voice is downloaded.
+More or less includes the same data as:
+
+```python
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test", use_auth_token=True)
+```
+
+And **neither** are allowed for training purposes. However, we strongly encourage participants to make use of the other 
+Common Voice splits as training data, such as `"train"` and `"validation"`.
+
+For most languages, the `"train"` split of Common Voice 11 dataset offers a reasonable amount of training data. 
+For low-resource languages, it is normal procedure to combine the `"train"` and `"validation"` splits to give a larger 
+training corpus.
+
+In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
+project demonstrates the significant effect that increasing the amount of training data can have on downstream 
+performance. There are a number of datasets that are available on the Hugging Face Hub that can be downloaded via 
+the 🤗 Datasets library in much the same way as Common Voice 11.
+
+We recommend the following four datasets on the Hugging Face Hub for multilingual speech recognition:
+
+<details>
+<summary>
+
+#### [Common Voice](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0)
+
+</summary>
+Common Voice is a series of crowd-sourced open-licensed speech datasets where speakers record text from Wikipedia in 
+various languages. Since anyone can contribute recordings, there is significant variation in both audio quality and 
+speakers. The audio conditions are challenging, with recording artefacts, accented speech, hesitations, and the presence 
+of foreign words. The transcriptions are both cased and punctuated. As of version 11, there are over 100 languages 
+available, both low and high-resource.
+</details>
+
+<details>
+<summary>
+
+#### [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli)
+
+</summary>
+VoxPopuli is a large-scale multilingual speech corpus consisting of data sourced from 2009-2020 European Parliament 
+event recordings. Consequently, it occupies the unique domain of oratory, political speech, largely sourced from 
+non-native speakers. It contains labelled audio-transcription data for 15 European languages.
+</details>
+
+<details>
+<summary>
+
+#### [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech)
+
+</summary>
+Multilingual LibriSpeech is the multilingual equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. 
+It comprises a large corpus of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making 
+it a suitable dataset for academic research. It contains data split into eight high-resource languages - English, 
+German, Dutch, Spanish, French, Italian, Portuguese and Polish.
+</details>
+
+<details>
+<summary>
+
+#### [FLEURS](https://huggingface.co/datasets/google/fleurs)
+
+</summary>
+FLEURS (Few-shot Learning Evaluation of Universal Representations of Speech) is a dataset for evaluating speech recognition 
+systems in 102 languages, including many that are classified as 'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) 
+dataset, a machine translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers 
+are recorded narrating the sentence transcriptions in their native language. The recorded audio data is paired with the 
+sentence transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
+approximately 10 hours of supervised audio-transcription data per language.
+</details>
+
+This blog post provides a more in-depth explanation of the main English speech recognition, multilingual speech recognition and speech translation datasets on the Hub: https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub  
+You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads.
+
 If one wants to combine multiple datasets for training, it might make sense to take a look at 
 the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
 
-In addition, participants can also make use of their audio data. Here, please make sure that you **are allowed to use the audio data**. E.g., if audio data 
-is taken from media platforms, such as YouTube, it should be verified that the media platform and the owner of the data have given their approval to use the audio 
-data in the context of machine learning research. If you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face 
-team on discord.
+TODO: SG - example script for doing this
+
+In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data for training. 
+When using your own audio data, please make sure that you **are allowed to use the audio data**. For instance, if the audio data is taken from media 
+platforms, such as YouTube, please verify that the media platform and the owner of the data have given their approval to 
+use the audio data in the context of machine learning research. If you are not sure whether the data you want to use has 
+the appropriate licensing, please contact the Hugging Face team on Discord.
+
+TODO: VB - tutorial for adding own data via audio folder
+
+### Streaming Mode
+
+### Pre-Processing
 
 Next, let's talk about preprocessing. Audio data and transcriptions have to be brought into the correct format when 
 training the acoustic model (example shown in [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)).
@@ -292,8 +364,6 @@ be given some consideration. As another example, it is fine to remove the "Hyphe
 meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
-
-## Streaming Mode
 
 ## Fine-Tune Whisper
 
