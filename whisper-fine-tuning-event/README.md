@@ -222,12 +222,22 @@ If the final check returns True, the libraries have been installed correctly. Fi
 quit()
 ```
 
+The last thing we need to do is link our Hugging Face account. Run the command:
+
+```bash
+huggingface-cli login
+```
+
+And then enter an authentication token from https://huggingface.co/settings/tokens.
+
 TODO: SG - do we need to install:
 * tensorboard
 
 ## Data and Pre-Processing
 
-In this Section, we will cover how to find suitable training data and the necessary steps to pre-process it.
+In this Section, we will cover how to find suitable training data and the necessary steps to pre-process it. 
+If you are new to the 🤗 Datasets library, we recommend reading the comprehensive blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
+This will tell you everything you need to know about 🤗 Datasets and the one-line API.
 
 ### Data
 
@@ -265,54 +275,57 @@ We recommend the following four datasets on the Hugging Face Hub for multilingua
 <details>
 <summary>
 
-#### [Common Voice](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0)
+#### Common Voice 11
 
 </summary>
-Common Voice is a series of crowd-sourced open-licensed speech datasets where speakers record text from Wikipedia in 
-various languages. Since anyone can contribute recordings, there is significant variation in both audio quality and 
-speakers. The audio conditions are challenging, with recording artefacts, accented speech, hesitations, and the presence 
-of foreign words. The transcriptions are both cased and punctuated. As of version 11, there are over 100 languages 
-available, both low and high-resource.
+[Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) is a crowd-sourced 
+open-licensed speech dataset where speakers record text from Wikipedia in various languages. Since anyone can contribute 
+recordings, there is significant variation in both audio quality andspeakers. The audio conditions are challenging, with 
+recording artefacts, accented speech, hesitations, and the presence of foreign words. The transcriptions are both cased 
+and punctuated. As of version 11, there are over 100 languages available, both low and high-resource.
 </details>
 
 <details>
 <summary>
 
-#### [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli)
+#### VoxPopuli
 
 </summary>
-VoxPopuli is a large-scale multilingual speech corpus consisting of data sourced from 2009-2020 European Parliament 
-event recordings. Consequently, it occupies the unique domain of oratory, political speech, largely sourced from 
-non-native speakers. It contains labelled audio-transcription data for 15 European languages.
+[VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli) is a large-scale multilingual speech corpus consisting 
+of data sourced from 2009-2020 European Parliament event recordings. Consequently, it occupies the unique domain of 
+oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
+15 European languages.
 </details>
 
 <details>
 <summary>
 
-#### [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech)
+#### Multilingual LibriSpeech
 
 </summary>
-Multilingual LibriSpeech is the multilingual equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. 
-It comprises a large corpus of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making 
-it a suitable dataset for academic research. It contains data split into eight high-resource languages - English, 
-German, Dutch, Spanish, French, Italian, Portuguese and Polish.
+[Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) is the multilingual 
+equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. It comprises a large corpus 
+of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making it a suitable dataset for academic 
+research. It contains data split into eight high-resource languages - English, German, Dutch, Spanish, French, Italian, 
+Portuguese and Polish.
 </details>
 
 <details>
 <summary>
 
-#### [FLEURS](https://huggingface.co/datasets/google/fleurs)
+#### FLEURS
 
 </summary>
-FLEURS (Few-shot Learning Evaluation of Universal Representations of Speech) is a dataset for evaluating speech recognition 
-systems in 102 languages, including many that are classified as 'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) 
-dataset, a machine translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers 
-are recorded narrating the sentence transcriptions in their native language. The recorded audio data is paired with the 
-sentence transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
+[FLEURS](https://huggingface.co/datasets/google/fleurs) (Few-shot Learning Evaluation of Universal Representations of 
+Speech) is a dataset for evaluating speech recognition systems in 102 languages, including many that are classified as 
+'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) dataset, a machine 
+translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers are recorded 
+narrating the sentence transcriptions in their native language. The recorded audio data is paired with the sentence 
+transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
 approximately 10 hours of supervised audio-transcription data per language.
 </details>
 
-This blog post provides a more in-depth explanation of the main English speech recognition, multilingual speech recognition and speech translation datasets on the Hub: https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub  
+This blog post provides a more in-depth explanation of the main English speech recognition, multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
 You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads.
 
 If one wants to combine multiple datasets for training, it might make sense to take a look at 
@@ -330,40 +343,46 @@ TODO: VB - tutorial for adding own data via audio folder
 
 ### Streaming Mode
 
-### Pre-Processing
+Audio datasets are very large. This causes two issues:
+1. They require a significant amount of **storage space** to download.
+2. They take a significant amount of **time** to download and process.
 
-Next, let's talk about preprocessing. Audio data and transcriptions have to be brought into the correct format when 
-training the acoustic model (example shown in [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)).
-It is recommended that this is done by using 🤗 Datasets `.map()` function as shown below.
-
+The storage and time requirements present limitations to most speech researchers. For example, downloading the English 
+subset of the Common Voice 11 dataset (2,300 hours) requires upwards of 200GB of disk space and up to several hours 
+of download time. For these reasons, we **do not** recommend that you run the following code cell! 
 ```python
-def remove_special_characters(batch):
-    if chars_to_ignore_regex is not None:
-        batch["target_text"] = re.sub(chars_to_ignore_regex, "", batch[text_column_name]).lower() + " "
-    else:
-        batch["target_text"] = batch[text_column_name].lower() + " "
-    return batch
+from datasets import load_dataset
 
+common_voice = load_dataset("mozilla-foundation/common_voice_11_0", "en", use_auth_token=True)
 
-raw_datasets = raw_datasets.map(
-    remove_special_characters,
-    remove_columns=[text_column_name],
-    desc="remove special characters from datasets",
-    )
+# we have to wait several hours until the entire dataset is downloaded before we can access the first sample... 
+print(next(iter(common_voice["train"])))
 ```
 
-The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
-it is done in the [official script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py).
-**However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
-These rules are not this straightforward and therefore often have to be evaluated case-by-case.
-It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
-symbols and punctuation marks. A list of such symbols can *e.g.* be found [here](https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks) - however here we already must be careful. We should **not** remove a symbol that would change the meaning of the words, *e.g.* in English, 
-we should not remove the single quotation mark `'` since it would change the meaning of the word `"it's"` to `"its"` which would then be incorrect. 
-So the golden rule here is to not remove any characters that could change the meaning of a word into another word. This is not always obvious and should 
-be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
-meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
+However, both these issues can be solved with 🤗 Datasets. Rather than downloading the whole dataset at once, we 
+download small chunks of the dataset at a time, in a process called _streaming_. Since the data is downloaded 
+progressively as we iterate over the dataset, we can get started with a dataset without waiting for the entire dataset 
+to download. Once we're done with a chunk, it's automatically deleted. This way, we only have the data when we need it, 
+and not when we don't!
 
-Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
+Streaming is enabled by passing the argument `streaming=True` to the `load_dataset` function. We can then use our 
+audio datasets in much the same way as before! For these reasons, **we highly recommend** that you try out the following 
+code cell! Just make sure you've accepted the Common Voice 11 terms of use on the Hugging Face Hub: https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0.
+
+```python
+from datasets import load_dataset
+
+common_voice = load_dataset("mozilla-foundation/common_voice_11_0", "en", use_auth_token=True, streaming=True)
+
+# get the first sample of the dataset straight away!
+print(next(iter(common_voice["train"])))
+```
+
+The examples in this README heavily rely on streaming mode to fine-tune Whisper. With streaming mode, we can use **any 
+speech recognition dataset with just 20GB of disk space**. If you want to read more about streaming mode, we 
+recommend you check out the aforementioned blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
+
+### Pre-Processing
 
 ## Fine-Tune Whisper
 
