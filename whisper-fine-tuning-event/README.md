@@ -2,9 +2,10 @@
 
 Welcome to the Whisper fine-tuning event 🎙️!
 
-The goal of this event is to fine-tune Whisper and build state-of-the-art speech recognition systems in as many languages as possible 🌏🌍🌎. 
-We will work together as a community to achieve this, helping others and learning where we can 🤗. If necessary and 
-available, free access to A100 40 GB GPUs will kindly be provided by our cloud compute partners, [Lambda Labs](https://lambdalabs.com) 🚀.
+For two weeks, we will endeavour to fine-tune the Whisper model to build state-of-the-art speech recognition systems in 
+the languages of our choice 🗣. We will work together as a community to achieve this, helping others and learning where 
+we can 🤗. If necessary and available, free access to A100 40 GB GPUs will kindly be provided by our cloud compute 
+partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
@@ -18,9 +19,10 @@ and make sure to:
 - [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
 - [Set Up an Environment](#set-up-an-environment)
 - [Data and Pre-Processing](#data-and-pre-processing)
+- [Streaming Mode](#streaming-mode)
 - [Fine-Tune a Whisper Model](#fine-tune-whisper)
 - [Evaluation](#evaluation)
-- [Prizes](#prizes)
+- [Building a Demo](#building-a-demo)
 - [Communication and Problems](#communication-and-problems)
 - [Talks](#talks)
 - [Tips and Tricks](#tips-and-tricks)
@@ -40,23 +42,26 @@ resources you need to participate! You are free to chose your level of participa
 it to your language, right the way through to exploring advanced training methods. We encourage you to participate to 
 level that suits you best. We'll be on hand to facilitate this!
 
-Speech recognition systems will be evaluated on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
-dataset for the participant's chosen language. At the end of the event, we'll verify the results, and the 
-best-performing speech recognition system in each language will receive a prize 🏆.
+Participants are allowed to fine-tune their systems on the training data of their choice, including datasets from the 
+Hugging Face Hub, web-scraped data from the internet, or private datasets. Speech recognition systems will be evaluated 
+on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
+dataset for the participant's chosen language.
 
 We believe that framing the event as a competition is fun! But at the core, the event is about
 fine-tuning Whisper in as many languages as possible as a community. We want to foster an environment where we 
 work together, help each other solve bugs, share important findings and ultimately learn something new.
 
 This README contains all the information you need for the event. It is structured such that you can read it sequentially, 
-section-by-section. We recommend that you read the document once from start to finish before running any code. This will 
+section-by-section. **We recommend that you read the document once from start to finish before running any code.** This will 
 give you an idea of where to look for the relevant information and an idea of how the event is going to run.
 
 ## Important Dates
 
+- *Introduction Talk*: 1st December 2022
 - *Sprint start*: 5th December 2022
+- *Speaker Events* 5th December 2022
 - *Sprint end*: 19th December 2022
-- *Whisper benchmark & results*: 26th December 2022 (tentative) TODO: VB, SG - decide a timeline for evaluation
+- *Results*: 23rd December 2022
 
 ## Launch a Lambda Cloud GPU
 Where possible, we encourage you to fine-tune Whisper on a local GPU machine. This will mean a faster set-up and more 
@@ -78,15 +83,14 @@ TODO: SG - add Section once we've figured out how the 'teams' function is going 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
 
-1. Head over to [lambdalabs.com](https://lambdalabs.com)
-2. Hover your cursor over the box "GPU Cloud" and click "Sign-In". 
-3. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
-4. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
-5. Launching an instance:
+1. Click the link: https://cloud.lambdalabs.com/instance
+2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
+3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
+4. Launching an instance:
    1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)" TODO: SG - SXM4 or PCle?
    2. In "Select region", select the region with availability closest to you.
    3. In "Select filesystem", select "Don't attach a filesystem".
-6. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
+5. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
    1. If you’ve not already created an SSH key pair, you can do so with the following command from your local device: 
       ```bash
       ssh-keygen
@@ -98,13 +102,13 @@ Estimated time to complete: 5 mins
    4. Copy and paste the output of this command into the first text box
    5. Give your SSH key a memorable name (e.g. `sanchits-mbp`)
    6. Click "Add SSH Key"
-7. Select the SSH key from the drop-down menu and click "Launch instance"
-8. Read the terms of use and agree
-9. We can now see on the "GPU instances" page that our device is booting up!
-10. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
-11. Now open a new command line window, paste the SSH login, and hit Enter.
-12. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
-13. Great! You're now SSH'd into your A100 device! We can now move on to setting up an environment.
+6. Select the SSH key from the drop-down menu and click "Launch instance"
+7. Read the terms of use and agree
+8. We can now see on the "GPU instances" page that our device is booting up!
+9. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
+10. Now open a new command line window, paste the SSH login, and hit Enter.
+11. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
+12. Great! You're now SSH'd into your A100 device! We can now move on to setting up an environment.
 
 TODO: SG - video for launching an instance
 
@@ -123,6 +127,14 @@ nvidia-smi
 
 This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda Labs GPUs!
 If you get an error running this command, refer to your device manual for installing the required NVIDIA driver.
+
+Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
+
+ ```bash
+add-apt-repository -y ppa:jonathonf/ffmpeg-4
+apt update
+apt install -y ffmpeg
+ ```
 
 We recommend installing the required libraries in a Python virtual environment. If you're unfamiliar with Python virtual 
 environments, check out the official user guide: [installing-using-pip-and-virtual-environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
@@ -154,79 +166,27 @@ bash
 Great! We can see that our venv name is at the start of our command line - this means that we're operating from 
 within the venv. We can now go ahead and start installing the required Python packages to our venv.
 
-We strongly recommend that you install 🤗 Transformers from source to profit from new library additions during the 
-community week. This will also copy the PyTorch examples scripts to your system for training the Whisper model and 
-allow you to make any desired changes.
+The [`requirements.txt`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/requirements.txt) 
+file in this directory has all the necessary Python packages we need to fine-tune Whisper, including PyTorch, Transformers 
+and Datasets. We'll install all the packages in this file through one `pip install` command.
 
-We recommend forking and cloning the 🤗 Transformers repository as follows:
-
-1. Fork the [repository](https://github.com/huggingface/transformers) by
-   clicking on the 'Fork' button on the repository's page. This creates a copy of the code
-   under your GitHub user account.
-
-2. Clone your fork to your local disk:
-
-   ```bash
-   git clone https://github.com/<your Github handle>/transformers.git
-   ```
-3. Add the base repository as a remote and pull the most recent changes:
-   
-   ```bash
-   cd transformers
-   git remote add upstream https://github.com/huggingface/transformers.git
-   git pull upstream main
-   ```
-
-4. Create a new branch to hold your development changes. This is especially useful to share code changes with your team:
-
-   ```bash
-   git checkout -b a-descriptive-name-for-my-project
-   ```
-
-5. Set up a PyTorch environment by running the following command in your venv:
-
-   ```bash
-   pip install -e ".[torch-speech]"
-   ```
-
-   (If transformers was already installed in the virtual environment, remove
-   it with `pip uninstall transformers` before reinstalling it in editable
-   mode with the `-e` flag.)
-
-   Running this command will automatically install `torch` and the relevant 
-   libraries required for running Whisper in 🤗 Transformers.
-
-6. There are a few additional dependencies we require for fine-tuning (e.g. `librosa` and `evaluate`). We can install 
-   these packages using the `requirements.txt` file located in the examples' directory:
-
-   ```bash
-   pip install -r ~/transformers/examples/pytorch/speech-recognition/requirements.txt
-   ```
-
-Great! Installing 🤗 Transformers from source has provided us with almost all the packages we need 
-to fine-tune Whisper!
-
-We can check that above steps installed the correct version of PyTorch to match our CUDA version.
-The following command should return `True`:
+First, let's copy the `requirements.txt` file to our GPU device:
 
 ```bash
+wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/requirements.txt
+```
+
+Now we can install the packages in this file using the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
+We can check that above steps installed the correct version of PyTorch to match our CUDA version. The following command should return True:
+
+```python
 python -c "import torch; print(torch.cuda.is_available())"
 ```
-
-If the command doesn't return `True`, follow the official instructions for installing 
-PyTorch with CUDA: https://pytorch.org/get-started/locally/
-
-Great! The last package we need to install is 🤗 Datasets. Again, we'll install it from source: 
-
-```bash
-cd ~/
-git clone https://github.com/huggingface/datasets.git
-cd datasets
-pip install -e ".[streaming]"
-```
-
-If you plan on contributing to the 🤗 Datasets library during the community week, fork the datasets repository and follow the instructions 
-for opening a PR: [#how-to-create-a-pull-request](https://github.com/huggingface/datasets/blob/master/CONTRIBUTING.md#how-to-create-a-pull-request).
 
 We can now verify that `transformers` and `datasets` have been correctly installed. First, launch a Python shell:
 
@@ -234,8 +194,8 @@ We can now verify that `transformers` and `datasets` have been correctly install
 python
 ```
 
-Running the following code cell will load a "dummy" dataset from the Hub and perform a forward pass of the 
-"tiny" Whisper model:
+Running the following code cell will load one sample of the [common voice](https://huggingface.co/datasets/common_voice) 
+dataset from the Hugging Face Hub and perform a forward pass of the "tiny" Whisper model:
 
 ```python
 import torch
@@ -245,18 +205,20 @@ from datasets import load_dataset
 model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
 feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-tiny")
 
-ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
+common_voice = load_dataset("common_voice", "en", split="validation", streaming=True)
 
-inputs = feature_extractor(ds[0]["audio"]["array"], sampling_rate=16000, return_tensors="pt")
+inputs = feature_extractor(next(iter(common_voice))["audio"]["array"], sampling_rate=16000, return_tensors="pt")
 input_features = inputs.input_features
 
 decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
 logits = model(input_features, decoder_input_ids=decoder_input_ids).logits
 
-assert logits.shape[-1] == 51865
+print("Environment set up successful?", logits.shape[-1] == 51865)
+
 ```
 
-If the final `assert` statement passes, the libraries have been installed correctly. Finally, exit the Python shell:
+If the final check returns True, the libraries have been installed correctly. Finally, exit the Python shell:
+
 ```python
 quit()
 ```
@@ -331,6 +293,8 @@ meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`f
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
+## Streaming Mode
+
 ## Fine-Tune Whisper
 
 Throughout the event, participants are encouraged to leverage the official pre-trained [Whisper checkpoints](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper).
@@ -356,11 +320,11 @@ can be trained much faster (and hence for much longer!).
 
 ## Evaluation
 
+* Live leaderboard at XYZ
+
 <!-- TODO: VB - To add after we have decided on the final evaluation criteria -->
 
-## Prizes
-
-<!-- TODO: Sanchit/ Omar/ VB - Put prizes here when decided. -->
+## Building a Demo
 
 ## Communication and Problems
 
