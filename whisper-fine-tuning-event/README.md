@@ -81,15 +81,14 @@ TODO: SG - add Section once we've figured out how the 'teams' function is going 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
 
-1. Head over to [lambdalabs.com](https://lambdalabs.com)
-2. Hover your cursor over the box "GPU Cloud" and click "Sign-In". 
-3. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
-4. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
-5. Launching an instance:
+1. Click the link: https://cloud.lambdalabs.com/instance
+2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
+3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
+4. Launching an instance:
    1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)" TODO: SG - SXM4 or PCle?
    2. In "Select region", select the region with availability closest to you.
    3. In "Select filesystem", select "Don't attach a filesystem".
-6. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
+5. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
    1. If you’ve not already created an SSH key pair, you can do so with the following command from your local device: 
       ```bash
       ssh-keygen
@@ -101,13 +100,13 @@ Estimated time to complete: 5 mins
    4. Copy and paste the output of this command into the first text box
    5. Give your SSH key a memorable name (e.g. `sanchits-mbp`)
    6. Click "Add SSH Key"
-7. Select the SSH key from the drop-down menu and click "Launch instance"
-8. Read the terms of use and agree
-9. We can now see on the "GPU instances" page that our device is booting up!
-10. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
-11. Now open a new command line window, paste the SSH login, and hit Enter.
-12. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
-13. Great! You're now SSH'd into your A100 device! We can now move on to setting up an environment.
+6. Select the SSH key from the drop-down menu and click "Launch instance"
+7. Read the terms of use and agree
+8. We can now see on the "GPU instances" page that our device is booting up!
+9. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
+10. Now open a new command line window, paste the SSH login, and hit Enter.
+11. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
+12. Great! You're now SSH'd into your A100 device! We can now move on to setting up an environment.
 
 TODO: SG - video for launching an instance
 
@@ -158,6 +157,7 @@ Great! We can see that our venv name is at the start of our command line - this 
 within the venv. We can now go ahead and start installing the required Python packages to our venv.
 
 
+
 We can now verify that `transformers` and `datasets` have been correctly installed. First, launch a Python shell:
 
 ```bash
@@ -169,21 +169,27 @@ Running the following code cell will load a "dummy" dataset from the Hub and per
 
 ```python
 import torch
-from transformers import WhisperFeatureExtractor, WhisperForConditionalGeneration
+from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from datasets import load_dataset
+from evaluate import load
 
 model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
-feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-tiny")
+processor = WhisperProcessor.from_pretrained("openai/whisper-tiny")
 
 ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
 
-inputs = feature_extractor(ds[0]["audio"]["array"], sampling_rate=16000, return_tensors="pt")
+inputs = processor(ds[0]["audio"]["array"], sampling_rate=16000, return_tensors="pt")
 input_features = inputs.input_features
 
-decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
-logits = model(input_features, decoder_input_ids=decoder_input_ids).logits
+with torch.no_grad():
+    tokens = model.generate(input_features, max_length=40)
+predictions = processor.batch_decode(tokens, skip_special_tokens=True)
 
-assert logits.shape[-1] == 51865
+wer_metric = load("wer")
+
+wer = wer_metric.compute(references=ds[0]["text"], predictions=predictions)
+
+assert round(wer) == 
 ```
 
 If the final `assert` statement passes, the libraries have been installed correctly. Finally, exit the Python shell:

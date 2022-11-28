@@ -1,0 +1,7 @@
+torch>=1.7,!=1.12
+torchaudio
+git+https://github.com/huggingface/transformers
+git+https://github.com/huggingface/datasets
+librosa
+jiwer
+evaluate
