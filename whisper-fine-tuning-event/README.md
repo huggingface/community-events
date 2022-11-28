@@ -19,8 +19,10 @@ and make sure to:
 - [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
 - [Set Up an Environment](#set-up-an-environment)
 - [Data and Pre-Processing](#data-and-pre-processing)
+- [Streaming Mode](#streaming-mode)
 - [Fine-Tune a Whisper Model](#fine-tune-whisper)
 - [Evaluation](#evaluation)
+- [Building a Demo](#building-a-demo)
 - [Communication and Problems](#communication-and-problems)
 - [Talks](#talks)
 - [Tips and Tricks](#tips-and-tricks)
@@ -126,6 +128,14 @@ nvidia-smi
 This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda Labs GPUs!
 If you get an error running this command, refer to your device manual for installing the required NVIDIA driver.
 
+Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
+
+ ```bash
+add-apt-repository -y ppa:jonathonf/ffmpeg-4
+apt update
+apt install -y ffmpeg
+ ```
+
 We recommend installing the required libraries in a Python virtual environment. If you're unfamiliar with Python virtual 
 environments, check out the official user guide: [installing-using-pip-and-virtual-environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 
@@ -156,7 +166,27 @@ bash
 Great! We can see that our venv name is at the start of our command line - this means that we're operating from 
 within the venv. We can now go ahead and start installing the required Python packages to our venv.
 
+The [`requirements.txt`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/requirements.txt) 
+file in this directory has all the necessary Python packages we need to fine-tune Whisper, including PyTorch, Transformers 
+and Datasets. We'll install all the packages in this file through one `pip install` command.
 
+First, let's copy the `requirements.txt` file to our GPU device:
+
+```bash
+wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/requirements.txt
+```
+
+Now we can install the packages in this file using the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
+We can check that above steps installed the correct version of PyTorch to match our CUDA version. The following command should return True:
+
+```python
+python -c "import torch; print(torch.cuda.is_available())"
+```
 
 We can now verify that `transformers` and `datasets` have been correctly installed. First, launch a Python shell:
 
@@ -164,35 +194,31 @@ We can now verify that `transformers` and `datasets` have been correctly install
 python
 ```
 
-Running the following code cell will load a "dummy" dataset from the Hub and perform a forward pass of the 
-"tiny" Whisper model:
+Running the following code cell will load one sample of the [common voice](https://huggingface.co/datasets/common_voice) 
+dataset from the Hugging Face Hub and perform a forward pass of the "tiny" Whisper model:
 
 ```python
 import torch
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import WhisperFeatureExtractor, WhisperForConditionalGeneration
 from datasets import load_dataset
-from evaluate import load
 
 model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
-processor = WhisperProcessor.from_pretrained("openai/whisper-tiny")
+feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-tiny")
 
-ds = load_dataset("hf-internal-testing/librispeech_asr_dummy", "clean", split="validation")
+common_voice = load_dataset("common_voice", "en", split="validation", streaming=True)
 
-inputs = processor(ds[0]["audio"]["array"], sampling_rate=16000, return_tensors="pt")
+inputs = feature_extractor(next(iter(common_voice))["audio"]["array"], sampling_rate=16000, return_tensors="pt")
 input_features = inputs.input_features
 
-with torch.no_grad():
-    tokens = model.generate(input_features, max_length=40)
-predictions = processor.batch_decode(tokens, skip_special_tokens=True)
+decoder_input_ids = torch.tensor([[1, 1]]) * model.config.decoder_start_token_id
+logits = model(input_features, decoder_input_ids=decoder_input_ids).logits
 
-wer_metric = load("wer")
+print("Environment set up successful?", logits.shape[-1] == 51865)
 
-wer = wer_metric.compute(references=ds[0]["text"], predictions=predictions)
-
-assert round(wer) == 
 ```
 
-If the final `assert` statement passes, the libraries have been installed correctly. Finally, exit the Python shell:
+If the final check returns True, the libraries have been installed correctly. Finally, exit the Python shell:
+
 ```python
 quit()
 ```
@@ -267,6 +293,8 @@ meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`f
 
 Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
 
+## Streaming Mode
+
 ## Fine-Tune Whisper
 
 Throughout the event, participants are encouraged to leverage the official pre-trained [Whisper checkpoints](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper).
@@ -292,7 +320,11 @@ can be trained much faster (and hence for much longer!).
 
 ## Evaluation
 
+* Live leaderboard at XYZ
+
 <!-- TODO: VB - To add after we have decided on the final evaluation criteria -->
+
+## Building a Demo
 
 ## Communication and Problems
 
