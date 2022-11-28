@@ -259,11 +259,22 @@ load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test", use_aut
 ```
 
 And **neither** are allowed for training purposes. However, we strongly encourage participants to make use of the other 
-Common Voice splits as training data, such as `"train"` and `"validation"`.
+Common Voice splits as training data, such as `"train"` and `"validation"`:
+
+```python
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train", use_auth_token=True)
+```
 
 For most languages, the `"train"` split of Common Voice 11 dataset offers a reasonable amount of training data. 
 For low-resource languages, it is normal procedure to combine the `"train"` and `"validation"` splits to give a larger 
-training corpus.
+training corpus:
+
+```python
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train+validation", use_auth_token=True)
+```
+
+This convention for combining splits (`"split_a+split_b"`) is consistent for all resources in the event. You can combine 
+splits in this same way using the fine-tuning scripts in the following Section [Fine-Tune Whisper](#fine-tune-whisper).
 
 In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
 project demonstrates the significant effect that increasing the amount of training data can have on downstream 
