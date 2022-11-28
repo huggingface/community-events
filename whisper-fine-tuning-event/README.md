@@ -399,6 +399,56 @@ recommend you check out the aforementioned blog post: [A Complete Guide To Audio
 
 ### Pre-Processing
 
+Data pre-processing is a very grey area when it comes to speech recognition. In this Section, we'll try to make the 
+situation as clear as possible for you as participants.
+
+We first define two pre-processing terms:
+* Un-normalised: no pre-processing applied to the transcriptions. All casing and punctuation is retained (e.g. "The cat sat on the mat.").
+* Normalised: pre-processing applied to the transcriptions. All casing and punctuation is removed (e.g. "the cat sat on the mat).
+
+The Common Voice dataset is both cased and punctuated:
+
+```python
+print(next(iter(common_voice["train"]))["sentence"])
+```
+**Print Output:**
+```
+Why does Melissandre look like she wants to consume Jon Snow on the ride up the wall?
+```
+
+If we train the Whisper model on the raw Common Voice dataset, it will learn to predict casing and punctuation. This is great when 
+you want to use your model for actual speech recognition applications, such as transcribing meetings or dictation.
+
+However, we also have the option of 'normalising' the dataset to remove any casing and punctuation. Normalising the dataset makes the 
+speech recognition task easier: the model no longer needs to distinguish between upper and lower case characters, or 
+try and predict punctuation from the audio data alone. Because of this, the word error rates are naturally lower 
+(results are better). But while we get lower WERs, we can't necessarily use our model in production! The lack of 
+casing and punctuation makes the predicted text from the model much harder to read.
+
+It is recommended that this is done by using 🤗 Datasets `.map()` function as shown 
+[here](https://github.com/huggingface/transformers/blob/9a2dabae7002258e41419491c73dd43ad61b5de7/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py#L444). As can be 
+see we can pass some characters that will be removed from the transcriptions, *e.g.*: `--chars_to_ignore , ? . ! - \; \: \" “ % ‘ ” � \`
+on the official ["Single GPU Example"](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition#single-gpu-ctc).
+The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
+it is done in the [official blog post](https://github.com/huggingface/transformers/blob/9a2dabae7002258e41419491c73dd43ad61b5de7/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py#L444).
+**However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
+These rules are not this straightforward and therefore often have to be evaluated case-by-case.
+It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
+symbols and punctuation marks. A list of such symbols can *e.g.* be found [here](https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks) - however here we already must be careful. We should **not** remove a symbol that would change the meaning of the words, *e.g.* in English, 
+we should not remove the single quotation mark `'` since it would change the meaning of the word `"it's"` to `"its"` which would then be incorrect. 
+So the golden rule here is to not remove any characters that could change the meaning of a word into another word. This is not always obvious and should 
+be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
+meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
+
+| Train         | Eval          | Pros                                                           | Cons                                     |
+|---------------|---------------|----------------------------------------------------------------|------------------------------------------|
+| Un-normalised | Un-normalised | * Predict casing + punctuation<br>* One logic for train / eval | * WERs are higher                        |
+| Un-normalised | Normalised    | * Predict casing + punctuation<br>* WERs are lower             | * Separate logic for train / eval        |
+| Normalised    | Normalised    | * One logic for train / eval<br>* WERs are lower               | * No casing / punctuation in predictions |
+
+
+Since those choices are not always obvious, when in doubt feel free to ask on Discord or (even better) post your question on the [forum](https://discuss.huggingface.co).
+
 <!--- TODO: SG What pre-processing steps do we deem appropriate? --->
 
 ## Fine-Tune Whisper
