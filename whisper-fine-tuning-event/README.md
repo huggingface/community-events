@@ -241,8 +241,8 @@ This will tell you everything you need to know about 🤗 Datasets and the one-l
 
 ### Data
 
-Whisper models will be evaluated on the `"test"` split of the Common Voice 11 dataset. Any data can 
-be used to fine-tune the Whisper model **except Common Voice's `"test"` split**. This exception 
+Whisper models will be evaluated on the `"test"` split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
+dataset. Any data can be used to fine-tune the Whisper model **except Common Voice's `"test"` split**. This exception 
 extends to all Common Voice versions, as the test split of legacy Common Voice releases often overlaps with the 
 latest one. For instance, the test split of Common Voice 10 is largely the same as that of Common Voice 11.
 
@@ -289,6 +289,7 @@ We recommend the following four datasets on the Hugging Face Hub for multilingua
 #### Common Voice 11
 
 </summary>
+
 [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) is a crowd-sourced 
 open-licensed speech dataset where speakers record text from Wikipedia in various languages. Since anyone can contribute 
 recordings, there is significant variation in both audio quality andspeakers. The audio conditions are challenging, with 
@@ -302,6 +303,7 @@ and punctuated. As of version 11, there are over 100 languages available, both l
 #### VoxPopuli
 
 </summary>
+
 [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli) is a large-scale multilingual speech corpus consisting 
 of data sourced from 2009-2020 European Parliament event recordings. Consequently, it occupies the unique domain of 
 oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
@@ -314,6 +316,7 @@ oratory, political speech, largely sourced from non-native speakers. It contains
 #### Multilingual LibriSpeech
 
 </summary>
+
 [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) is the multilingual 
 equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. It comprises a large corpus 
 of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making it a suitable dataset for academic 
@@ -327,6 +330,7 @@ Portuguese and Polish.
 #### FLEURS
 
 </summary>
+
 [FLEURS](https://huggingface.co/datasets/google/fleurs) (Few-shot Learning Evaluation of Universal Representations of 
 Speech) is a dataset for evaluating speech recognition systems in 102 languages, including many that are classified as 
 'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) dataset, a machine 
