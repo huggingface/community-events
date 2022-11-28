@@ -10,7 +10,9 @@ partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
 - Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. TODO: VB - add specific instructions for going to the role-assignments channel and accept audio
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. 
+
+<!--- TODO: VB - add specific instructions for going to the role-assignments channel and accept audio --->
 
 ## Table of Contents
 
@@ -77,7 +79,7 @@ This Section is split into two halves:
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
 
 ### Signing-Up with Lambda Labs
-TODO: SG - add Section once we've figured out how the 'teams' function is going to work with Mitesh
+TODO: SG - add Section once we've figured out how the 'teams' function is going to work with Lambda
 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
@@ -296,7 +298,6 @@ recordings, there is significant variation in both audio quality andspeakers. Th
 recording artefacts, accented speech, hesitations, and the presence of foreign words. The transcriptions are both cased 
 and punctuated. As of version 11, there are over 100 languages available, both low and high-resource.
 </details>
-
 <details>
 <summary>
 
@@ -309,7 +310,6 @@ of data sourced from 2009-2020 European Parliament event recordings. Consequentl
 oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
 15 European languages.
 </details>
-
 <details>
 <summary>
 
@@ -323,7 +323,6 @@ of read audiobooks taken from the [LibriVox](https://librivox.org/) project, mak
 research. It contains data split into eight high-resource languages - English, German, Dutch, Spanish, French, Italian, 
 Portuguese and Polish.
 </details>
-
 <details>
 <summary>
 
@@ -340,13 +339,14 @@ transcriptions to yield a multilingual speech recognition over all 101 languages
 approximately 10 hours of supervised audio-transcription data per language.
 </details>
 
-This blog post provides a more in-depth explanation of the main English speech recognition, multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
+The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
+multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
 You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads.
 
 If one wants to combine multiple datasets for training, it might make sense to take a look at 
 the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
 
-TODO: SG - example script for doing this
+<!--- TODO: SG - example script for doing this --->
 
 In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data for training. 
 When using your own audio data, please make sure that you **are allowed to use the audio data**. For instance, if the audio data is taken from media 
@@ -354,7 +354,7 @@ platforms, such as YouTube, please verify that the media platform and the owner 
 use the audio data in the context of machine learning research. If you are not sure whether the data you want to use has 
 the appropriate licensing, please contact the Hugging Face team on Discord.
 
-TODO: VB - tutorial for adding own data via audio folder
+<!--- TODO: VB - tutorial for adding own data via audio folder --->
 
 ### Streaming Mode
 
@@ -399,6 +399,8 @@ recommend you check out the aforementioned blog post: [A Complete Guide To Audio
 
 ### Pre-Processing
 
+<!--- TODO: SG What pre-processing steps do we deem appropriate? --->
+
 ## Fine-Tune Whisper
 
 Throughout the event, participants are encouraged to leverage the official pre-trained [Whisper checkpoints](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=downloads&search=whisper).
@@ -420,13 +422,11 @@ fine-tuning. These checkpoints achieve comparable performance to the large check
 can be trained much faster (and hence for much longer!).
 <!--- TODO: SG - review this after lambda testing --->
 
-<!-- TODO: VB - Add a fine-tuning guide here after testing the script on lambda labs GPU -->
-
 ## Evaluation
 
-* Live leaderboard at XYZ
+<!--- TODO: Live leaderboard at XYZ --->
 
-<!-- TODO: VB - To add after we have decided on the final evaluation criteria -->
+<!--- TODO: VB - To add after we have decided on the final evaluation criteria --->
 
 ## Building a Demo
 
