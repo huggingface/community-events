@@ -10,9 +10,7 @@ partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
 - Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. 
-
-<!--- TODO: VB - add specific instructions for going to the role-assignments channel and accept audio --->
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure to assign yourself **@ml-4-audio** role in #role-assignment so that you can access #events channel. 
 
 ## Table of Contents
 
@@ -59,7 +57,7 @@ give you an idea of where to look for the relevant information and an idea of ho
 
 ## Important Dates
 
-- *Introduction Talk*: 1st December 2022
+- *Introduction Talk*: 2nd December 2022
 - *Sprint start*: 5th December 2022
 - *Speaker Events* 5th December 2022
 - *Sprint end*: 19th December 2022
@@ -505,9 +503,13 @@ by `do_remove_punctuation = True`. Normalisation is only applied during evaluati
 
 ## Evaluation
 
-<!--- TODO: Live leaderboard at XYZ --->
+<!--- TODO: VB - Live leaderboard at XYZ [After the final discussion with Tristan and Lewis] --->
 
-<!--- TODO: VB - To add after we have decided on the final evaluation criteria --->
+Finally, on to the fun part - time to sit back and watch the model transcribe audio. Each participant should evaluate their fine-tuned Whisper checkpoint on `Common Voice 11` test set for their respective language. For languages that are not part of the Common Voice 11 dataset, please contact the organisers on Discord so that we can work together to find some evaluation data.
+
+If you are using the official fine-tuning scripts for training your Whisper model, then you can run the evaluation loop by setting `do_eval=True`. We'll also provide you with a standalone evaluation script.
+
+<!--- TODO: VB - Add the streaming evaluation script here once tested. --->
 
 ## Building a Demo
 
@@ -523,13 +525,18 @@ The following table summarizes what platform to use for which problem.
 - Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issues on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
+- Questions regarding access to the Lambda Labs GPUs, please ask in the Discord channel **#lambdalabs-infra-support**.
 - Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel **#events**.
-
-<!-- TODO: VB - Add a note about cloud issues when we have the cloud provider identified -->
 
 ## Talks
 
-<!-- TODO: VB - Add Talk schedule when up. -->
+We are quite excited to host talks from Open AI, Meta AI and Hugging Face to help you get a better understanding of the Whisper architecture, datasets used for ASR and details about the event itself!
+
+| **Speaker**                  | **Topic**                                                  | **Time**                      | **Video**                                                                                                                 |
+|------------------------------|------------------------------------------------------------|-------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| Sanchit Gandhi, Hugging Face | Introduction to Whisper Fine Tuning Event                  | 16:00 CET, 2nd December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=1cVBLOMlv3w)  |
+| Jong Wook Kim, OpenAI        | [Whisper Model](https://cdn.openai.com/papers/whisper.pdf) | 17:30 CET, 5th December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=fZMiD8sDzzg ) |
+| Changhan Wang, MetaAI        | [VoxPopuli Dataset](https://arxiv.org/abs/2101.00390)      | 18:30 CET, 5th December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=fZMiD8sDzzg ) |
 
 ## Tips and Tricks
 
