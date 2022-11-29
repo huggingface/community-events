@@ -511,6 +511,10 @@ We recommend using the tiny model for rapid prototyping. We advise that the smal
 fine-tuning. These checkpoints achieve comparable performance to the large checkpoint, but can be trained much faster 
 (and hence for much longer!).
 
+A complete guide to Whisper fine-tuning can be found in the blog post: [Fine-Tune Whisper with 🤗 Transformers](https://huggingface.co/blog/fine-tune-whisper).
+While it is not necessary to have read this blog post before fine-tuning Whisper, it is strongly advised in order that 
+you understand the logic behind the fine-tuning code.  
+
 There are three ways in which you can execute the fine-tuning code:
 1. [Python Script](#python-script)
 2. [Jupyter Notebook](#jupyter-notebook)
@@ -614,7 +618,7 @@ Make sure to change the `--dataset_config_name` and `--language` to the correct 
 we combine the train and validation splits as `--train_split_name="train+validation"`. This is recommended for low-resource 
 languages such as Hindi.
 
-3. Launch training 🚀
+3. **Launch training 🚀**
 
 We recommend running training through a `tmux` session. This means that training won't be interrupted when you close 
 your SSH connection. To start a `tmux` session named `mysession`: 
@@ -765,15 +769,19 @@ Training won't be interrupted by closing this window.
 
 If you want to reconnect to the notebook, simply open a browser and return to the URL that we pasted in the address bar!
 
-TODO: set outputdir of notebook to "./"
+<!--- TODO: SG - set outputdir of notebook to "./" --->
 
 ### Google Colab
-The Google Colab for fine-tuning Whisper is entirely self-contained. You can access it through the following link: 
+The Google Colab for fine-tuning Whisper is entirely self-contained. You can access it through the following link:
+
 <a target="_blank" href="https://colab.research.google.com/github/sanchit-gandhi/notebooks/blob/main/fine_tune_whisper_streaming.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-V100 /16 GB GPU:
+<!--- TODO: SG - recommended batch-sizes and learning rates. We can give these since the input features are of fixed 
+dim --->
+
+V100 / 16 GB GPU:
 
 | Model  | Batch Size | Learning Rate |
 |--------|------------|---------------|
@@ -787,6 +795,7 @@ A100 / 40GB GPU:
 | small  |            |               |
 | medium |            |               |
 
+<!--- TOOD: SG - add flags / variables for casing, punctuation and normalise --->
 When using the training scripts, removing casing is enabled by passing the flag `--do_lower_case`. Remove 
 punctuation is achieved by passing the flag `--do_remove_punctuation`. The punctuation characters removed are defined 
 in TODO. Normalisation is only applied during evaluation by setting the flag `--do_normalize_eval_only`.
@@ -802,6 +811,8 @@ by `do_remove_punctuation = True`. Normalisation is only applied during evaluati
 <!--- TODO: VB - To add after we have decided on the final evaluation criteria --->
 
 ## Building a Demo
+
+We can use https://huggingface.co/spaces/osanseviero/fork_a_repo to clone the demo repo https://huggingface.co/spaces/sanchit-gandhi/whisper-small.
 
 ## Communication and Problems
 
