@@ -503,10 +503,13 @@ by `do_remove_punctuation = True`. Normalisation is only applied during evaluati
 
 ## Evaluation
 
-<!--- TODO: Live leaderboard at XYZ --->
+<!--- TODO: VB - Live leaderboard at XYZ [After the final discussion with Tristan and Lewis] --->
 
-<!--- TODO: VB - To add after we have decided on the final evaluation criteria --->
+Finally, on to the fun part - time to sit back and watch the model transcribe audio. Each participant should evaluate their fine-tuned Whisper checkpoint on `Common Voice 11` test set for their respective language. For languages that are not part of the Common Voice 11 dataset, please contact the organisers on Discord so that we can work together to find some evaluation data.
 
+If you are using the official fine-tuning scripts for training your Whisper model, then you can run the evaluation loop by setting `do_eval=True`. We'll also provide you with a standalone evaluation script.
+
+<!--- TODO: VB - Add the streaming evaluation script here once tested. --->
 
 ## Building a Demo
 
