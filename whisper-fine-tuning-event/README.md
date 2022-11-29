@@ -68,8 +68,12 @@ give you an idea of where to look for the relevant information and an idea of ho
 ## Launch a Lambda Cloud GPU
 Where possible, we encourage you to fine-tune Whisper on a local GPU machine. This will mean a faster set-up and more 
 familiarity with your device. If you are running on a local GPU machine, you can skip ahead to the next Section: [Set Up an Environment](#set-up-an-environment). 
-However, if you do not have access to a GPU, we'll endeavour to provide you with a cloud GPU instance.
 
+The training scripts can also be run as a notebook through Google Colab. We recommend you train on Google Colab if you 
+have a "Colab Pro" or "Pro+" subscription. This is to ensure that you receive a sufficiently powerful GPU on your Colab for 
+fine-tuning Whisper. If you wish to fine-tune Whisper through Google Colab, you can skip ahead to the Section: [Data and Pre-Processing](#data-and-pre-processing). 
+
+If you do not have access to a local GPU or Colab Pro/Pro+, we'll endeavour to provide you with a cloud GPU instance.
 We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
 40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Labs Cloud API makes it easy to spin-up and launch 
 a GPU instance. In this Section, we'll go through the steps for spinning up an instance one-by-one.
@@ -233,13 +237,15 @@ huggingface-cli login
 
 And then enter an authentication token from https://huggingface.co/settings/tokens.
 
+<!--- TODO: SG - do we need to set git.config? --->
+
 <!--- TODO: SG - do we need to install tensorboard? Add to requirements.txt if so --->
 
 ## Data and Pre-Processing
 
 In this Section, we will cover how to find suitable training data and the necessary steps to pre-process it. 
 If you are new to the 🤗 Datasets library, we recommend reading the comprehensive blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
-This will tell you everything you need to know about 🤗 Datasets and the one-line API.
+This will tell you everything you need to know about 🤗 Datasets and its one-line API.
 
 ### Data
 
@@ -275,7 +281,7 @@ training corpus:
 load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train+validation", use_auth_token=True)
 ```
 
-This convention for combining splits (`"split_a+split_b"`) is consistent for all resources in the event. You can combine 
+This notation for combining splits (`"split_a+split_b"`) is consistent for all resources in the event. You can combine 
 splits in this same way using the fine-tuning scripts in the following Section [Fine-Tune Whisper](#fine-tune-whisper).
 
 In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
@@ -349,11 +355,12 @@ the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_referen
 
 <!--- TODO: SG - example script for doing this --->
 
-In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data for training. 
-When using your own audio data, please make sure that you **are allowed to use the audio data**. For instance, if the audio data is taken from media 
-platforms, such as YouTube, please verify that the media platform and the owner of the data have given their approval to 
-use the audio data in the context of machine learning research. If you are not sure whether the data you want to use has 
-the appropriate licensing, please contact the Hugging Face team on Discord.
+In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data 
+for training. When using your own audio data, please make sure that you **are allowed to use the audio data**. For 
+instance, if the audio data is taken from media platforms, such as YouTube, please verify that the media platform and 
+the owner of the data have given their approval to use the audio data in the context of machine learning research. If 
+you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face team 
+on Discord.
 
 <!--- TODO: VB - tutorial for adding own data via audio folder --->
 
@@ -415,20 +422,20 @@ Why does Melissandre look like she wants to consume Jon Snow on the ride up the 
 
 If we train the Whisper model on the raw Common Voice dataset, it will learn to predict casing and punctuation. This is 
 great when we want to use out model for actual speech recognition applications, such as transcribing meetings or 
-dictation, as the transcriptions will be formatted with casing and punctuation.
+dictation, as the predicted transcriptions will be formatted with casing and punctuation.
 
 However, we also have the option of 'normalising' the dataset to remove any casing and punctuation. Normalising the 
 dataset makes the speech recognition task easier: the model no longer needs to distinguish between upper and lower case 
 characters, or try and predict punctuation from the audio data alone. Because of this, the word error rates are 
-naturally lower (results are better). The Whisper paper demonstrates the drastic effect that normalising 
+naturally lower (meaning the results are better). The Whisper paper demonstrates the drastic effect that normalising 
 transcriptions can have on WER results (_c.f._ Section 4.4 of the [Whisper paper](https://cdn.openai.com/papers/whisper.pdf)). 
-But while we get lower WERs, we can't necessarily use our model in production! The lack of casing and punctuation makes 
-the predicted text from the model much harder to read. We would need additional models to restore the casing and 
+But while we get lower WERs, we can't necessarily use our model in production. The lack of casing and punctuation makes 
+the predicted text from the model much harder to read. We would need additional post-processing models to restore casing and 
 punctuation in our predictions if we wanted to use it for downstream applications.
 
 There is a happy medium between the two: we can train our systems on cased and normalised transcriptions, and then 
 evaluate them on normalised text. This way, we train our systems to predict fully formatted text, but also benefit from 
-the WER improvements we get by normalising the transcriptions! 
+the WER improvements we get by normalising the transcriptions.
 
 The choice of whether you normalise the transcriptions is ultimately down to you. We recommend training on un-normalised 
 text and evaluating on normalised text to get the best of both worlds. Since those choices are not always obvious, feel 
