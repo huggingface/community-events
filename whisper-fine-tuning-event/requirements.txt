@@ -5,3 +5,4 @@ git+https://github.com/huggingface/datasets
 librosa
 jiwer
 evaluate
+tensorboard
