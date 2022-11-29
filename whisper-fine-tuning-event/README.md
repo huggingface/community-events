@@ -10,7 +10,9 @@ partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
 - Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. TODO: VB - add specific instructions for going to the role-assignments channel and accept audio
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. 
+
+<!--- TODO: VB - add specific instructions for going to the role-assignments channel and accept audio --->
 
 ## Table of Contents
 
@@ -19,13 +21,13 @@ and make sure to:
 - [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
 - [Set Up an Environment](#set-up-an-environment)
 - [Data and Pre-Processing](#data-and-pre-processing)
-- [Streaming Mode](#streaming-mode)
 - [Fine-Tune a Whisper Model](#fine-tune-whisper)
 - [Evaluation](#evaluation)
 - [Building a Demo](#building-a-demo)
 - [Communication and Problems](#communication-and-problems)
 - [Talks](#talks)
 - [Tips and Tricks](#tips-and-tricks)
+- [Feedback](#feedback)
 
 ## Introduction
 Whisper is a pre-trained model for automatic speech recognition (ASR) published in [September 2022](https://openai.com/blog/whisper/) 
@@ -43,7 +45,7 @@ it to your language, right the way through to exploring advanced training method
 level that suits you best. We'll be on hand to facilitate this!
 
 Participants are allowed to fine-tune their systems on the training data of their choice, including datasets from the 
-Hugging Face Hub, web-scraped data from the internet, or private datasets. Speech recognition systems will be evaluated 
+Hugging Face Hub, web-scraped data from the internet, or private datasets. Whisper models will be evaluated 
 on the "test" split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
 dataset for the participant's chosen language.
 
@@ -78,7 +80,7 @@ This Section is split into two halves:
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
 
 ### Signing-Up with Lambda Labs
-TODO: SG - add Section once we've figured out how the 'teams' function is going to work with Mitesh
+TODO: SG - add Section once we've figured out how the 'teams' function is going to work with Lambda
 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
@@ -223,77 +225,247 @@ If the final check returns True, the libraries have been installed correctly. Fi
 quit()
 ```
 
-TODO: SG - do we need to install:
-* tensorboard
+The last thing we need to do is link our Hugging Face account. Run the command:
+
+```bash
+huggingface-cli login
+```
+
+And then enter an authentication token from https://huggingface.co/settings/tokens.
+
+<!--- TODO: SG - do we need to install tensorboard? Add to requirements.txt if so --->
 
 ## Data and Pre-Processing
 
-In this Section, we will quickly go over how to find suitable training data and 
-how to preprocess it.
+In this Section, we will cover how to find suitable training data and the necessary steps to pre-process it. 
+If you are new to the 🤗 Datasets library, we recommend reading the comprehensive blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
+This will tell you everything you need to know about 🤗 Datasets and the one-line API.
 
-To begin with, **all data except Common Voice's `"test"` data can be used as training data.**
-The exception includes all Common Voice versions as the test data split of later Common Voice versions often
-overlaps with the one of previous versions, *e.g.* the test data of Common Voice 7 in English is 
-to a big part identical to the test data of Common Voice 6 in English:
+### Data
+
+Whisper models will be evaluated on the `"test"` split of the [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
+dataset. Any data can be used to fine-tune the Whisper model **except Common Voice's `"test"` split**. This exception 
+extends to all Common Voice versions, as the test split of legacy Common Voice releases often overlaps with the 
+latest one. For instance, the test split of Common Voice 10 is largely the same as that of Common Voice 11.
+
+So, the test data:
 
 ```python
-load_dataset("mozilla-foundation/common_voice_11_0", "en", split="test") 
+load_dataset("mozilla-foundation/common_voice_11_0", "en", split="test", use_auth_token=True)
 ```
 
-includes more or less the same data as
+More or less includes the same data as:
 
 ```python
-load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test") 
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test", use_auth_token=True)
 ```
 
-However, we strongly encourage participants to make use of Common Voice's other splits, *e.g.* `"train"` and `"validation"`.
-For most languages, the Common Voice dataset offers already a decent amount of training data. It is usually 
-always advantageous to collect additional data. To do so, the participants are in first step encouraged to search the
-Hugging Face Hub for additional audio data, for example by selecting the category 
-["speech-processing"](https://huggingface.co/datasets?task_categories=task_categories:speech-processing&sort=downloads).
-All datasets that are available on the Hub can be downloaded via the 🤗 Datasets library in the same way Common Voice is downloaded.
+And **neither** are allowed for training purposes. However, we strongly encourage participants to make use of the other 
+Common Voice splits as training data, such as `"train"` and `"validation"`:
+
+```python
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train", use_auth_token=True)
+```
+
+For most languages, the `"train"` split of Common Voice 11 dataset offers a reasonable amount of training data. 
+For low-resource languages, it is normal procedure to combine the `"train"` and `"validation"` splits to give a larger 
+training corpus:
+
+```python
+load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train+validation", use_auth_token=True)
+```
+
+This convention for combining splits (`"split_a+split_b"`) is consistent for all resources in the event. You can combine 
+splits in this same way using the fine-tuning scripts in the following Section [Fine-Tune Whisper](#fine-tune-whisper).
+
+In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
+project demonstrates the significant effect that increasing the amount of training data can have on downstream 
+performance. There are a number of datasets that are available on the Hugging Face Hub that can be downloaded via 
+the 🤗 Datasets library in much the same way as Common Voice 11.
+
+We recommend the following four datasets on the Hugging Face Hub for multilingual speech recognition:
+
+<details>
+<summary>
+
+#### Common Voice 11
+
+</summary>
+
+[Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) is a crowd-sourced 
+open-licensed speech dataset where speakers record text from Wikipedia in various languages. Since anyone can contribute 
+recordings, there is significant variation in both audio quality and speakers. The audio conditions are challenging, with 
+recording artefacts, accented speech, hesitations, and the presence of foreign words. The transcriptions are both cased 
+and punctuated. As of version 11, there are over 100 languages available, both low and high-resource.
+</details>
+<details>
+<summary>
+
+#### VoxPopuli
+
+</summary>
+
+[VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli) is a large-scale multilingual speech corpus consisting 
+of data sourced from 2009-2020 European Parliament event recordings. Consequently, it occupies the unique domain of 
+oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
+15 European languages. The transcriptions are punctuated but not cased.
+</details>
+<details>
+<summary>
+
+#### Multilingual LibriSpeech
+
+</summary>
+
+[Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) is the multilingual 
+equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. It comprises a large corpus 
+of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making it a suitable dataset for academic 
+research. It contains data split into eight high-resource languages - English, German, Dutch, Spanish, French, Italian, 
+Portuguese and Polish. The transcriptions are neither punctuated nor cased.
+</details>
+<details>
+<summary>
+
+#### FLEURS
+
+</summary>
+
+[FLEURS](https://huggingface.co/datasets/google/fleurs) (Few-shot Learning Evaluation of Universal Representations of 
+Speech) is a dataset for evaluating speech recognition systems in 102 languages, including many that are classified as 
+'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) dataset, a machine 
+translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers are recorded 
+narrating the sentence transcriptions in their native language. The recorded audio data is paired with the sentence 
+transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
+approximately 10 hours of supervised audio-transcription data per language. Transcriptions come in two formats: un-normalised 
+(`"raw_transcription"`) and normalised (`"transcription"`).
+</details>
+
+The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
+multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
+You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads.
+
 If one wants to combine multiple datasets for training, it might make sense to take a look at 
 the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
 
-In addition, participants can also make use of their audio data. Here, please make sure that you **are allowed to use the audio data**. E.g., if audio data 
-is taken from media platforms, such as YouTube, it should be verified that the media platform and the owner of the data have given their approval to use the audio 
-data in the context of machine learning research. If you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face 
-team on discord.
+<!--- TODO: SG - example script for doing this --->
 
-Next, let's talk about preprocessing. Audio data and transcriptions have to be brought into the correct format when 
-training the acoustic model (example shown in [How to fine-tune a Whisper model](#how-to-finetune-a-whisper-model)).
-It is recommended that this is done by using 🤗 Datasets `.map()` function as shown below.
+In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data for training. 
+When using your own audio data, please make sure that you **are allowed to use the audio data**. For instance, if the audio data is taken from media 
+platforms, such as YouTube, please verify that the media platform and the owner of the data have given their approval to 
+use the audio data in the context of machine learning research. If you are not sure whether the data you want to use has 
+the appropriate licensing, please contact the Hugging Face team on Discord.
 
+<!--- TODO: VB - tutorial for adding own data via audio folder --->
+
+### Streaming Mode
+
+Audio datasets are very large. This causes two issues:
+1. They require a significant amount of **storage space** to download.
+2. They take a significant amount of **time** to download and process.
+
+The storage and time requirements present limitations to most speech researchers. For example, downloading the English 
+subset of the Common Voice 11 dataset (2,300 hours) requires upwards of 200GB of disk space and up to several hours 
+of download time. For these reasons, we **do not** recommend that you run the following code cell! 
 ```python
-def remove_special_characters(batch):
-    if chars_to_ignore_regex is not None:
-        batch["target_text"] = re.sub(chars_to_ignore_regex, "", batch[text_column_name]).lower() + " "
-    else:
-        batch["target_text"] = batch[text_column_name].lower() + " "
-    return batch
+from datasets import load_dataset
 
+common_voice = load_dataset("mozilla-foundation/common_voice_11_0", "en", use_auth_token=True)
 
-raw_datasets = raw_datasets.map(
-    remove_special_characters,
-    remove_columns=[text_column_name],
-    desc="remove special characters from datasets",
-    )
+# we have to wait several hours until the entire dataset is downloaded before we can access the first sample... 
+print(next(iter(common_voice["train"])))
 ```
 
-The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
-it is done in the [official script](https://github.com/huggingface/transformers/blob/main/examples/pytorch/speech-recognition/run_speech_recognition_seq2seq.py).
-**However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
-These rules are not this straightforward and therefore often have to be evaluated case-by-case.
-It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
-symbols and punctuation marks. A list of such symbols can *e.g.* be found [here](https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks) - however here we already must be careful. We should **not** remove a symbol that would change the meaning of the words, *e.g.* in English, 
-we should not remove the single quotation mark `'` since it would change the meaning of the word `"it's"` to `"its"` which would then be incorrect. 
-So the golden rule here is to not remove any characters that could change the meaning of a word into another word. This is not always obvious and should 
-be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
-meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
+However, both these issues can be solved with 🤗 Datasets. Rather than downloading the whole dataset at once, we 
+download small chunks of the dataset at a time, in a process called _streaming_. Since the data is downloaded 
+progressively as we iterate over the dataset, we can get started with a dataset without waiting for the entire dataset 
+to download. Once we're done with a chunk, it's automatically deleted. This way, we only have the data when we need it, 
+and not when we don't!
 
-Since those choices are not always obvious when in doubt feel free to ask on Discord or even better post your question on the forum.
+Streaming is enabled by passing the argument `streaming=True` to the `load_dataset` function. We can then use our 
+audio datasets in much the same way as before! For these reasons, **we highly recommend** that you try out the following 
+code cell! Just make sure you've accepted the Common Voice 11 terms of use on the Hugging Face Hub: https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0.
 
-## Streaming Mode
+```python
+from datasets import load_dataset
+
+common_voice = load_dataset("mozilla-foundation/common_voice_11_0", "en", use_auth_token=True, streaming=True)
+
+# get the first sample of the dataset straight away!
+print(next(iter(common_voice["train"])))
+```
+
+The examples in this README heavily rely on streaming mode to fine-tune Whisper. With streaming mode, we can use **any 
+speech recognition dataset with just 20GB of disk space**. If you want to read more about streaming mode, we 
+recommend you check out the aforementioned blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
+
+### Pre-Processing
+
+Data pre-processing is a very grey area when it comes to speech recognition. In this Section, we'll try to make the 
+situation as clear as possible for you as participants.
+
+The Common Voice dataset is both cased and punctuated:
+
+```python
+print(next(iter(common_voice["train"]))["sentence"])
+```
+**Print Output:**
+```
+Why does Melissandre look like she wants to consume Jon Snow on the ride up the wall?
+```
+
+If we train the Whisper model on the raw Common Voice dataset, it will learn to predict casing and punctuation. This is 
+great when we want to use out model for actual speech recognition applications, such as transcribing meetings or 
+dictation, as the transcriptions will be formatted with casing and punctuation.
+
+However, we also have the option of 'normalising' the dataset to remove any casing and punctuation. Normalising the 
+dataset makes the speech recognition task easier: the model no longer needs to distinguish between upper and lower case 
+characters, or try and predict punctuation from the audio data alone. Because of this, the word error rates are 
+naturally lower (results are better). The Whisper paper demonstrates the drastic effect that normalising 
+transcriptions can have on WER results (_c.f._ Section 4.4 of the [Whisper paper](https://cdn.openai.com/papers/whisper.pdf)). 
+But while we get lower WERs, we can't necessarily use our model in production! The lack of casing and punctuation makes 
+the predicted text from the model much harder to read. We would need additional models to restore the casing and 
+punctuation in our predictions if we wanted to use it for downstream applications.
+
+There is a happy medium between the two: we can train our systems on cased and normalised transcriptions, and then 
+evaluate them on normalised text. This way, we train our systems to predict fully formatted text, but also benefit from 
+the WER improvements we get by normalising the transcriptions! 
+
+The choice of whether you normalise the transcriptions is ultimately down to you. We recommend training on un-normalised 
+text and evaluating on normalised text to get the best of both worlds. Since those choices are not always obvious, feel 
+free to ask on Discord or (even better) post your question on the [forum](https://discuss.huggingface.co).
+
+| Train         | Eval          | Pros                                                           | Cons                                     |
+|---------------|---------------|----------------------------------------------------------------|------------------------------------------|
+| Un-normalised | Un-normalised | * Predict casing + punctuation<br>* One logic for train / eval | * WERs are higher                        |
+| Un-normalised | Normalised    | * Predict casing + punctuation<br>* WERs are lower             | * Different logic for train / eval       |
+| Normalised    | Normalised    | * One logic for train / eval<br>* WERs are lower               | * No casing / punctuation in predictions |
+
+With the provided training scripts, it is trivial to toggle between removing or retaining punctuation and casing, 
+requiring at most three lines of code change. Switching between the different modes is explained in more detail in the 
+following Section [Fine-Tune Whisper](#fine-tune-whisper).
+
+When mixing datasets, you should ensure the transcription format is consistent across datasets. For example, if you mix 
+Common Voice 11 (cased + punctuated) with VoxPopuli (un-cased + punctuated), you will need to lower-case **all the text** 
+for both training and evaluation, such that the transcriptions are consistent across training samples (un-cased + punctuated). 
+
+Likewise, if mixing Common Voice 11 (cased + punctuated) with Multilingual LibriSpeech (un-cased + un-punctuated), you 
+should make sure to remove all casing and punctuation in **all the text** for both training and evaluation, such that 
+all transcriptions are un-cased and un-punctuated for all training samples.
+
+Having a mismatch in formatting for different training samples can reduce the final performance of your fine-tuned Whisper 
+model.
+
+| Dataset                                                                                       | Casing | Punctuation |
+|-----------------------------------------------------------------------------------------------|--------|-------------|
+| [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0)       | ✅      | ✅           |
+| [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli)                               | ❌      | ✅           |
+| [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) | ❌      | ❌           |
+| [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | ✅      | ✅           |
+
+If you want to find out more about pre- and post-processing for speech recognition, we point you in the direction of 
+the paper: [ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition](https://arxiv.org/abs/2210.13352).
+
+<!--- TODO: SG What pre-processing steps do we deem appropriate? --->
 
 ## Fine-Tune Whisper
 
@@ -316,13 +488,19 @@ fine-tuning. These checkpoints achieve comparable performance to the large check
 can be trained much faster (and hence for much longer!).
 <!--- TODO: SG - review this after lambda testing --->
 
-<!-- TODO: VB - Add a fine-tuning guide here after testing the script on lambda labs GPU -->
+When using the training scripts, removing casing is enabled by passing the flag `--do_lower_case`. Remove 
+punctuation is achieved by passing the flag `--do_remove_punctuation`. The punctuation characters removed are defined 
+in TODO. Normalisation is only applied during evaluation by setting the flag `--do_normalize_eval_only`.
+
+Similarly, in the notebooks, removing casing is enabled by setting the variable `do_lower_case = True` and punctuation 
+by `do_remove_punctuation = True`. Normalisation is only applied during evaluation by setting the variable 
+`do_normalize_eval_only=True`.
 
 ## Evaluation
 
-* Live leaderboard at XYZ
+<!--- TODO: Live leaderboard at XYZ --->
 
-<!-- TODO: VB - To add after we have decided on the final evaluation criteria -->
+<!--- TODO: VB - To add after we have decided on the final evaluation criteria --->
 
 ## Building a Demo
 
@@ -349,3 +527,16 @@ The following table summarizes what platform to use for which problem.
 ## Tips and Tricks
 
 <!-- TODO: VB - Add tips for faster convergence/ memory efficient training. -->
+
+## Feedback
+
+We would love to get your feedback on the event! If you have a spare two minutes, we'd appreciate you filling out the 
+feedback form at: TODO
+
+<!--- TODO: VB - topics for feedback form (Google form):
+* Discord comms
+* README info
+* Streaming mode
+* Examples scripts
+* Satisfaction with the event
+--->
