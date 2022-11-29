@@ -27,6 +27,7 @@ and make sure to:
 - [Communication and Problems](#communication-and-problems)
 - [Talks](#talks)
 - [Tips and Tricks](#tips-and-tricks)
+- [Feedback](#feedback)
 
 ## Introduction
 Whisper is a pre-trained model for automatic speech recognition (ASR) published in [September 2022](https://openai.com/blog/whisper/) 
@@ -526,3 +527,16 @@ The following table summarizes what platform to use for which problem.
 ## Tips and Tricks
 
 <!-- TODO: VB - Add tips for faster convergence/ memory efficient training. -->
+
+## Feedback
+
+We would love to get your feedback on the event! If you have a spare two minutes, we'd appreciate you filling out the 
+feedback form at: TODO
+
+<!--- TODO: VB - topics for feedback form (Google form):
+* Discord comms
+* README info
+* Streaming mode
+* Examples scripts
+* Satisfaction with the event
+--->
