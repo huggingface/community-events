@@ -232,8 +232,7 @@ huggingface-cli login
 
 And then enter an authentication token from https://huggingface.co/settings/tokens.
 
-TODO: SG - do we need to install:
-* tensorboard
+<!--- TODO: SG - do we need to install tensorboard? Add to requirements.txt if so --->
 
 ## Data and Pre-Processing
 
@@ -294,7 +293,7 @@ We recommend the following four datasets on the Hugging Face Hub for multilingua
 
 [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) is a crowd-sourced 
 open-licensed speech dataset where speakers record text from Wikipedia in various languages. Since anyone can contribute 
-recordings, there is significant variation in both audio quality andspeakers. The audio conditions are challenging, with 
+recordings, there is significant variation in both audio quality and speakers. The audio conditions are challenging, with 
 recording artefacts, accented speech, hesitations, and the presence of foreign words. The transcriptions are both cased 
 and punctuated. As of version 11, there are over 100 languages available, both low and high-resource.
 </details>
@@ -308,7 +307,7 @@ and punctuated. As of version 11, there are over 100 languages available, both l
 [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli) is a large-scale multilingual speech corpus consisting 
 of data sourced from 2009-2020 European Parliament event recordings. Consequently, it occupies the unique domain of 
 oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
-15 European languages.
+15 European languages. The transcriptions are punctuated but not cased.
 </details>
 <details>
 <summary>
@@ -321,7 +320,7 @@ oratory, political speech, largely sourced from non-native speakers. It contains
 equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. It comprises a large corpus 
 of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making it a suitable dataset for academic 
 research. It contains data split into eight high-resource languages - English, German, Dutch, Spanish, French, Italian, 
-Portuguese and Polish.
+Portuguese and Polish. The transcriptions are neither punctuated nor cased.
 </details>
 <details>
 <summary>
@@ -336,7 +335,8 @@ Speech) is a dataset for evaluating speech recognition systems in 102 languages,
 translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers are recorded 
 narrating the sentence transcriptions in their native language. The recorded audio data is paired with the sentence 
 transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
-approximately 10 hours of supervised audio-transcription data per language.
+approximately 10 hours of supervised audio-transcription data per language. Transcriptions come in two formats: un-normalised 
+(`"raw_transcription"`) and normalised (`"transcription"`).
 </details>
 
 The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
@@ -402,10 +402,6 @@ recommend you check out the aforementioned blog post: [A Complete Guide To Audio
 Data pre-processing is a very grey area when it comes to speech recognition. In this Section, we'll try to make the 
 situation as clear as possible for you as participants.
 
-We first define two pre-processing terms:
-* Un-normalised: no pre-processing applied to the transcriptions. All casing and punctuation is retained (e.g. "The cat sat on the mat.").
-* Normalised: pre-processing applied to the transcriptions. All casing and punctuation is removed (e.g. "the cat sat on the mat).
-
 The Common Voice dataset is both cased and punctuated:
 
 ```python
@@ -416,38 +412,57 @@ print(next(iter(common_voice["train"]))["sentence"])
 Why does Melissandre look like she wants to consume Jon Snow on the ride up the wall?
 ```
 
-If we train the Whisper model on the raw Common Voice dataset, it will learn to predict casing and punctuation. This is great when 
-you want to use your model for actual speech recognition applications, such as transcribing meetings or dictation.
+If we train the Whisper model on the raw Common Voice dataset, it will learn to predict casing and punctuation. This is 
+great when we want to use out model for actual speech recognition applications, such as transcribing meetings or 
+dictation, as the transcriptions will be formatted with casing and punctuation.
 
-However, we also have the option of 'normalising' the dataset to remove any casing and punctuation. Normalising the dataset makes the 
-speech recognition task easier: the model no longer needs to distinguish between upper and lower case characters, or 
-try and predict punctuation from the audio data alone. Because of this, the word error rates are naturally lower 
-(results are better). But while we get lower WERs, we can't necessarily use our model in production! The lack of 
-casing and punctuation makes the predicted text from the model much harder to read.
+However, we also have the option of 'normalising' the dataset to remove any casing and punctuation. Normalising the 
+dataset makes the speech recognition task easier: the model no longer needs to distinguish between upper and lower case 
+characters, or try and predict punctuation from the audio data alone. Because of this, the word error rates are 
+naturally lower (results are better). The Whisper paper demonstrates the drastic effect that normalising 
+transcriptions can have on WER results (_c.f._ Section 4.4 of the [Whisper paper](https://cdn.openai.com/papers/whisper.pdf)). 
+But while we get lower WERs, we can't necessarily use our model in production! The lack of casing and punctuation makes 
+the predicted text from the model much harder to read. We would need additional models to restore the casing and 
+punctuation in our predictions if we wanted to use it for downstream applications.
 
-It is recommended that this is done by using 🤗 Datasets `.map()` function as shown 
-[here](https://github.com/huggingface/transformers/blob/9a2dabae7002258e41419491c73dd43ad61b5de7/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py#L444). As can be 
-see we can pass some characters that will be removed from the transcriptions, *e.g.*: `--chars_to_ignore , ? . ! - \; \: \" “ % ‘ ” � \`
-on the official ["Single GPU Example"](https://github.com/huggingface/transformers/tree/main/examples/pytorch/speech-recognition#single-gpu-ctc).
-The participants are free to modify this preprocessing by removing more characters or even replacing characters as 
-it is done in the [official blog post](https://github.com/huggingface/transformers/blob/9a2dabae7002258e41419491c73dd43ad61b5de7/examples/pytorch/speech-recognition/run_speech_recognition_ctc.py#L444).
-**However**, there are some rules regarding what characters are allowed to be removed/replaced and which are not.
-These rules are not this straightforward and therefore often have to be evaluated case-by-case.
-It is allowed (and recommended) to normalize the data to only have lower-case characters. It is also allowed (and recommended) to remove typographical 
-symbols and punctuation marks. A list of such symbols can *e.g.* be found [here](https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks) - however here we already must be careful. We should **not** remove a symbol that would change the meaning of the words, *e.g.* in English, 
-we should not remove the single quotation mark `'` since it would change the meaning of the word `"it's"` to `"its"` which would then be incorrect. 
-So the golden rule here is to not remove any characters that could change the meaning of a word into another word. This is not always obvious and should 
-be given some consideration. As another example, it is fine to remove the "Hyphen-minus" sign "`-`" since it doesn't change the 
-meaning of a word to another one. *E.g.* "`fine-tuning`" would be changed to "`finetuning`" which has still the same meaning.
+There is a happy medium between the two: we can train our systems on cased and normalised transcriptions, and then 
+evaluate them on normalised text. This way, we train our systems to predict fully formatted text, but also benefit from 
+the WER improvements we get by normalising the transcriptions! 
+
+The choice of whether you normalise the transcriptions is ultimately down to you. We recommend training on un-normalised 
+text and evaluating on normalised text to get the best of both worlds. Since those choices are not always obvious, feel 
+free to ask on Discord or (even better) post your question on the [forum](https://discuss.huggingface.co).
 
 | Train         | Eval          | Pros                                                           | Cons                                     |
 |---------------|---------------|----------------------------------------------------------------|------------------------------------------|
 | Un-normalised | Un-normalised | * Predict casing + punctuation<br>* One logic for train / eval | * WERs are higher                        |
-| Un-normalised | Normalised    | * Predict casing + punctuation<br>* WERs are lower             | * Separate logic for train / eval        |
+| Un-normalised | Normalised    | * Predict casing + punctuation<br>* WERs are lower             | * Different logic for train / eval       |
 | Normalised    | Normalised    | * One logic for train / eval<br>* WERs are lower               | * No casing / punctuation in predictions |
 
+With the provided training scripts, it is trivial to toggle between removing or retaining punctuation and casing, 
+requiring at most three lines of code change. Switching between the different modes is explained in more detail in the 
+following Section [Fine-Tune Whisper](#fine-tune-whisper).
 
-Since those choices are not always obvious, when in doubt feel free to ask on Discord or (even better) post your question on the [forum](https://discuss.huggingface.co).
+When mixing datasets, you should ensure the transcription format is consistent across datasets. For example, if you mix 
+Common Voice 11 (cased + punctuated) with VoxPopuli (un-cased + punctuated), you will need to lower-case **all the text** 
+for both training and evaluation, such that the transcriptions are consistent across training samples (un-cased + punctuated). 
+
+Likewise, if mixing Common Voice 11 (cased + punctuated) with Multilingual LibriSpeech (un-cased + un-punctuated), you 
+should make sure to remove all casing and punctuation in **all the text** for both training and evaluation, such that 
+all transcriptions are un-cased and un-punctuated for all training samples.
+
+Having a mismatch in formatting for different training samples can reduce the final performance of your fine-tuned Whisper 
+model.
+
+| Dataset                                                                                       | Casing | Punctuation |
+|-----------------------------------------------------------------------------------------------|--------|-------------|
+| [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0)       | ✅      | ✅           |
+| [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli)                               | ❌      | ✅           |
+| [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) | ❌      | ❌           |
+| [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | ✅      | ✅           |
+
+If you want to find out more about pre- and post-processing for speech recognition, we point you in the direction of 
+the paper: [ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition](https://arxiv.org/abs/2210.13352).
 
 <!--- TODO: SG What pre-processing steps do we deem appropriate? --->
 
@@ -471,6 +486,14 @@ We recommend using the tiny model for rapid prototyping. We advise that the smal
 fine-tuning. These checkpoints achieve comparable performance to the large checkpoint with very little fine-tuning, but 
 can be trained much faster (and hence for much longer!).
 <!--- TODO: SG - review this after lambda testing --->
+
+When using the training scripts, removing casing is enabled by passing the flag `--do_lower_case`. Remove 
+punctuation is achieved by passing the flag `--do_remove_punctuation`. The punctuation characters removed are defined 
+in TODO. Normalisation is only applied during evaluation by setting the flag `--do_normalize_eval_only`.
+
+Similarly, in the notebooks, removing casing is enabled by setting the variable `do_lower_case = True` and punctuation 
+by `do_remove_punctuation = True`. Normalisation is only applied during evaluation by setting the variable 
+`do_normalize_eval_only=True`.
 
 ## Evaluation
 
