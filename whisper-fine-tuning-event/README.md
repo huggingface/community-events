@@ -65,24 +65,24 @@ give you an idea of where to look for the relevant information and an idea of ho
 
 ## Launch a Lambda Cloud GPU
 Where possible, we encourage you to fine-tune Whisper on a local GPU machine. This will mean a faster set-up and more 
-familiarity with your device. If you are running on a local GPU machine, you can skip ahead to the next Section: [Set Up an Environment](#set-up-an-environment). 
+familiarity with your device. If you are running on a local GPU machine, you can skip ahead to the next section: [Set Up an Environment](#set-up-an-environment). 
 
 The training scripts can also be run as a notebook through Google Colab. We recommend you train on Google Colab if you 
 have a "Colab Pro" or "Pro+" subscription. This is to ensure that you receive a sufficiently powerful GPU on your Colab for 
-fine-tuning Whisper. If you wish to fine-tune Whisper through Google Colab, you can skip ahead to the Section: [Data and Pre-Processing](#data-and-pre-processing). 
+fine-tuning Whisper. If you wish to fine-tune Whisper through Google Colab, you can skip ahead to the section: [Data and Pre-Processing](#data-and-pre-processing). 
 
 If you do not have access to a local GPU or Colab Pro/Pro+, we'll endeavour to provide you with a cloud GPU instance.
 We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
 40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Labs Cloud API makes it easy to spin-up and launch 
-a GPU instance. In this Section, we'll go through the steps for spinning up an instance one-by-one.
+a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
-This Section is split into two halves:
+This section is split into two halves:
 
 1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
 
 ### Signing-Up with Lambda Labs
-TODO: SG - add Section once we've figured out how the 'teams' function is going to work with Lambda
+TODO: SG - add section once we've figured out how the 'teams' function is going to work with Lambda
 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
@@ -120,7 +120,7 @@ TODO: SG - video for launching an instance
 Estimated time to complete: 5 mins
 
 The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
-Section, we'll cover how to set up an environment with the required libraries.
+section, we'll cover how to set up an environment with the required libraries.
 
 First, we need to make sure we have the required NVIDIA drivers installed. We can check that we have these drivers 
 through the following command:
@@ -132,13 +132,27 @@ nvidia-smi
 This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda Labs GPUs!
 If you get an error running this command, refer to your device manual for installing the required NVIDIA driver.
 
-Before installing the required libraries, we'd need to install and update `ffmpeg` to version 4:
+Before installing the required libraries, we'd need to install and update the Unix package `ffmpeg` to version 4:
 
  ```bash
 add-apt-repository -y ppa:jonathonf/ffmpeg-4
 apt update
 apt install -y ffmpeg
  ```
+
+We'll also need the package `git-lfs` to push large model weights to the Hugging Face Hub. To check whether 
+`git-lfs` is installed, simply run:
+
+```bash
+git-lfs -v
+```
+
+The output should show something like `git-lfs/2.13.2 (GitHub; linux amd64; go 1.15.4)`. If your console states that 
+the `git-lfs` command was not found, you can install it via: 
+
+```bash
+sudo apt-get install git-lfs
+```
 
 We recommend installing the required libraries in a Python virtual environment. If you're unfamiliar with Python virtual 
 environments, check out the official user guide: [installing-using-pip-and-virtual-environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
@@ -198,7 +212,7 @@ We can now verify that `transformers` and `datasets` have been correctly install
 python
 ```
 
-Running the following code cell will load one sample of the [common voice](https://huggingface.co/datasets/common_voice) 
+Running the following code cell will load one sample of the [Common Voice](https://huggingface.co/datasets/common_voice) 
 dataset from the Hugging Face Hub and perform a forward pass of the "tiny" Whisper model:
 
 ```python
@@ -241,7 +255,7 @@ And then enter an authentication token from https://huggingface.co/settings/toke
 
 ## Data and Pre-Processing
 
-In this Section, we will cover how to find suitable training data and the necessary steps to pre-process it. 
+In this section, we will cover how to find suitable training data and the necessary steps to pre-process it. 
 If you are new to the 🤗 Datasets library, we recommend reading the comprehensive blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
 This will tell you everything you need to know about 🤗 Datasets and its one-line API.
 
@@ -280,7 +294,7 @@ load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train+validati
 ```
 
 This notation for combining splits (`"split_a+split_b"`) is consistent for all resources in the event. You can combine 
-splits in this same way using the fine-tuning scripts in the following Section [Fine-Tune Whisper](#fine-tune-whisper).
+splits in this same way using the fine-tuning scripts in the following section [Fine-Tune Whisper](#fine-tune-whisper).
 
 In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
 project demonstrates the significant effect that increasing the amount of training data can have on downstream 
@@ -405,7 +419,7 @@ recommend you check out the aforementioned blog post: [A Complete Guide To Audio
 
 ### Pre-Processing
 
-Data pre-processing is a very grey area when it comes to speech recognition. In this Section, we'll try to make the 
+Data pre-processing is a very grey area when it comes to speech recognition. In this section, we'll try to make the 
 situation as clear as possible for you as participants.
 
 The Common Voice dataset is both cased and punctuated:
@@ -447,7 +461,7 @@ free to ask on Discord or (even better) post your question on the [forum](https:
 
 With the provided training scripts, it is trivial to toggle between removing or retaining punctuation and casing, 
 requiring at most three lines of code change. Switching between the different modes is explained in more detail in the 
-following Section [Fine-Tune Whisper](#fine-tune-whisper).
+following section [Fine-Tune Whisper](#fine-tune-whisper).
 
 When mixing datasets, you should ensure the transcription format is consistent across datasets. For example, if you mix 
 Common Voice 11 (cased + punctuated) with VoxPopuli (un-cased + punctuated), you will need to lower-case **all the text** 
@@ -488,11 +502,298 @@ models on the Hugging Face Hub:
 | medium | 24     | 1024  | 16    | 769 M      | [✓](https://huggingface.co/openai/whisper-medium.en) | [✓](https://huggingface.co/openai/whisper-medium) |
 | large  | 32     | 1280  | 20    | 1550 M     | x                                                    | [✓](https://huggingface.co/openai/whisper-large)  |
 
-We recommend using the tiny model for rapid prototyping. We advise that the small or medium checkpoints are used for 
-fine-tuning. These checkpoints achieve comparable performance to the large checkpoint with very little fine-tuning, but 
-can be trained much faster (and hence for much longer!).
-<!--- TODO: SG - review this after lambda testing --->
+The English-only checkpoints should be used for English speech recognition. For all other languages, one should use the 
+multilingual checkpoints.
 
+We recommend using the tiny model for rapid prototyping. We advise that the small or medium checkpoints are used for 
+fine-tuning. These checkpoints achieve comparable performance to the large checkpoint, but can be trained much faster 
+(and hence for much longer!).
+
+A complete guide to Whisper fine-tuning can be found in the blog post: [Fine-Tune Whisper with 🤗 Transformers](https://huggingface.co/blog/fine-tune-whisper).
+While it is not necessary to have read this blog post before fine-tuning Whisper, it is strongly advised in order that 
+you understand the logic behind the fine-tuning code.  
+
+There are three ways in which you can execute the fine-tuning code:
+1. [Python Script](#python-script)
+2. [Jupyter Notebook](#jupyter-notebook)
+3. [Google Colab](#google-colab)
+
+1 and 2 are applicable when running on a local GPU or cloud GPU instance (such as on Lambda Labs). 3 applies if you have 
+a Google Colab Pro/Pro+ subscription and want to run training in a Google Colab. The proceeding instructions for running 
+each of these methods are quite lengthy. Feel free to read through each of them to get a better idea for which one you 
+want to use for training. Once you've read through, we advise you pick one method and stick to it!
+
+TODO: select language
+
+### Python Script
+
+Video tutorial: TODO
+
+1. **Create a model repository**
+
+The steps for running training with a Python script assume that you are SSH'd into your GPU device and have set up 
+your environment according to the previous section [Set Up an Environment](#set-up-an-environment).
+
+First, we need to create a model repository on the Hugging Face Hub. This repository will contain all the required files 
+to reproduce the training run, alongside model weights, training logs and a README.md card. You can either create a model 
+repository directly on the Hugging Face Hub using the link: https://huggingface.co/new Or, via the CLI. Here, we'll show 
+how to use the CLI. 
+
+Let's pick a name for our fine-tuned Whisper model: *whisper-small-hi*. We can run the following command to create a 
+repository under this name:
+
+```bash
+huggingface-cli repo create whisper-small-hi
+```
+
+We can now see the model on the Hub, *e.g.* under https://huggingface.co/sanchit-gandhi/whisper-small-hi
+
+Let's clone the repository so that we can place our training script and model weights inside:
+
+```bash
+git lfs install
+git clone https://huggingface.co/sanchit-gandhi/whisper-small-hi
+```
+
+We can then enter the repository using the `cd` command:
+
+```bash
+cd whisper-small-hi
+```
+
+2. **Add training script and `run` command**
+
+We encourage participants to add all the relevant files for training directly to the model repository. This way, 
+training runs are fully reproducible.
+
+We provide a Python training script for fine-tuning Whisper with 🤗 Datasets' streaming mode: [`run_speech_recognition_seq2seq_streaming.py`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_streaming.py)
+This script can be downloaded to your GPU through the `wget` command:
+
+```bash
+wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_streaming.py
+```
+
+This will download a copy of the training script to your model repository.
+
+We can then define the model, training and data arguments for fine-tuning:
+
+```bash
+echo '''python run_speech_recognition_seq2seq_streaming.py \
+	--model_name_or_path="openai/whisper-small" \
+	--dataset_name="mozilla-foundation/common_voice_11_0" \
+	--dataset_config_name="hi" \
+	--language="hindi" \
+	--train_split_name="train+validation" \
+	--eval_split_name="test" \
+	--max_steps="5000" \
+	--output_dir="./" \
+	--per_device_train_batch_size="32" \
+	--per_device_eval_batch_size="16" \
+	--logging_steps="25" \
+	--learning_rate="1e-5" \
+	--warmup_steps="500" \
+	--evaluation_strategy="steps" \
+	--eval_steps="1000" \
+	--save_strategy="steps" \
+	--save_steps="1000" \
+	--generation_max_length="225" \
+	--length_column_name="input_length" \
+	--max_duration_in_seconds="30" \
+	--text_column_name="sentence" \
+	--freeze_feature_encoder="False" \
+	--report_to="tensorboard" \
+	--gradient_checkpointing \
+	--fp16 \
+	--overwrite_output_dir \
+	--do_train \
+	--do_eval \
+	--predict_with_generate \
+	--use_auth_token \
+	--push_to_hub''' >> run.sh
+```
+
+Make sure to change the `--dataset_config_name` and `--language` to the correct values for your language! See also how 
+we combine the train and validation splits as `--train_split_name="train+validation"`. This is recommended for low-resource 
+languages such as Hindi.
+
+3. **Launch training 🚀**
+
+We recommend running training through a `tmux` session. This means that training won't be interrupted when you close 
+your SSH connection. To start a `tmux` session named `mysession`: 
+
+```bash
+tmux new -s mysession
+```
+
+Once in the `tmux` session, we can launch training:
+
+```bash
+bash run.sh
+```
+
+Training should take approximately 8 hours, with a final cross-entropy loss of **1e-4** and word error rate of **32.6%**.
+
+Since we're in a `tmux` session, we're free to close our SSH window without stopping training!
+
+If you close your SSH connection and want to rejoin the `tmux` window, you can SSH into your GPU and then connect to 
+your session with the following command:
+
+```bash
+tmux a -t mysession
+```
+
+It will be like you never left! 
+
+`tmux` guide: https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
+
+TODO: 
+* do_eval_normalize
+* recommended batch sizes
+* config for medium
+
+### Jupyter Notebook
+
+Video tutorial: TODO
+
+1. **SSH port forwarding**
+
+The steps for running training with a Python script assume that you have set up your environment according to the 
+previous section [Set Up an Environment](#set-up-an-environment) and are **not** SSH'd into your GPU device. If you are 
+SSH'd into your GPU device, you can close this SSH window and start from your local machine.
+
+The command to SSH into our GPU looked something as follows:
+
+```bash
+ssh ubuntu@104.171.202.236
+```
+
+When running a Jupyter Notebook, we need to "forward" the SSH port from the remote port to the local one. This amounts 
+to adding `-L 8888:localhost:8888` to the end of our SSH command. We can SSH into our remote machine using this modified 
+SSH command:
+
+```bash
+ssh ubuntu@104.171.202.236 -L 8888:localhost:8888
+```
+
+Be sure to change the `ssh ubuntu@...` part to your corresponding SSH command, it's simply the `-L 8888:localhost:8888` 
+part added onto the end that is new. If you want to read more about SSH port forwarding, we recommend you read the guide: 
+[SSH/OpenSSH/PortForwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding).
+
+2. **Create a model repository (copied from previous subsection [Python Script](#python-script))**
+
+First, we need to create a model repository on the Hugging Face Hub. This repository will contain all the required files 
+to reproduce the training run, alongside model weights, training logs and a README.md card. 
+
+You can either create a model repository directly on the Hugging Face Hub using the link: https://huggingface.co/new
+Or, via the CLI. Here, we'll show how to use the CLI. 
+
+Let's pick a name for our fine-tuned Whisper model: *whisper-small-hi*. We can run the following command to create a 
+repository under this name:
+
+```bash
+huggingface-cli repo create whisper-small-hi
+```
+
+We can now see the model on the Hub, *e.g.* under https://huggingface.co/sanchit-gandhi/whisper-small-hi
+
+Let's clone the repository so that we can place our training script and model weights inside:
+
+```bash
+git lfs install
+git clone https://huggingface.co/sanchit-gandhi/whisper-small-hi
+```
+
+We can then enter the repository using the `cd` command:
+
+```bash
+cd whisper-small-hi
+```
+
+2. **Add notebook**
+
+We encourage participants to add all the training notebook directly to the model repository. This way, 
+training runs are fully reproducible.
+
+We are providing a iPython notebook for fine-tuning Whisper with 🤗 Datasets' streaming mode: [`fine_tune_whisper_streaming.ipynb`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine_tune_whisper_streaming.ipynb)
+This script can be downloaded to your GPU through the `wget` command:
+
+```bash
+wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine_tune_whisper_streaming.ipynb
+```
+
+This will download a copy of the iPython notebook to your model repository.
+
+3. **Launch Jupyter**
+
+First, we need to make sure `jupyterlab` is installed:
+
+```bash
+pip install jupyterlab
+```
+
+We recommend running training through a `tmux` session. This means that training won't be interrupted when you close 
+your SSH connection. To start a `tmux` session named `mysession`:
+
+```bash
+tmux new -s mysession
+```
+
+Once in the `tmux` session, we can launch `jupyter lab`:
+
+```bash
+jupyter lab
+```
+
+4. **Open Jupyter in browser**
+
+Now, this is the hardest step of running training from a Jupyter Notebook! When we launched `jupyter lab` in the previous 
+step, our console would've been dumped with a bunch of information. For using our notebook in a browser, we're interested 
+in the last of these two lines:
+
+Copy one of these URLs to your clipboard (drag the mouse over it and then press CTRL + C). On your local desktop, open 
+a web browser window (Safari, Firefox, Chrome, etc.). Paste the URL into the browser web address bar and press Enter.
+
+Voila! We're now running a Jupyter Notebook on our GPU machine through the web browser on our local device!
+
+5. **Open notebook**
+
+We can use the file explorer on the left to go to our model repository and open the Jupyter notebook `fine_tune_whisper_streaming.ipynb`. 
+You can now run this notebook from start to finish and fine-tune the Whisper model as you desire 🤗
+
+6. **Reconnect to notebook**
+
+Since we're operating within a `tmux` session, we're free to close our SSH connection and browser window when we desire. 
+Training won't be interrupted by closing this window.
+
+If you want to reconnect to the notebook, simply open a browser and return to the URL that we pasted in the address bar!
+
+<!--- TODO: SG - set outputdir of notebook to "./" --->
+
+### Google Colab
+The Google Colab for fine-tuning Whisper is entirely self-contained. You can access it through the following link:
+
+<a target="_blank" href="https://colab.research.google.com/github/sanchit-gandhi/notebooks/blob/main/fine_tune_whisper_streaming.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+<!--- TODO: SG - recommended batch-sizes and learning rates. We can give these since the input features are of fixed 
+dim --->
+
+V100 / 16 GB GPU:
+
+| Model  | Batch Size | Learning Rate |
+|--------|------------|---------------|
+| small  |            |               |
+| medium |            |               |
+
+A100 / 40GB GPU:
+
+| Model  | Batch Size | Learning Rate |
+|--------|------------|---------------|
+| small  |            |               |
+| medium |            |               |
+
+<!--- TOOD: SG - add flags / variables for casing, punctuation and normalise --->
 When using the training scripts, removing casing is enabled by passing the flag `--do_lower_case`. Remove 
 punctuation is achieved by passing the flag `--do_remove_punctuation`. The punctuation characters removed are defined 
 in TODO. Normalisation is only applied during evaluation by setting the flag `--do_normalize_eval_only`.
@@ -512,6 +813,8 @@ If you are using the official fine-tuning scripts for training your Whisper mode
 <!--- TODO: VB - Add the streaming evaluation script here once tested. --->
 
 ## Building a Demo
+
+We can use https://huggingface.co/spaces/osanseviero/fork_a_repo to clone the demo repo https://huggingface.co/spaces/sanchit-gandhi/whisper-small.
 
 ## Communication and Problems
 
