@@ -10,9 +10,7 @@ partners, [Lambda Labs](https://lambdalabs.com) 🚀.
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
 - Sign-up using the [Google form](https://forms.gle/F2bpouvhDpKKisM39)
-- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure you have access to the #events channel. 
-
-<!--- TODO: VB - add specific instructions for going to the role-assignments channel and accept audio --->
+- Join the [Hugging Face Discord server](https://hf.co/join/discord) and make sure to assign yourself **@ml-4-audio** role in #role-assignment so that you can access #events channel. 
 
 ## Table of Contents
 
@@ -59,7 +57,7 @@ give you an idea of where to look for the relevant information and an idea of ho
 
 ## Important Dates
 
-- *Introduction Talk*: 1st December 2022
+- *Introduction Talk*: 2nd December 2022
 - *Sprint start*: 5th December 2022
 - *Speaker Events* 5th December 2022
 - *Sprint end*: 19th December 2022
