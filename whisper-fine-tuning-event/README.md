@@ -99,6 +99,7 @@ Estimated time to complete: 5 mins
       ```bash
       ssh-keygen
       ```
+      TODO: SG - instructions for Windows users
    2. You can find your public SSH key using the command: 
       ```bash
       cat ~/.ssh/id_rsa.pub
@@ -122,6 +123,8 @@ Estimated time to complete: 5 mins
 The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
 section, we'll cover how to set up an environment with the required libraries.
 
+### Unix Libraries
+
 First, we need to make sure we have the required NVIDIA drivers installed. We can check that we have these drivers 
 through the following command:
 
@@ -135,9 +138,9 @@ If you get an error running this command, refer to your device manual for instal
 Before installing the required libraries, we'd need to install and update the Unix package `ffmpeg` to version 4:
 
  ```bash
-add-apt-repository -y ppa:jonathonf/ffmpeg-4
-apt update
-apt install -y ffmpeg
+sudo add-apt-repository -y ppa:jonathonf/ffmpeg-4
+sudo apt update
+sudo apt install -y ffmpeg
  ```
 
 We'll also need the package `git-lfs` to push large model weights to the Hugging Face Hub. To check whether 
@@ -154,8 +157,10 @@ the `git-lfs` command was not found, you can install it via:
 sudo apt-get install git-lfs
 ```
 
+### Python Libraries
+
 We recommend installing the required libraries in a Python virtual environment. If you're unfamiliar with Python virtual 
-environments, check out the official user guide: [installing-using-pip-and-virtual-environments](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
+environments, check out the [official user guide](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/).
 
 Let's define a variable that denotes the name of the environment we're going to create:
 
@@ -205,6 +210,8 @@ We can check that above steps installed the correct version of PyTorch to match 
 ```python
 python -c "import torch; print(torch.cuda.is_available())"
 ```
+
+If the above command does not return True, refer to the [official instructions](https://pytorch.org/get-started/locally/) for installing PyTorch.
 
 We can now verify that `transformers` and `datasets` have been correctly installed. First, launch a Python shell:
 
@@ -256,8 +263,8 @@ And then enter an authentication token from https://huggingface.co/settings/toke
 ## Data and Pre-Processing
 
 In this section, we will cover how to find suitable training data and the necessary steps to pre-process it. 
-If you are new to the 🤗 Datasets library, we recommend reading the comprehensive blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
-This will tell you everything you need to know about 🤗 Datasets and its one-line API.
+If you are new to the 🤗 Datasets library, we highly recommend reading the comprehensive blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
+This blog post will tell you everything you need to know about 🤗 Datasets and its one-line API.
 
 ### Data
 
@@ -279,7 +286,7 @@ load_dataset("mozilla-foundation/common_voice_10_0", "en", split="test", use_aut
 ```
 
 And **neither** are allowed for training purposes. However, we strongly encourage participants to make use of the other 
-Common Voice splits as training data, such as `"train"` and `"validation"`:
+Common Voice splits for training data, such as the `"train"` and `"validation"` splits:
 
 ```python
 load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train", use_auth_token=True)
@@ -297,8 +304,8 @@ This notation for combining splits (`"split_a+split_b"`) is consistent for all r
 splits in this same way using the fine-tuning scripts in the following section [Fine-Tune Whisper](#fine-tune-whisper).
 
 In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
-project demonstrates the significant effect that increasing the amount of training data can have on downstream 
-performance. There are a number of datasets that are available on the Hugging Face Hub that can be downloaded via 
+paper demonstrates the significant effect that increasing the amount of training data can have on downstream 
+performance (_c.f._ Section 4.2 of the [paper](https://cdn.openai.com/papers/whisper.pdf)). There are a number of datasets that are available on the Hugging Face Hub that can be downloaded via 
 the 🤗 Datasets library in much the same way as Common Voice 11.
 
 We recommend the following four datasets on the Hugging Face Hub for multilingual speech recognition:
@@ -360,7 +367,8 @@ approximately 10 hours of supervised audio-transcription data per language. Tran
 
 The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
 multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
-You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads.
+
+You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: [ASR datasets on the Hub](https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads).
 
 If one wants to combine multiple datasets for training, it might make sense to take a look at 
 the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
@@ -402,7 +410,7 @@ and not when we don't!
 
 Streaming is enabled by passing the argument `streaming=True` to the `load_dataset` function. We can then use our 
 audio datasets in much the same way as before! For these reasons, **we highly recommend** that you try out the following 
-code cell! Just make sure you've accepted the Common Voice 11 terms of use on the Hugging Face Hub: https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0.
+code cell! Just make sure you've accepted the Common Voice 11 [terms of use](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) on the Hugging Face Hub.
 
 ```python
 from datasets import load_dataset
@@ -413,8 +421,12 @@ common_voice = load_dataset("mozilla-foundation/common_voice_11_0", "en", use_au
 print(next(iter(common_voice["train"])))
 ```
 
-The examples in this README heavily rely on streaming mode to fine-tune Whisper. With streaming mode, we can use **any 
-speech recognition dataset with just 20GB of disk space**. If you want to read more about streaming mode, we 
+The examples for this event rely heavily on streaming mode to fine-tune Whisper. With streaming mode, we can use **any 
+speech recognition dataset on the Hub with just 20GB of disk space**. As a speech recognition practitioner, this is 
+game changing! The largest speech recognition datasets are available to us regardless of our device disk space. We are 
+extremely excited to be showcasing streaming mode in this event and hope that you will enjoy using it.
+
+If you want to read more about streaming mode, we 
 recommend you check out the aforementioned blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
 
 ### Pre-Processing
@@ -438,7 +450,7 @@ dictation, as the predicted transcriptions will be formatted with casing and pun
 
 However, we also have the option of 'normalising' the dataset to remove any casing and punctuation. Normalising the 
 dataset makes the speech recognition task easier: the model no longer needs to distinguish between upper and lower case 
-characters, or try and predict punctuation from the audio data alone. Because of this, the word error rates are 
+characters, or have to predict punctuation from the audio data alone. Because of this, the word error rates are 
 naturally lower (meaning the results are better). The Whisper paper demonstrates the drastic effect that normalising 
 transcriptions can have on WER results (_c.f._ Section 4.4 of the [Whisper paper](https://cdn.openai.com/papers/whisper.pdf)). 
 But while we get lower WERs, we can't necessarily use our model in production. The lack of casing and punctuation makes 
@@ -505,13 +517,13 @@ models on the Hugging Face Hub:
 The English-only checkpoints should be used for English speech recognition. For all other languages, one should use the 
 multilingual checkpoints.
 
-We recommend using the tiny model for rapid prototyping. We advise that the small or medium checkpoints are used for 
-fine-tuning. These checkpoints achieve comparable performance to the large checkpoint, but can be trained much faster 
+We recommend using the tiny model for rapid prototyping. **We advise that the small or medium checkpoints are used for 
+fine-tuning**. These checkpoints achieve comparable performance to the large checkpoint, but can be trained much faster 
 (and hence for much longer!).
 
 A complete guide to Whisper fine-tuning can be found in the blog post: [Fine-Tune Whisper with 🤗 Transformers](https://huggingface.co/blog/fine-tune-whisper).
-While it is not necessary to have read this blog post before fine-tuning Whisper, it is strongly advised in order that 
-you understand the logic behind the fine-tuning code.  
+While it is not necessary to have read this blog post before fine-tuning Whisper, it is strongly advised to gain 
+familiarity with the fine-tuning code.
 
 There are three ways in which you can execute the fine-tuning code:
 1. [Python Script](#python-script)
@@ -523,7 +535,11 @@ a Google Colab Pro/Pro+ subscription and want to run training in a Google Colab.
 each of these methods are quite lengthy. Feel free to read through each of them to get a better idea for which one you 
 want to use for training. Once you've read through, we advise you pick one method and stick to it!
 
-TODO: select language
+For the walk-through, we'll assume that we're fine-tuning the Whisper model on Spanish ("es") on the Common Voice 11 
+dataset. We'll point out where you'll need to change variables to run the script for your language of choice.
+
+Before jumping into any training, make sure you've accepted the Common Voice 11 [terms of use](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) 
+on the Hugging Face Hub.
 
 ### Python Script
 
@@ -539,26 +555,29 @@ to reproduce the training run, alongside model weights, training logs and a READ
 repository directly on the Hugging Face Hub using the link: https://huggingface.co/new Or, via the CLI. Here, we'll show 
 how to use the CLI. 
 
-Let's pick a name for our fine-tuned Whisper model: *whisper-small-hi*. We can run the following command to create a 
-repository under this name:
+Let's pick a name for our fine-tuned Whisper model: *whisper-small-es*. We can run the following command to create a 
+repository under this name.
 
 ```bash
-huggingface-cli repo create whisper-small-hi
+huggingface-cli repo create whisper-small-es
 ```
+(change "es" to your language code)
 
-We can now see the model on the Hub, *e.g.* under https://huggingface.co/sanchit-gandhi/whisper-small-hi
+We can now see the model on the Hub, *e.g.* under https://huggingface.co/sanchit-gandhi/whisper-small-es
 
 Let's clone the repository so that we can place our training script and model weights inside:
 
 ```bash
 git lfs install
-git clone https://huggingface.co/sanchit-gandhi/whisper-small-hi
+git clone https://huggingface.co/sanchit-gandhi/whisper-small-es
 ```
+
+(be sure to change the repo address to `https://huggingface.co/<your-user-name>/<your-repo-name>`)
 
 We can then enter the repository using the `cd` command:
 
 ```bash
-cd whisper-small-hi
+cd whisper-small-es
 ```
 
 2. **Add training script and `run` command**
@@ -578,13 +597,14 @@ This will download a copy of the training script to your model repository.
 We can then define the model, training and data arguments for fine-tuning:
 
 ```bash
-echo '''python run_speech_recognition_seq2seq_streaming.py \
+echo 'python run_speech_recognition_seq2seq_streaming.py \
 	--model_name_or_path="openai/whisper-small" \
 	--dataset_name="mozilla-foundation/common_voice_11_0" \
 	--dataset_config_name="hi" \
 	--language="hindi" \
 	--train_split_name="train+validation" \
 	--eval_split_name="test" \
+	--model_index_name="Whisper Small Spanish" \
 	--max_steps="5000" \
 	--output_dir="./" \
 	--per_device_train_batch_size="32" \
@@ -609,12 +629,13 @@ echo '''python run_speech_recognition_seq2seq_streaming.py \
 	--do_eval \
 	--predict_with_generate \
 	--use_auth_token \
-	--push_to_hub''' >> run.sh
+	--push_to_hub' >> run.sh
 ```
 
 Make sure to change the `--dataset_config_name` and `--language` to the correct values for your language! See also how 
 we combine the train and validation splits as `--train_split_name="train+validation"`. This is recommended for low-resource 
-languages such as Hindi.
+languages (it probably isn't strictly necessary for Spanish, where the `"train"` split for Common Voice 11 contains 
+ample training data). We also assign a `"model_index_name"`
 
 3. **Launch training 🚀**
 
@@ -687,26 +708,29 @@ to reproduce the training run, alongside model weights, training logs and a READ
 You can either create a model repository directly on the Hugging Face Hub using the link: https://huggingface.co/new
 Or, via the CLI. Here, we'll show how to use the CLI. 
 
-Let's pick a name for our fine-tuned Whisper model: *whisper-small-hi*. We can run the following command to create a 
-repository under this name:
+Let's pick a name for our fine-tuned Whisper model: *whisper-small-es*. We can run the following command to create a 
+repository under this name.
 
 ```bash
-huggingface-cli repo create whisper-small-hi
+huggingface-cli repo create whisper-small-es
 ```
+(change "es" to your language code)
 
-We can now see the model on the Hub, *e.g.* under https://huggingface.co/sanchit-gandhi/whisper-small-hi
+We can now see the model on the Hub, *e.g.* under https://huggingface.co/sanchit-gandhi/whisper-small-es
 
 Let's clone the repository so that we can place our training script and model weights inside:
 
 ```bash
 git lfs install
-git clone https://huggingface.co/sanchit-gandhi/whisper-small-hi
+git clone https://huggingface.co/sanchit-gandhi/whisper-small-es
 ```
+
+(be sure to change the repo address to `https://huggingface.co/<your-user-name>/<your-repo-name>`)
 
 We can then enter the repository using the `cd` command:
 
 ```bash
-cd whisper-small-hi
+cd whisper-small-es
 ```
 
 2. **Add notebook**
@@ -760,12 +784,14 @@ Voila! We're now running a Jupyter Notebook on our GPU machine through the web b
 We can use the file explorer on the left to go to our model repository and open the Jupyter notebook `fine_tune_whisper_streaming.ipynb`. 
 You can now run this notebook from start to finish and fine-tune the Whisper model as you desire 🤗
 
+The notebook contains pointers for where you need to change variables for your language. 
+
 6. **Reconnect to notebook**
 
 Since we're operating within a `tmux` session, we're free to close our SSH connection and browser window when we desire. 
 Training won't be interrupted by closing this window.
 
-If you want to reconnect to the notebook, simply open a browser and return to the URL that we pasted in the address bar!
+If you want to reconnect to the notebook, simply open a browser and return to the URL that we previously pasted in the address bar!
 
 <!--- TODO: SG - set outputdir of notebook to "./" --->
 
@@ -778,6 +804,8 @@ The Google Colab for fine-tuning Whisper is entirely self-contained. You can acc
 
 <!--- TODO: SG - recommended batch-sizes and learning rates. We can give these since the input features are of fixed 
 dim --->
+
+### Recommended Training Configurations
 
 V100 / 16 GB GPU:
 
