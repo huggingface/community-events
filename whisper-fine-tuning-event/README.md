@@ -87,7 +87,7 @@ TODO: SG - add section once we've figured out how the 'teams' function is going 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
 
-1. Click the link: https://cloud.lambdalabs.com/instance
+1. Click the link: https://cloud.lambdalabs.com/instances
 2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Launching an instance:
@@ -193,16 +193,16 @@ The [`requirements.txt`](https://github.com/huggingface/community-events/blob/ma
 file in this directory has all the necessary Python packages we need to fine-tune Whisper, including PyTorch, Transformers 
 and Datasets. We'll install all the packages in this file through one `pip install` command.
 
-First, let's copy the `requirements.txt` file to our GPU device:
+First, let's clone the `community-events` repository to our device:
 
 ```bash
-wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/requirements.txt
+git clone https://github.com/huggingface/community-events.git
 ```
 
-Now we can install the packages in this file using the following command:
+Now we can install the packages from the `requirements.txt` file using the following command:
 
 ```bash
-pip install -r requirements.txt
+pip install -r community-events/whisper-fine-tuning-event/requirements.txt
 ```
 
 We can check that above steps installed the correct version of PyTorch to match our CUDA version. The following command should return True:
@@ -251,12 +251,11 @@ quit()
 The last thing we need to do is link our Hugging Face account. Run the command:
 
 ```bash
+git config --global credential.helper store
 huggingface-cli login
 ```
 
 And then enter an authentication token from https://huggingface.co/settings/tokens.
-
-<!--- TODO: SG - do we need to set git.config? --->
 
 <!--- TODO: SG - do we need to install tensorboard? Add to requirements.txt if so --->
 
@@ -586,10 +585,10 @@ We encourage participants to add all the relevant files for training directly to
 training runs are fully reproducible.
 
 We provide a Python training script for fine-tuning Whisper with 🤗 Datasets' streaming mode: [`run_speech_recognition_seq2seq_streaming.py`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_streaming.py)
-This script can be downloaded to your GPU through the `wget` command:
+This script can be copied to your model repository with the following command:
 
 ```bash
-wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_streaming.py
+cp ~/community-events/whisper-fine-tuning-event/run_speech_recognition_seq2seq_streaming.py .
 ```
 
 This will download a copy of the training script to your model repository.
@@ -600,8 +599,8 @@ We can then define the model, training and data arguments for fine-tuning:
 echo 'python run_speech_recognition_seq2seq_streaming.py \
 	--model_name_or_path="openai/whisper-small" \
 	--dataset_name="mozilla-foundation/common_voice_11_0" \
-	--dataset_config_name="hi" \
-	--language="hindi" \
+	--dataset_config_name="es" \
+	--language="spanish" \
 	--train_split_name="train+validation" \
 	--eval_split_name="test" \
 	--model_index_name="Whisper Small Spanish" \
@@ -645,6 +644,7 @@ your SSH connection. To start a `tmux` session named `mysession`:
 ```bash
 tmux new -s mysession
 ```
+(if `tmux` is not installed, you can install it through: `sudo apt-get install tmux`)
 
 Once in the `tmux` session, we can launch training:
 
@@ -739,10 +739,10 @@ We encourage participants to add all the training notebook directly to the model
 training runs are fully reproducible.
 
 We are providing a iPython notebook for fine-tuning Whisper with 🤗 Datasets' streaming mode: [`fine_tune_whisper_streaming.ipynb`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine_tune_whisper_streaming.ipynb)
-This script can be downloaded to your GPU through the `wget` command:
+This notebook can be copied to your model repository with the following command:
 
 ```bash
-wget https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine_tune_whisper_streaming.ipynb
+cp ~/community-events/whisper-fine-tuning-event/fine-tune-whisper-streaming.ipynb .
 ```
 
 This will download a copy of the iPython notebook to your model repository.
@@ -761,6 +761,7 @@ your SSH connection. To start a `tmux` session named `mysession`:
 ```bash
 tmux new -s mysession
 ```
+(if `tmux` is not installed, you can install it through: `sudo apt-get install tmux`)
 
 Once in the `tmux` session, we can launch `jupyter lab`:
 
