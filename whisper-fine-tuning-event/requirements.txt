@@ -4,5 +4,5 @@ git+https://github.com/huggingface/transformers
 git+https://github.com/huggingface/datasets
 librosa
 jiwer
-evaluate>=0.30
+evaluate>=0.3.0
 tensorboard
