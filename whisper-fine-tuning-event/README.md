@@ -80,9 +80,18 @@ This section is split into two halves:
 
 1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
+3. [Deleting a Cloud Instance](#deleting-a-cloud-instance)
 
 ### Signing-Up with Lambda Labs
-TODO: SG - add section once we've figured out how the 'teams' function is going to work with Lambda
+<!--- TODO: SG - the first 100 people to sign up with lambda get GPU credit? --->
+
+1. Create an account with Lambda Labs using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
+2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `"Lambda cloud account for HuggingFace Whisper event - payment authentication and credit request"`.
+3. Each user who emails as above will receive $110 in credits (amounting to 100 hours of 1x A100 usage).
+
+100 hours of 1x A100 usage should enable you to complete 5-10 fine-tuning runs. To maximise the GPU hours you have 
+available for training, we advise that you shut down GPUs when you are not using them and closely monitor your GPU usage 
+(see [Deleting a Cloud Instance](#deleting-a-cloud-instance)).
 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
@@ -90,11 +99,12 @@ Estimated time to complete: 5 mins
 1. Click the link: https://cloud.lambdalabs.com/instances
 2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
-4. Launching an instance:
+4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $110 in GPU credits. Exceeding 100 hours of 1x A100 usage may incur charges on your credit card.
+5. Launching an instance:
    1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)"
    2. In "Select region", select the region with availability closest to you.
    3. In "Select filesystem", select "Don't attach a filesystem".
-5. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
+6. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
    1. If you’ve not already created an SSH key pair, you can do so with the following command from your local device: 
       ```bash
       ssh-keygen
@@ -107,21 +117,47 @@ Estimated time to complete: 5 mins
    4. Copy and paste the output of this command into the first text box
    5. Give your SSH key a memorable name (e.g. `sanchits-mbp`)
    6. Click "Add SSH Key"
-6. Select the SSH key from the drop-down menu and click "Launch instance"
-7. Read the terms of use and agree
-8. We can now see on the "GPU instances" page that our device is booting up!
-9. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
-10. Now open a new command line window, paste the SSH login, and hit Enter.
-11. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
-12. Great! You're now SSH'd into your A100 device! We can now move on to setting up an environment.
+7. Select the SSH key from the drop-down menu and click "Launch instance"
+8. Read the terms of use and agree
+9. We can now see on the "GPU instances" page that our device is booting up!
+10. Once the device status changes to "✅ Running", click on the SSH login ("ssh ubuntu@..."). This will copy the SSH login to your clipboard.
+11. Now open a new command line window, paste the SSH login, and hit Enter.
+12. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
+13. Great! You're now SSH'd into your A100 device! We're now ready to set up our Python environment!
 
-TODO: SG - video for launching an instance
+<!--- TODO: SG - video for launching an instance --->
+
+You can see your total GPU usage from the Lambda Labs cloud interface: https://cloud.lambdalabs.com/usage
+
+Here, you can see the total charges that you have incurred since the start of the event. We advise that you check your 
+total on a daily basis to make sure that it remains below the credit allocation of $110. This ensures that you are 
+not inadvertently charged for GPU hours.
+
+### Deleting a Cloud Instance
+
+100 1x A100 hours should provide you with enough time for 5-10 fine-tuning runs (depending on how long you train for 
+and which size models). To maximise the GPU time you have for training, we advise that you shut down GPUs over prolonged 
+periods of time when they are not in use. Leaving a GPU running accidentally over the weekend will incur 48 hours of 
+wasted GPU hours. That's nearly half of your compute allocation! So be smart and shut down your GPU when you're not training.
+
+Creating an instance and setting it up for the first time may take up to 20 minutes. Subsequently, this process will 
+be much faster as you gain familiarity with the steps, so you shouldn't worry about having to delete a GPU and spinning one 
+up the next time you need one. You can expect to spin-up and delete 2-3 GPUs over the course of the fine-tuning event!
+
+We'll quickly run through the steps for deleting a Lambda Labs Cloud GPU. You can come back to these steps after you've 
+performed your first training run and you want to shut down the GPU:
+
+1. Go to the instances page: https://cloud.lambdalabs.com/instances
+2. Click the checkbox on the left next to the GPU device you want to delete
+3. Click the button "Terminate" in the top right-hand side of your screen (under the purple button "Launch instance")
+4. Type "erase data on instance" in the text box and press "ok"
 
 ## Set Up an Environment
 Estimated time to complete: 5 mins
 
 The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
-section, we'll cover how to set up an environment with the required libraries.
+section, we'll cover how to set up an environment with the required libraries. This section assumes that you are SSH'd 
+into your GPU device. This section does not apply if you are fine-tuning the Whisper model in a Google Colab.
 
 ### Unix Libraries
 
@@ -268,8 +304,10 @@ huggingface-cli login
 And then enter an authentication token from https://huggingface.co/settings/tokens.
 
 Link to jupyter:
+```bash
 pip install jupyter lab
 python -m ipykernel install --user --name=$env_name
+```
 
 ## Data and Pre-Processing
 
@@ -870,15 +908,29 @@ by `do_remove_punctuation = True`. Normalisation is only applied during evaluati
 
 <!--- TODO: VB - Live leaderboard at XYZ [After the final discussion with Tristan and Lewis] --->
 
-Finally, on to the fun part - time to sit back and watch the model transcribe audio. Each participant should evaluate their fine-tuned Whisper checkpoint on `Common Voice 11` test set for their respective language. For languages that are not part of the Common Voice 11 dataset, please contact the organisers on Discord so that we can work together to find some evaluation data.
+Each participant should evaluate their fine-tuned Whisper checkpoint on the `"test"` split of the Common Voice 11 
+dataset for their respective language. For languages that are not part of the Common Voice 11 dataset, please contact 
+the organisers on Discord so that we can work together to find suitable evaluation data.
 
-If you are using the official fine-tuning scripts for training your Whisper model, then you can run the evaluation loop by setting `do_eval=True`. We'll also provide you with a standalone evaluation script.
+We recommend running evaluation during training by setting your eval dataset to the `"test"` split of Common Voice 11.
+We'll also provide you with a standalone evaluation script so that you can test your model after training on Common Voice 
+or other datasets of your choice.
 
+<!--- TODO: SG - add video link for YT --->
 <!--- TODO: VB - Add the streaming evaluation script here once tested. --->
 
 ## Building a Demo
 
-We can use https://huggingface.co/spaces/osanseviero/fork_a_repo to clone the demo repo https://huggingface.co/spaces/sanchit-gandhi/whisper-small.
+Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/sanchit-gandhi/whisper-small) that you can use to showcase your fine-tuned Whisper model 📢
+
+Click the link to duplicate the template demo to your account: https://huggingface.co/spaces/sanchit-gandhi/whisper-small?duplicate=true
+
+Click "Files and versions" -> "app.py" -> "edit". Change the model identifier to your fine-tuned model (line 9). 
+Scroll to the bottom of the page and click "Commit changes to `main`". Now click "App" in the top left-hand corner. 
+The demo will reboot, this time using your fine-tuned model. You can share this demo with your friends and family and 
+have them use the model that you've trained!
+
+<!--- TODO: VB - Add YT space link when ready --->
 
 ## Communication and Problems
 
@@ -907,8 +959,8 @@ We are quite excited to host talks from Open AI, Meta AI and Hugging Face to hel
 
 ## Tips and Tricks
 
-We include two memory saving tricks that you can explore to run the fine-tuning scripts with larger batch-sizes and even 
-larger models!
+We include two memory saving tricks that you can explore to run the fine-tuning scripts with larger batch-sizes and 
+potentially even larger checkpoints.
 
 ### Adam 8bit
 The [Adam optimiser](https://arxiv.org/abs/1412.6980a) requires two params (betas) for every model parameter. So the memory requirement of the optimiser is 
