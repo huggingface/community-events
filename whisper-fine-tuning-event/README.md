@@ -91,7 +91,7 @@ Estimated time to complete: 5 mins
 2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Launching an instance:
-   1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)" TODO: SG - SXM4 or PCle?
+   1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)"
    2. In "Select region", select the region with availability closest to you.
    3. In "Select filesystem", select "Don't attach a filesystem".
 5. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
@@ -99,11 +99,11 @@ Estimated time to complete: 5 mins
       ```bash
       ssh-keygen
       ```
-      TODO: SG - instructions for Windows users
    2. You can find your public SSH key using the command: 
       ```bash
       cat ~/.ssh/id_rsa.pub
       ```
+      (Windows: `type C:UsersUSERNAME.sshid_rsa.pub` where `USERNAME` is the name of your user)
    4. Copy and paste the output of this command into the first text box
    5. Give your SSH key a memorable name (e.g. `sanchits-mbp`)
    6. Click "Add SSH Key"
@@ -205,6 +205,16 @@ Now we can install the packages from the `requirements.txt` file using the follo
 pip install -r community-events/whisper-fine-tuning-event/requirements.txt
 ```
 
+Note: when installing packages, you might see warnings such as:
+
+```bash
+  error: invalid command 'bdist_wheel'
+  ----------------------------------------
+  ERROR: Failed building wheel for audioread
+```
+
+This is perfectly ok! It does not affect our installation.
+
 We can check that above steps installed the correct version of PyTorch to match our CUDA version. The following command should return True:
 
 ```python
@@ -257,7 +267,9 @@ huggingface-cli login
 
 And then enter an authentication token from https://huggingface.co/settings/tokens.
 
-<!--- TODO: SG - do we need to install tensorboard? Add to requirements.txt if so --->
+Link to jupyter:
+pip install jupyter lab
+python -m ipykernel install --user --name=$env_name
 
 ## Data and Pre-Processing
 
@@ -667,10 +679,11 @@ It will be like you never left!
 
 `tmux` guide: https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
 
-TODO: 
+<!--- TODO: 
 * do_eval_normalize
 * recommended batch sizes
 * config for medium
+--->
 
 ### Jupyter Notebook
 
@@ -697,7 +710,7 @@ ssh ubuntu@104.171.202.236 -L 8888:localhost:8888
 ```
 
 Be sure to change the `ssh ubuntu@...` part to your corresponding SSH command, it's simply the `-L 8888:localhost:8888` 
-part added onto the end that is new. If you want to read more about SSH port forwarding, we recommend you read the guide: 
+part added onto the end that is new. If you want to find out more about SSH port forwarding, we recommend you read the guide: 
 [SSH/OpenSSH/PortForwarding](https://help.ubuntu.com/community/SSH/OpenSSH/PortForwarding).
 
 2. **Create a model repository (copied from previous subsection [Python Script](#python-script))**
@@ -755,6 +768,11 @@ First, we need to make sure `jupyterlab` is installed:
 pip install jupyterlab
 ```
 
+We can then link `jupyter lab` to our venv:
+```bash
+python -m ipykernel install --user --name=<your-venv-name>
+```
+
 We recommend running training through a `tmux` session. This means that training won't be interrupted when you close 
 your SSH connection. To start a `tmux` session named `mysession`:
 
@@ -783,9 +801,12 @@ Voila! We're now running a Jupyter Notebook on our GPU machine through the web b
 5. **Open notebook**
 
 We can use the file explorer on the left to go to our model repository and open the Jupyter notebook `fine_tune_whisper_streaming.ipynb`. 
-You can now run this notebook from start to finish and fine-tune the Whisper model as you desire 🤗
+In the top right of the notebook, you'll see a small window that says "Python 3". Clicking on this window will open a 
+dropdown menu, from which we can select a Python kernel. Select your venv from this dropdown menu. This will ensure that 
+you run the notebook in the venv we previously set up.
 
-The notebook contains pointers for where you need to change variables for your language. 
+You can now run this notebook from start to finish and fine-tune the Whisper model as you desire 🤗 The notebook 
+contains pointers for where you need to change variables for your language. 
 
 6. **Reconnect to notebook**
 
@@ -803,24 +824,32 @@ The Google Colab for fine-tuning Whisper is entirely self-contained. You can acc
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-<!--- TODO: SG - recommended batch-sizes and learning rates. We can give these since the input features are of fixed 
-dim --->
-
 ### Recommended Training Configurations
 
-V100 / 16 GB GPU:
+In this section, we provide guidance for appropriate training and evaluation batch sizes depending on your GPU device. 
+Since the Whisper model expects log-Mel input features of a fixed dimension, the GPU memory required by the models is the 
+same for audio samples of any length. Thus, these recommendations should stand for all 16/40GB GPU devices. However, 
+if you experience out-of-memory errors, we recommend reducing the `per_device_train_batch_size` by factors of 2 and 
+increasing the `gradient_accumulation_steps` to compensate.
 
-| Model  | Batch Size | Learning Rate |
-|--------|------------|---------------|
-| small  |            |               |
-| medium |            |               |
+If you want to explore methods for reducing the memory of the Whisper model, check out the section [Tips and Tricks](#tips-and-tricks).
 
-A100 / 40GB GPU:
+#### V100 / 16 GB GPU
 
-| Model  | Batch Size | Learning Rate |
-|--------|------------|---------------|
-| small  |            |               |
-| medium |            |               |
+| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size |
+|--------|------------------|--------------------|-----------------|
+| small  | 16               | 2                  | 8               |
+| medium | 2                | 16                 | 1               |
+
+It is advised to run the "small" checkpoint if training on a V100 device. Running the medium checkpoint will take 
+upwards of 12 hours for 5k training steps. We reckon you're better off training the "small" checkpoint for longer!
+
+#### A100 / 40GB GPU
+
+| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size |
+|--------|------------------|--------------------|-----------------|
+| small  | 64               | 1                  | 32              |
+| medium | 32               | 1                  | 16              |
 
 <!--- TOOD: SG - add flags / variables for casing, punctuation and normalise --->
 When using the training scripts, removing casing is enabled by passing the flag `--do_lower_case`. Remove 
@@ -872,7 +901,56 @@ We are quite excited to host talks from Open AI, Meta AI and Hugging Face to hel
 
 ## Tips and Tricks
 
-<!-- TODO: VB - Add tips for faster convergence/ memory efficient training. -->
+We include two memory saving tricks that you can explore to run the fine-tuning scripts with larger batch-sizes and even 
+larger models!
+
+### Adam 8bit
+The [Adam optimiser](https://arxiv.org/abs/1412.6980a) requires two params (betas) for every model parameter. So the memory requirement of the optimiser is 
+**two times** that of the model. You can switch to using an 8bit version of the Adam optimiser from [`bitsandbytes`](https://github.com/TimDettmers/bitsandbytes#bitsandbytes). 
+This will cast the optimiser parameters into 8bit precision, saving you a lot of memory and potentially allowing you to run bigger batch sizes.
+To use Adam 8bti, you first need to pip install `bitsandbytes`:
+
+```bash
+pip install bitsandbytes
+```
+
+Then, set `optim="adamw_bnb_8bit"` when you instantiate the Seq2SeqTrainingArguments:
+```python
+from transformers import Seq2SeqTrainingArguments
+
+training_args = Seq2SeqTrainingArguments(
+    output_dir="./",
+    per_device_train_batch_size=64,
+    gradient_accumulation_steps=1,  # increase by 2x for every 2x decrease in batch size
+    learning_rate=1e-5,
+    warmup_steps=500,
+    max_steps=5000,
+    gradient_checkpointing=True,
+    fp16=True,
+    evaluation_strategy="steps",
+    per_device_eval_batch_size=8,
+    predict_with_generate=True,
+    generation_max_length=225,
+    save_steps=1000,
+    eval_steps=1000,
+    logging_steps=25,
+    report_to=["tensorboard"],
+    load_best_model_at_end=True,
+    metric_for_best_model="wer",
+    greater_is_better=False,
+    push_to_hub=True,
+    optim="adamw_bnb_8bit"
+)
+```
+
+### Adafactor
+
+Rather than using Adam, you can use a different optimiser all together. Adam requires two optimiser params per one model 
+param, but [Adafactor](https://arxiv.org/abs/1804.04235) uses only one. To enable Adafactor, set `optim="adafactor"` in the 
+`Seq2SeqTrainingArguments`. You can expect to double your training batch size when using Adafactor compared to Adam. 
+
+A word of caution: Adafactor is untested for fine-tuning Whisper, so we are unsure sure how 
+Adafactor performance compares to Adam! For this reason, we recommend Adafactor as an **experimental feature** only.
 
 ## Feedback
 
