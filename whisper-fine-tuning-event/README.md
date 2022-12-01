@@ -682,7 +682,6 @@ It will be like you never left!
 <!--- TODO: 
 * do_eval_normalize
 * recommended batch sizes
-* config for medium
 --->
 
 ### Jupyter Notebook
@@ -784,7 +783,7 @@ tmux new -s mysession
 Once in the `tmux` session, we can launch `jupyter lab`:
 
 ```bash
-jupyter lab
+jupyter lab --port 8888
 ```
 
 4. **Open Jupyter in browser**
@@ -792,6 +791,13 @@ jupyter lab
 Now, this is the hardest step of running training from a Jupyter Notebook! When we launched `jupyter lab` in the previous 
 step, our console would've been dumped with a bunch of information. For using our notebook in a browser, we're interested 
 in the last of these two lines:
+
+Open a new SSH window. Then type:
+```bash
+jupyter lab list
+```
+
+Copy the URL for the lab corresponding to port 8888.
 
 Copy one of these URLs to your clipboard (drag the mouse over it and then press CTRL + C). On your local desktop, open 
 a web browser window (Safari, Firefox, Chrome, etc.). Paste the URL into the browser web address bar and press Enter.
@@ -954,13 +960,5 @@ Adafactor performance compares to Adam! For this reason, we recommend Adafactor 
 
 ## Feedback
 
-We would love to get your feedback on the event! If you have a spare two minutes, we'd appreciate you filling out the 
-feedback form at: TODO
-
-<!--- TODO: VB - topics for feedback form (Google form):
-* Discord comms
-* README info
-* Streaming mode
-* Examples scripts
-* Satisfaction with the event
---->
+We would love to get your feedback on the event! If you have a spare ten minutes, we'd appreciate you filling out the 
+feedback form at: https://forms.gle/7hvrTE8NaSdQwwU68
