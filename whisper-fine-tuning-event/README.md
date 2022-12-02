@@ -73,7 +73,7 @@ fine-tuning Whisper. If you wish to fine-tune Whisper through Google Colab, you 
 
 If you do not have access to a local GPU or Colab Pro/Pro+, we'll endeavour to provide you with a cloud GPU instance.
 We've partnered up with Lambda to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
-40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Cloud API makes it easy to spin-up and launch 
+40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda API makes it easy to spin-up and launch 
 a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
 This section is split into three parts:
@@ -148,7 +148,7 @@ be much faster as you gain familiarity with the steps, so you shouldn't worry ab
 up the next time you need one. You can expect to spin-up and delete 2-3 GPUs over the course of the fine-tuning event.
 
 
-We'll quickly run through the steps for deleting a Lambda Cloud GPU. You can come back to these steps after you've 
+We'll quickly run through the steps for deleting a Lambda GPU. You can come back to these steps after you've 
 performed your first training run and you want to shut down the GPU:
 
 1. Go to the instances page: https://cloud.lambdalabs.com/instances
@@ -834,7 +834,7 @@ Copy the URL for the lab corresponding to port 8888 your clipboard, it will take
 On your local desktop, open a web browser window (Safari, Firefox, Chrome, etc.). Paste the URL into the browser web 
 address bar and press Enter.
 
-Voila! We're now running a Jupyter Notebook on our GPU machine through the web browser on our local device!
+Voilà! We're now running a Jupyter Notebook on our GPU machine through the web browser on our local device!
 
 5. **Open notebook**
 
