@@ -22,9 +22,10 @@ with 🤗 Datasets' streaming mode.
 
 import logging
 import os
+import re
+import string
 import sys
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import datasets
@@ -188,8 +189,16 @@ class DataTrainingArguments:
         },
     )
     do_lower_case: bool = field(
-        default=True,
+        default=False,
         metadata={"help": "Whether the target text should be lower cased."},
+    )
+    do_remove_punctuation: bool = field(
+        default=False,
+        metadata={"help": "Whether the target text should be striped of punctuation."},
+    )
+    do_normalize_eval: bool = field(
+        default=True,
+        metadata={"help": "Whether to normalise the references and predictions in the eval WER calculation."},
     )
     language: str = field(
         default=None,
@@ -435,6 +444,10 @@ def main():
     text_column_name = data_args.text_column_name
     model_input_name = feature_extractor.model_input_names[0]
     do_lower_case = data_args.do_lower_case
+    do_remove_punctuation = data_args.do_remove_punctuation
+
+    punctuation_to_remove = string.punctuation.replace("'", "")  # don't remove apostrophes
+    punctuation_to_remove_regex = f"[{''.join(punctuation_to_remove)}]"
 
     if data_args.max_train_samples is not None:
         raw_datasets["train"] = raw_datasets["train"].take(data_args.max_train_samples)
@@ -452,6 +465,8 @@ def main():
 
         # process targets
         input_str = batch[text_column_name].lower() if do_lower_case else batch[text_column_name]
+        if do_remove_punctuation:
+            input_str = re.sub(punctuation_to_remove_regex, " ", input_str).strip()
         batch["labels"] = tokenizer(input_str).input_ids
         return batch
 
@@ -479,17 +494,18 @@ def main():
 
     # 8. Load Metric
     metric = evaluate.load("wer")
+    do_normalize_eval = data_args.do_normalize_eval
 
     def compute_metrics(pred):
         pred_ids = pred.predictions
 
         pred.label_ids[pred.label_ids == -100] = tokenizer.pad_token_id
 
-        pred_str = tokenizer.batch_decode(pred_ids, skip_special_tokens=True)
+        pred_str = tokenizer.batch_decode(pred_ids, skip_special_tokens=True, normalize=do_normalize_eval)
         # we do not want to group tokens when computing the metrics
-        label_str = tokenizer.batch_decode(pred.label_ids, skip_special_tokens=True)
+        label_str = tokenizer.batch_decode(pred.label_ids, skip_special_tokens=True, normalize=do_normalize_eval)
 
-        wer = metric.compute(predictions=pred_str, references=label_str)
+        wer = 100 * metric.compute(predictions=pred_str, references=label_str)
 
         return {"wer": wer}
 

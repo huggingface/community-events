@@ -133,7 +133,7 @@ Here, you can see the total charges that you have incurred since the start of th
 total on a daily basis to make sure that it remains below the credit allocation of $110. This ensures that you are 
 not inadvertently charged for GPU hours.
 
-If you are unable to SSH into your Lambda Labs GPU in step 11, there is a workaround that you can try. On the [GPU instances page](https://cloud.lambdalabs.com/instances), 
+If you are unable to SSH into your Lambda GPU in step 11, there is a workaround that you can try. On the [GPU instances page](https://cloud.lambdalabs.com/instances), 
 under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the 
 top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this 
 terminal window to set up your Python environment in the next section [Set Up an Environment](#set-up-an-environment).
@@ -891,15 +891,15 @@ upwards of 12 hours for 5k training steps. We reckon you're better off training 
 
 ### Punctuation, Casing and Normalisation
 
-<!--- TOOD: SG - add flags / variables for casing, punctuation and normalise --->
-When using the training scripts, normalisation is only applied during evaluation by setting the flag 
+When using the Python training script, normalisation is only applied during evaluation by setting the flag 
 `--do_normalize_eval_only` (which we recommend setting). Removing casing for the training data is enabled by passing the 
 flag `--do_lower_case`. Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. 
-The punctuation characters removed are defined in TODO.
+The punctuation characters removed are defined in [run_speech_recognition_seq2seq_streaming.py#L450](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_seq2seq_streaming.py#L450).
 
 Similarly, in the notebooks, normalisation is only applied during evaluation by setting the variable 
 `do_normalize_eval_only=True` (which we recommend setting). Removing casing in the training data is enabled by setting 
-the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. 
+the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. The same characters are removed 
+as the Python training script.
 
 ## Evaluation
 
