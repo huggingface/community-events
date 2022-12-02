@@ -778,7 +778,7 @@ We can then enter the repository using the `cd` command:
 cd whisper-small-es
 ```
 
-2. **Add notebook**
+3. **Add notebook**
 
 We encourage participants to add all the training notebook directly to the model repository. This way, 
 training runs are fully reproducible.
@@ -792,7 +792,7 @@ cp ~/community-events/whisper-fine-tuning-event/fine-tune-whisper-streaming.ipyn
 
 This will download a copy of the iPython notebook to your model repository.
 
-3. **Launch Jupyter**
+4. **Launch Jupyter**
 
 First, we need to make sure `jupyterlab` is installed:
 
@@ -819,7 +819,7 @@ Once in the `tmux` session, we can launch `jupyter lab`:
 jupyter lab --port 8888
 ```
 
-4. **Open Jupyter in browser**
+5. **Open Jupyter in browser**
 
 Now, this is the hardest step of running training from a Jupyter Notebook! Open a second terminal window on your local 
 machine and SSH into your GPU again. This time, it doesn't matter whether we include the `-L 8888:localhost:8888` part, 
@@ -837,7 +837,7 @@ address bar and press Enter.
 
 Voilà! We're now running a Jupyter Notebook on our GPU machine through the web browser on our local device!
 
-5. **Open notebook**
+6. **Open fine-tuning notebook**
 
 We can use the file explorer on the left to go to our model repository and open the Jupyter notebook `fine_tune_whisper_streaming.ipynb`. 
 In the top right of the notebook, you'll see a small window that says "Python 3". Clicking on this window will open a 
@@ -892,7 +892,7 @@ upwards of 12 hours for 5k training steps. We reckon you're better off training 
 When using the Python training script, normalisation is only applied during evaluation by setting the flag 
 `--do_normalize_eval_only` (which we recommend setting). Removing casing for the training data is enabled by passing the 
 flag `--do_lower_case`. Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. 
-The punctuation characters removed are defined in [run_speech_recognition_seq2seq_streaming.py#L450](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_seq2seq_streaming.py#L450).
+The punctuation characters removed are defined in [run_speech_recognition_seq2seq_streaming.py#L449](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_seq2seq_streaming.py#L449).
 
 Similarly, in the notebooks, normalisation is only applied during evaluation by setting the variable 
 `do_normalize_eval_only=True` (which we recommend setting). Removing casing in the training data is enabled by setting 
@@ -920,12 +920,15 @@ or other datasets of your choice.
 Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/sanchit-gandhi/whisper-small) 
 that you can use to showcase your fine-tuned Whisper model 📢
 
-Click the link to duplicate the template demo to your account: https://huggingface.co/spaces/sanchit-gandhi/whisper-small?duplicate=true
+Click the link to duplicate the template demo to your account: https://huggingface.co/spaces/whisper-event/whisper-demo?duplicate=true
 
-Click "Files and versions" -> "app.py" -> "edit". Change the model identifier to your fine-tuned model (line 9). 
-Scroll to the bottom of the page and click "Commit changes to `main`". The demo will reboot, this time using your 
-fine-tuned model. You can share this demo with your friends and family so that they can use the model that you've 
-trained!
+We recommend giving your space a similar name to your fine-tuned model (e.g. `whisper-demo-es`) and setting the visibility 
+to "Public". 
+
+Once you've duplicated the Space to your account, click "Files and versions" -> "app.py" -> "edit". Change the model 
+identifier to your fine-tuned model (line 9). Scroll to the bottom of the page and click "Commit changes to `main`". 
+The demo will reboot, this time using your fine-tuned model. You can share this demo with your friends and family so 
+that they can use the model that you've trained!
 
 <!--- TODO: VB - Add YT space link when ready --->
 
