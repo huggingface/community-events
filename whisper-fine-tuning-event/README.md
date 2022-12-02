@@ -125,8 +125,6 @@ Estimated time to complete: 5 mins
 12. If asked "Are you sure you want to continue connecting?", type "yes" and press Enter.
 13. Great! You're now SSH'd into your A100 device! We're now ready to set up our Python environment!
 
-<!--- TODO: SG - video for launching an instance --->
-
 You can see your total GPU usage from the Lambda cloud interface: https://cloud.lambdalabs.com/usage
 
 Here, you can see the total charges that you have incurred since the start of the event. We advise that you check your 
@@ -544,10 +542,8 @@ model.
 | [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) | ❌      | ❌           |
 | [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | ✅      | ✅           |
 
-If you want to find out more about pre- and post-processing for speech recognition, we point you in the direction of 
+If you want to find out more about pre- and post-processing for speech recognition, we refer you in the direction of 
 the paper: [ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition](https://arxiv.org/abs/2210.13352).
-
-<!--- TODO: SG What pre-processing steps do we deem appropriate? --->
 
 ## Fine-Tune Whisper
 
@@ -656,8 +652,8 @@ echo 'python run_speech_recognition_seq2seq_streaming.py \
 	--model_index_name="Whisper Small Spanish" \
 	--max_steps="5000" \
 	--output_dir="./" \
-	--per_device_train_batch_size="32" \
-	--per_device_eval_batch_size="16" \
+	--per_device_train_batch_size="64" \
+	--per_device_eval_batch_size="32" \
 	--logging_steps="25" \
 	--learning_rate="1e-5" \
 	--warmup_steps="500" \
@@ -686,6 +682,10 @@ Make sure to change the `--dataset_config_name` and `--language` to the correct 
 we combine the train and validation splits as `--train_split_name="train+validation"`. This is recommended for low-resource 
 languages (it probably isn't strictly necessary for Spanish, where the `"train"` split for Common Voice 11 contains 
 ample training data). We also assign a `"model_index_name"` - a pretty name that will go on the model card.
+
+We provide the train/eval batch sizes for the "small" checkpoint fine-tuned on a 1x A100 device. Depending on your device and checkpoint, 
+you might need to lower these values. Refer to the subsection [Recommended Training Configurations](#recommended-training-configurations) 
+for suggested batch-sizes for other devices and checkpoints.
 
 3. **Launch training 🚀**
 
@@ -717,11 +717,6 @@ tmux a -t mysession
 It will be like you never left! 
 
 `tmux` guide: https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
-
-<!--- TODO: 
-* do_eval_normalize
-* recommended batch sizes
---->
 
 ### Jupyter Notebook
 
@@ -914,7 +909,6 @@ We recommend running evaluation during training by setting your eval dataset to 
 We'll also provide you with a standalone evaluation script so that you can test your model after training on Common Voice 
 or other datasets of your choice.
 
-<!--- TODO: SG - add video link for YT --->
 <!--- TODO: VB - Add the streaming evaluation script here once tested. --->
 
 ## Building a Demo
@@ -929,7 +923,6 @@ Scroll to the bottom of the page and click "Commit changes to `main`". The demo 
 fine-tuned model. You can share this demo with your friends and family so that they can use the model that you've 
 trained!
 
-<!--- TODO: SG - add YT video for creating demo --->
 <!--- TODO: VB - Add YT space link when ready --->
 
 ## Communication and Problems
