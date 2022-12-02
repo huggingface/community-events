@@ -852,9 +852,10 @@ sure that training is working before closing the notebook. You can monitor train
 on the Hugging Face Hub under the "Training Metrics" tab.
 
 ### Google Colab
-The Google Colab for fine-tuning Whisper is entirely self-contained. You can access it through the following link:
+The Google Colab for fine-tuning Whisper is entirely self-contained. No need to set up an environment or sping up a GPU.
+You can access it through the following link:
 
-<a target="_blank" href="https://colab.research.google.com/github/sanchit-gandhi/notebooks/blob/main/fine_tune_whisper_streaming.ipynb">
+<a target="_blank" href="https://colab.research.google.com/github/huggingface/community-events/blob/main/whisper-finetuning-event/fine_tune_whisper_streaming_colab.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
