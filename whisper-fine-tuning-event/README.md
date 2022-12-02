@@ -677,6 +677,7 @@ echo 'python run_speech_recognition_seq2seq_streaming.py \
 	--do_train \
 	--do_eval \
 	--predict_with_generate \
+	--do_normalize_eval \
 	--use_auth_token \
 	--push_to_hub' >> run.sh
 ```
@@ -684,7 +685,7 @@ echo 'python run_speech_recognition_seq2seq_streaming.py \
 Make sure to change the `--dataset_config_name` and `--language` to the correct values for your language! See also how 
 we combine the train and validation splits as `--train_split_name="train+validation"`. This is recommended for low-resource 
 languages (it probably isn't strictly necessary for Spanish, where the `"train"` split for Common Voice 11 contains 
-ample training data). We also assign a `"model_index_name"`
+ample training data). We also assign a `"model_index_name"` - a pretty name that will go on the model card.
 
 3. **Launch training 🚀**
 
