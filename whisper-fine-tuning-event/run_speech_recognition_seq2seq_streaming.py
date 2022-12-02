@@ -482,12 +482,12 @@ def main():
                 seed=training_args.seed,
             )
 
-    # filter data that is shorter than min_input_length or longer than
+    # filter training data that is shorter than min_input_length or longer than
     # max_input_length
     def is_audio_in_length_range(length):
         return min_input_length < length < max_input_length
 
-    vectorized_datasets = vectorized_datasets.filter(
+    vectorized_datasets["train"] = vectorized_datasets["train"].filter(
         is_audio_in_length_range,
         input_columns=["input_length"],
     )
