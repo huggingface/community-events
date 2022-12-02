@@ -899,7 +899,9 @@ as the Python training script.
 
 ## Evaluation
 
-<!--- TODO: VB - Live leaderboard at XYZ [After the final discussion with Tristan and Lewis] --->
+We'll be running a live leaderboard throughout the event to track the best performing models across all languages. The leaderboard will track your models performance across *all* the speech recognition models available on the hub for your chosen language and dataset.
+
+You can find the leaderboard [here](https://huggingface.co/spaces/autoevaluate/leaderboards?dataset=common_voice_11_0&only_verified=0&task=automatic-speech-recognition&config=th&split=train%2Bvalidation&metric=wer) 📈.
 
 Each participant should evaluate their fine-tuned Whisper checkpoint on the `"test"` split of the Common Voice 11 
 dataset for their respective language. For languages that are not part of the Common Voice 11 dataset, please contact 
