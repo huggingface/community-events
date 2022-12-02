@@ -5,7 +5,7 @@ Welcome to the Whisper fine-tuning event 🎙️!
 For two weeks, we will endeavour to fine-tune the Whisper model to build state-of-the-art speech recognition systems in 
 the languages of our choice 🗣. We will work together as a community to achieve this, helping others and learning where 
 we can 🤗. If necessary and available, free access to A100 40 GB GPUs will kindly be provided by our cloud compute 
-partners, [Lambda Labs](https://lambdalabs.com) 🚀.
+partners, [Lambda](https://lambdalabs.com) 🚀.
 
 This document summarises all the relevant information required for the event 📋. Please read it thoroughly 
 and make sure to:
@@ -72,20 +72,20 @@ have a "Colab Pro" or "Pro+" subscription. This is to ensure that you receive a 
 fine-tuning Whisper. If you wish to fine-tune Whisper through Google Colab, you can skip ahead to the section: [Data and Pre-Processing](#data-and-pre-processing). 
 
 If you do not have access to a local GPU or Colab Pro/Pro+, we'll endeavour to provide you with a cloud GPU instance.
-We've partnered up with Lambda Labs to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
-40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Labs Cloud API makes it easy to spin-up and launch 
+We've partnered up with Lambda to provide cloud compute for this event. They'll be providing the latest NVIDIA A100 
+40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Cloud API makes it easy to spin-up and launch 
 a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
 This section is split into three parts:
 
-1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
+1. [Signing-Up with Lambda](#signing-up-with-lambda-labs)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
 3. [Deleting a Cloud Instance](#deleting-a-cloud-instance)
 
-### Signing-Up with Lambda Labs
+### Signing-Up with Lambda
 <!--- TODO: SG - the first 100 people to sign up with lambda get GPU credit? --->
 
-1. Create an account with Lambda Labs using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
+1. Create an account with Lambda using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
 2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `"Lambda cloud account for HuggingFace Whisper event - payment authentication and credit request"`.
 3. Each user who emails as above will receive $110 in credits (amounting to 100 hours of 1x A100 usage).
 
@@ -97,7 +97,7 @@ available for training, we advise that you shut down GPUs when you are not using
 Estimated time to complete: 5 mins
 
 1. Click the link: https://cloud.lambdalabs.com/instances
-2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
+2. You'll be asked to sign in to your Lambda account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $110 in GPU credits. Exceeding 100 hours of 1x A100 usage may incur charges on your credit card. Contact the Lambda team on Discord if you have issues authenticating your payment method (see [Communications and Problems](#communication-and-problems))
 5. Launching an instance:
@@ -127,7 +127,7 @@ Estimated time to complete: 5 mins
 
 <!--- TODO: SG - video for launching an instance --->
 
-You can see your total GPU usage from the Lambda Labs cloud interface: https://cloud.lambdalabs.com/usage
+You can see your total GPU usage from the Lambda cloud interface: https://cloud.lambdalabs.com/usage
 
 Here, you can see the total charges that you have incurred since the start of the event. We advise that you check your 
 total on a daily basis to make sure that it remains below the credit allocation of $110. This ensures that you are 
@@ -149,8 +149,9 @@ Creating an instance and setting it up for the first time may take up to 20 minu
 be much faster as you gain familiarity with the steps, so you shouldn't worry about having to delete a GPU and spinning one 
 up the next time you need one. You can expect to spin-up and delete 2-3 GPUs over the course of the fine-tuning event.
 
-We'll quickly run through the steps for deleting a Lambda Labs Cloud GPU. You can come back to these steps after you've 
-performed your first training run and want to shut down the GPU:
+
+We'll quickly run through the steps for deleting a Lambda Cloud GPU. You can come back to these steps after you've 
+performed your first training run and you want to shut down the GPU:
 
 1. Go to the instances page: https://cloud.lambdalabs.com/instances
 2. Click the checkbox on the left next to the GPU device you want to delete
@@ -175,7 +176,7 @@ through the following command:
 nvidia-smi
 ```
 
-This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda Labs GPUs!
+This should print a table with our NVIDIA driver version and CUDA version, and should work out of the box for Lambda GPUs!
 If you get an error running this command, refer to your device manual for installing the required NVIDIA driver.
 
 Before installing the required libraries, we'd need to install and update the Unix package `ffmpeg` to version 4:
@@ -580,7 +581,7 @@ There are three ways in which you can execute the fine-tuning code:
 2. [Jupyter Notebook](#jupyter-notebook)
 3. [Google Colab](#google-colab)
 
-1 and 2 are applicable when running on a local GPU or cloud GPU instance (such as on Lambda Labs). 3 applies if you have 
+1 and 2 are applicable when running on a local GPU or cloud GPU instance (such as on Lambda). 3 applies if you have 
 a Google Colab Pro/Pro+ subscription and want to run training in a Google Colab. The proceeding instructions for running 
 each of these methods are quite lengthy. Feel free to read through each of them to get a better idea for which one you 
 want to use for training. Once you've read through, we advise you pick one method and stick to it!
@@ -942,10 +943,8 @@ The following paragraph summarises the platform to use for each kind of problem:
 - Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issue on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issue on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
 - Problem/question with a modified, customised training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
-- Problem/question regarding access or set up of a Lambda Labs GPU, please ask in the Discord channel **#lambdalabs-infra-support**.
+- Problem/question regarding access or set up of a Lambda GPU, please ask in the Discord channel **#lambdalabs-infra-support**.
 - Other questions regarding the event, rules of the event, or if you are unsure where to post your question, please ask in the Discord channel **#events**.
-
-We're on-hand to help you, so don't hesitate in asking questions if you get stuck!
 
 ## Talks
 
