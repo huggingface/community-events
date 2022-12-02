@@ -59,7 +59,7 @@ give you an idea of where to look for the relevant information and an idea of ho
 
 - *Introduction Talk*: 2nd December 2022
 - *Sprint start*: 5th December 2022
-- *Speaker Events* 5th December 2022
+- *Speaker Events*: 5th December 2022
 - *Sprint end*: 19th December 2022
 - *Results*: 23rd December 2022
 
@@ -86,7 +86,7 @@ This section is split into three parts:
 <!--- TODO: SG - the first 100 people to sign up with lambda get GPU credit? --->
 
 1. Create an account with Lambda using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
-2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `"Lambda cloud account for HuggingFace Whisper event - payment authentication and credit request"`.
+2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `Lambda cloud account for HuggingFace Whisper event - payment authentication and credit request`.
 3. Each user who emails as above will receive $110 in credits (amounting to 100 hours of 1x A100 usage).
 
 100 hours of 1x A100 usage should enable you to complete 5-10 fine-tuning runs. To maximise the GPU hours you have 
