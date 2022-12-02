@@ -5,4 +5,5 @@ git+https://github.com/huggingface/datasets
 librosa
 jiwer
 evaluate>=0.3.0
+more-itertools
 tensorboard
