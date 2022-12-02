@@ -76,7 +76,7 @@ We've partnered up with Lambda Labs to provide cloud compute for this event. The
 40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda Labs Cloud API makes it easy to spin-up and launch 
 a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
-This section is split into two halves:
+This section is split into three parts:
 
 1. [Signing-Up with Lambda Labs](#signing-up-with-lambda-labs)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
@@ -99,7 +99,7 @@ Estimated time to complete: 5 mins
 1. Click the link: https://cloud.lambdalabs.com/instances
 2. You'll be asked to sign in to your Lambda Labs account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
-4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $110 in GPU credits. Exceeding 100 hours of 1x A100 usage may incur charges on your credit card.
+4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $110 in GPU credits. Exceeding 100 hours of 1x A100 usage may incur charges on your credit card. Contact the Lambda team on Discord if you have issues authenticating your payment method (see [Communications and Problems](#communication-and-problems))
 5. Launching an instance:
    1. In "Instance type", select the instance type "1x A100 (40 GB SXM4)"
    2. In "Select region", select the region with availability closest to you.
@@ -133,6 +133,11 @@ Here, you can see the total charges that you have incurred since the start of th
 total on a daily basis to make sure that it remains below the credit allocation of $110. This ensures that you are 
 not inadvertently charged for GPU hours.
 
+If you are unable to SSH into your Lambda Labs GPU in step 11, there is a workaround that you can try. On the [GPU instances page](https://cloud.lambdalabs.com/instances), 
+under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the 
+top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this 
+terminal window to set up your Python environment in the next section [Set Up an Environment](#set-up-an-environment).
+
 ### Deleting a Cloud Instance
 
 100 1x A100 hours should provide you with enough time for 5-10 fine-tuning runs (depending on how long you train for 
@@ -142,15 +147,17 @@ wasted GPU hours. That's nearly half of your compute allocation! So be smart and
 
 Creating an instance and setting it up for the first time may take up to 20 minutes. Subsequently, this process will 
 be much faster as you gain familiarity with the steps, so you shouldn't worry about having to delete a GPU and spinning one 
-up the next time you need one. You can expect to spin-up and delete 2-3 GPUs over the course of the fine-tuning event!
+up the next time you need one. You can expect to spin-up and delete 2-3 GPUs over the course of the fine-tuning event.
 
 We'll quickly run through the steps for deleting a Lambda Labs Cloud GPU. You can come back to these steps after you've 
-performed your first training run and you want to shut down the GPU:
+performed your first training run and want to shut down the GPU:
 
 1. Go to the instances page: https://cloud.lambdalabs.com/instances
 2. Click the checkbox on the left next to the GPU device you want to delete
 3. Click the button "Terminate" in the top right-hand side of your screen (under the purple button "Launch instance")
 4. Type "erase data on instance" in the text box and press "ok"
+
+Your GPU device is now deleted and will stop consuming GPU credits.
 
 ## Set Up an Environment
 Estimated time to complete: 5 mins
@@ -302,12 +309,6 @@ huggingface-cli login
 ```
 
 And then enter an authentication token from https://huggingface.co/settings/tokens.
-
-Link to jupyter:
-```bash
-pip install jupyter lab
-python -m ipykernel install --user --name=$env_name
-```
 
 ## Data and Pre-Processing
 
@@ -592,8 +593,6 @@ on the Hugging Face Hub.
 
 ### Python Script
 
-Video tutorial: TODO
-
 1. **Create a model repository**
 
 The steps for running training with a Python script assume that you are SSH'd into your GPU device and have set up 
@@ -724,8 +723,6 @@ It will be like you never left!
 
 ### Jupyter Notebook
 
-Video tutorial: TODO
-
 1. **SSH port forwarding**
 
 The steps for running training with a Python script assume that you have set up your environment according to the 
@@ -826,19 +823,19 @@ jupyter lab --port 8888
 
 4. **Open Jupyter in browser**
 
-Now, this is the hardest step of running training from a Jupyter Notebook! When we launched `jupyter lab` in the previous 
-step, our console would've been dumped with a bunch of information. For using our notebook in a browser, we're interested 
-in the last of these two lines:
+Now, this is the hardest step of running training from a Jupyter Notebook! Open a second terminal window on your local 
+machine and SSH into your GPU again. This time, it doesn't matter whether we include the `-L 8888:localhost:8888` part, 
+the important thing is that you re-enter your GPU device in a new SSH window.
 
-Open a new SSH window. Then type:
+Once SSH'd into your GPU, view all running `jupyter lab` sessions:
+
 ```bash
 jupyter lab list
 ```
 
-Copy the URL for the lab corresponding to port 8888.
-
-Copy one of these URLs to your clipboard (drag the mouse over it and then press CTRL + C). On your local desktop, open 
-a web browser window (Safari, Firefox, Chrome, etc.). Paste the URL into the browser web address bar and press Enter.
+Copy the URL for the lab corresponding to port 8888 your clipboard, it will take the form `http://localhost:8888/?token=...`. 
+On your local desktop, open a web browser window (Safari, Firefox, Chrome, etc.). Paste the URL into the browser web 
+address bar and press Enter.
 
 Voila! We're now running a Jupyter Notebook on our GPU machine through the web browser on our local device!
 
@@ -850,16 +847,12 @@ dropdown menu, from which we can select a Python kernel. Select your venv from t
 you run the notebook in the venv we previously set up.
 
 You can now run this notebook from start to finish and fine-tune the Whisper model as you desire 🤗 The notebook 
-contains pointers for where you need to change variables for your language. 
-
-6. **Reconnect to notebook**
+contains pointers for where you need to change variables for your language.
 
 Since we're operating within a `tmux` session, we're free to close our SSH connection and browser window when we desire. 
-Training won't be interrupted by closing this window.
-
-If you want to reconnect to the notebook, simply open a browser and return to the URL that we previously pasted in the address bar!
-
-<!--- TODO: SG - set outputdir of notebook to "./" --->
+Training won't be interrupted by closing this window. However, the notebook will cease to update, so you should make 
+sure that training is working before closing the notebook. You can monitor training progress through your model repo 
+on the Hugging Face Hub under the "Training Metrics" tab.
 
 ### Google Colab
 The Google Colab for fine-tuning Whisper is entirely self-contained. You can access it through the following link:
@@ -871,8 +864,8 @@ The Google Colab for fine-tuning Whisper is entirely self-contained. You can acc
 ### Recommended Training Configurations
 
 In this section, we provide guidance for appropriate training and evaluation batch sizes depending on your GPU device. 
-Since the Whisper model expects log-Mel input features of a fixed dimension, the GPU memory required by the models is the 
-same for audio samples of any length. Thus, these recommendations should stand for all 16/40GB GPU devices. However, 
+Since the Whisper model expects log-Mel input features of a fixed dimension, the GPU memory required by the models is 
+the same for audio samples of any length. Thus, these recommendations should stand for all 16/40GB GPU devices. However, 
 if you experience out-of-memory errors, we recommend reducing the `per_device_train_batch_size` by factors of 2 and 
 increasing the `gradient_accumulation_steps` to compensate.
 
@@ -895,14 +888,17 @@ upwards of 12 hours for 5k training steps. We reckon you're better off training 
 | small  | 64               | 1                  | 32              |
 | medium | 32               | 1                  | 16              |
 
-<!--- TOOD: SG - add flags / variables for casing, punctuation and normalise --->
-When using the training scripts, removing casing is enabled by passing the flag `--do_lower_case`. Remove 
-punctuation is achieved by passing the flag `--do_remove_punctuation`. The punctuation characters removed are defined 
-in TODO. Normalisation is only applied during evaluation by setting the flag `--do_normalize_eval_only`.
+### Punctuation, Casing and Normalisation
 
-Similarly, in the notebooks, removing casing is enabled by setting the variable `do_lower_case = True` and punctuation 
-by `do_remove_punctuation = True`. Normalisation is only applied during evaluation by setting the variable 
-`do_normalize_eval_only=True`.
+<!--- TOOD: SG - add flags / variables for casing, punctuation and normalise --->
+When using the training scripts, normalisation is only applied during evaluation by setting the flag 
+`--do_normalize_eval_only` (which we recommend setting). Removing casing for the training data is enabled by passing the 
+flag `--do_lower_case`. Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. 
+The punctuation characters removed are defined in TODO.
+
+Similarly, in the notebooks, normalisation is only applied during evaluation by setting the variable 
+`do_normalize_eval_only=True` (which we recommend setting). Removing casing in the training data is enabled by setting 
+the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. 
 
 ## Evaluation
 
@@ -921,46 +917,50 @@ or other datasets of your choice.
 
 ## Building a Demo
 
-Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/sanchit-gandhi/whisper-small) that you can use to showcase your fine-tuned Whisper model 📢
+Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/sanchit-gandhi/whisper-small) 
+that you can use to showcase your fine-tuned Whisper model 📢
 
 Click the link to duplicate the template demo to your account: https://huggingface.co/spaces/sanchit-gandhi/whisper-small?duplicate=true
 
 Click "Files and versions" -> "app.py" -> "edit". Change the model identifier to your fine-tuned model (line 9). 
-Scroll to the bottom of the page and click "Commit changes to `main`". Now click "App" in the top left-hand corner. 
-The demo will reboot, this time using your fine-tuned model. You can share this demo with your friends and family and 
-have them use the model that you've trained!
+Scroll to the bottom of the page and click "Commit changes to `main`". The demo will reboot, this time using your 
+fine-tuned model. You can share this demo with your friends and family so that they can use the model that you've 
+trained!
 
+<!--- TODO: SG - add YT video for creating demo --->
 <!--- TODO: VB - Add YT space link when ready --->
 
 ## Communication and Problems
 
 If you encounter any problems or have any questions, you should use one of the following platforms
-depending on your type of problem. Hugging Face is an "open-source-first" organization meaning 
+depending on your type of problem. Hugging Face is an "open-source-first" organisation, meaning 
 that we'll try to solve all problems in the most public and transparent way possible so that everybody
-in the community profits.
+in the community benefits.
 
-The following table summarizes what platform to use for which problem.
+The following paragraph summarises the platform to use for each kind of problem:
 
-- Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issues on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
-- Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issues on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
-- Problem/question with a modified, customized training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
-- Questions regarding access to the Lambda Labs GPUs, please ask in the Discord channel **#lambdalabs-infra-support**.
-- Other questions regarding the event, rules of the event, or if you are not sure where to post your question, please ask in the Discord channel **#events**.
+- Problem/question/bug with the 🤗 Datasets library that you think is a general problem that also impacts other people, please open an [Issue on Datasets](https://github.com/huggingface/datasets/issues/new?assignees=&labels=bug&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
+- Problem/question/bug with the 🤗 Transformers library that you think is a general problem that also impacts other people, please open an [Issue on Transformers](https://github.com/huggingface/transformers/issues/new?assignees=&labels=&template=bug-report.md&title=) and ping @sanchit-gandhi and @vaibhavs10.
+- Problem/question with a modified, customised training script that is less likely to impact other people, please post your problem/question [on the forum](https://discuss.huggingface.co/) and ping @sanchit-gandhi and @vaibhavs10.
+- Problem/question regarding access or set up of a Lambda Labs GPU, please ask in the Discord channel **#lambdalabs-infra-support**.
+- Other questions regarding the event, rules of the event, or if you are unsure where to post your question, please ask in the Discord channel **#events**.
+
+We're on-hand to help you, so don't hesitate in asking questions if you get stuck!
 
 ## Talks
 
-We are quite excited to host talks from Open AI, Meta AI and Hugging Face to help you get a better understanding of the Whisper architecture, datasets used for ASR and details about the event itself!
+We are very excited to be hosting talks from Open AI, Meta AI and Hugging Face to help you get a better understanding of the Whisper model, the VoxPopuli dataset and details about the fine-tuning event itself!
 
 | **Speaker**                  | **Topic**                                                  | **Time**                      | **Video**                                                                                                                 |
 |------------------------------|------------------------------------------------------------|-------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| Sanchit Gandhi, Hugging Face | Introduction to Whisper Fine Tuning Event                  | 16:00 CET, 2nd December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=1cVBLOMlv3w)  |
-| Jong Wook Kim, OpenAI        | [Whisper Model](https://cdn.openai.com/papers/whisper.pdf) | 17:30 CET, 5th December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=fZMiD8sDzzg ) |
-| Changhan Wang, MetaAI        | [VoxPopuli Dataset](https://arxiv.org/abs/2101.00390)      | 18:30 CET, 5th December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=fZMiD8sDzzg ) |
+| Sanchit Gandhi, Hugging Face | Introduction to Whisper Fine-Tuning Event                  | 15:00 UTC, 2nd December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=1cVBLOMlv3w)  |
+| Jong Wook Kim, OpenAI        | [Whisper Model](https://cdn.openai.com/papers/whisper.pdf) | 16:30 UTC, 5th December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=fZMiD8sDzzg ) |
+| Changhan Wang, MetaAI        | [VoxPopuli Dataset](https://arxiv.org/abs/2101.00390)      | 17:30 UTC, 5th December, 2022 | [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=fZMiD8sDzzg ) |
 
 ## Tips and Tricks
 
 We include two memory saving tricks that you can explore to run the fine-tuning scripts with larger batch-sizes and 
-potentially even larger checkpoints.
+potentially larger checkpoints.
 
 ### Adam 8bit
 The [Adam optimiser](https://arxiv.org/abs/1412.6980a) requires two params (betas) for every model parameter. So the memory requirement of the optimiser is 
@@ -972,7 +972,9 @@ To use Adam 8bti, you first need to pip install `bitsandbytes`:
 pip install bitsandbytes
 ```
 
-Then, set `optim="adamw_bnb_8bit"` when you instantiate the Seq2SeqTrainingArguments:
+Then, set `optim="adamw_bnb_8bit"`, either in your `run.sh` file if running from a Python script, or when you 
+instantiate the Seq2SeqTrainingArguments from a Jupyter Notebook or Google Colab:
+
 ```python
 from transformers import Seq2SeqTrainingArguments
 
