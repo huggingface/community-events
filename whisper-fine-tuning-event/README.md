@@ -78,7 +78,7 @@ a GPU instance. In this section, we'll go through the steps for spinning up an i
 
 This section is split into three parts:
 
-1. [Signing-Up with Lambda](#signing-up-with-lambda-labs)
+1. [Signing-Up with Lambda](#signing-up-with-lambda)
 2. [Creating a Cloud Instance](#creating-a-cloud-instance)
 3. [Deleting a Cloud Instance](#deleting-a-cloud-instance)
 
@@ -307,7 +307,8 @@ git config --global credential.helper store
 huggingface-cli login
 ```
 
-And then enter an authentication token from https://huggingface.co/settings/tokens.
+And then enter an authentication token from https://huggingface.co/settings/tokens. Create a new token if you do not have 
+one already. You should make sure that this token has "write" privileges.
 
 ## Data and Pre-Processing
 
