@@ -76,6 +76,10 @@ We've partnered up with Lambda to provide cloud compute for this event. They'll 
 40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda API makes it easy to spin-up and launch 
 a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
+<p align="center" width="100%">
+    <img width="50%" src="https://raw.githubusercontent.com/sanchit-gandhi/codesnippets/main/hf_x_lambda.jpg">
+</p>
+
 This section is split into three parts:
 
 1. [Signing-Up with Lambda](#signing-up-with-lambda)
@@ -96,7 +100,7 @@ available for training, we advise that you shut down GPUs when you are not using
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
 
-*You can also follow our video tutorial to set up a cloud instance on Lambda here* 👉️ [YouTube Video](https://www.youtube.com/watch?v=Ndm9CROuk5g&list=PLo2EIpI_JMQtncHQHdHq2cinRVk_VZdGW)
+*You can also follow our video tutorial to set up a cloud instance on Lambda* 👉️ [YouTube Video](https://www.youtube.com/watch?v=Ndm9CROuk5g&list=PLo2EIpI_JMQtncHQHdHq2cinRVk_VZdGW)
 
 1. Click the link: https://cloud.lambdalabs.com/instances
 2. You'll be asked to sign in to your Lambda account (if you haven't done so already).
@@ -163,7 +167,7 @@ Your GPU device is now deleted and will stop consuming GPU credits.
 ## Set Up an Environment
 Estimated time to complete: 5 mins
 
-*Follow along our video tutorial detailing the setup* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQtzC5feNpqQL7eToYKcOxYf)
+*Follow along our video tutorial detailing the set up* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQtzC5feNpqQL7eToYKcOxYf)
 
 The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
 section, we'll cover how to set up an environment with the required libraries. This section assumes that you are SSH'd 
@@ -594,7 +598,7 @@ Before jumping into any training, make sure you've accepted the Common Voice 11 
 on the Hugging Face Hub.
 
 ### Python Script
-*Check-out the video tutorial detailing how to fine-tune your whisper model via the CLI* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQuKpnFm1ntcLKP6gq0l0f1Q)
+*Checkout the video tutorial detailing how to fine-tune your whisper model via the CLI* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQuKpnFm1ntcLKP6gq0l0f1Q)
 
 1. **Create a model repository**
 
@@ -923,7 +927,7 @@ or other datasets of your choice.
 
 ## Building a Demo
 
-Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/sanchit-gandhi/whisper-small) 
+Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/whisper-event/whisper-demo) 
 that you can use to showcase your fine-tuned Whisper model 📢
 
 Click the link to duplicate the template demo to your account: https://huggingface.co/spaces/whisper-event/whisper-demo?duplicate=true
@@ -936,8 +940,7 @@ identifier to your fine-tuned model (line 9). Scroll to the bottom of the page a
 The demo will reboot, this time using your fine-tuned model. You can share this demo with your friends and family so 
 that they can use the model that you've trained!
 
-Come checkout our video tutorial to get a better understanding 👉️ [YouTube Video](https://www.youtube.com/watch?v=VQYuvl6-9VE)
-<!--- TODO: VB - Add YT space link when ready --->
+*Checkout our video tutorial to get a better understanding 👉️ [YouTube Video](https://www.youtube.com/watch?v=VQYuvl6-9VE)*
 
 ## Communication and Problems
 
