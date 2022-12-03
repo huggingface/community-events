@@ -100,6 +100,8 @@ available for training, we advise that you shut down GPUs when you are not using
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
 
+*You can also follow our video tutorial to set up a cloud instance on Lambda here* 👉️ [YouTube Video](https://www.youtube.com/watch?v=Ndm9CROuk5g&list=PLo2EIpI_JMQtncHQHdHq2cinRVk_VZdGW)
+
 1. Click the link: https://cloud.lambdalabs.com/instances
 2. You'll be asked to sign in to your Lambda account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
@@ -164,6 +166,8 @@ Your GPU device is now deleted and will stop consuming GPU credits.
 
 ## Set Up an Environment
 Estimated time to complete: 5 mins
+
+*Follow along our video tutorial detailing the setup* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQtzC5feNpqQL7eToYKcOxYf)
 
 The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
 section, we'll cover how to set up an environment with the required libraries. This section assumes that you are SSH'd 
@@ -594,6 +598,7 @@ Before jumping into any training, make sure you've accepted the Common Voice 11 
 on the Hugging Face Hub.
 
 ### Python Script
+*Check-out the video tutorial detailing how to fine-tune your whisper model via the CLI* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQuKpnFm1ntcLKP6gq0l0f1Q)
 
 1. **Create a model repository**
 
@@ -724,6 +729,7 @@ It will be like you never left!
 `tmux` guide: https://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/
 
 ### Jupyter Notebook
+*We've detailed these steps in a video tutorial to help you get up to speed faster* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQs9z-N4v8L_Jb4KF6kAkylX)
 
 1. **SSH port forwarding**
 
@@ -905,7 +911,9 @@ as the Python training script.
 
 ## Evaluation
 
-<!--- TODO: VB - Live leaderboard at XYZ [After the final discussion with Tristan and Lewis] --->
+We'll be running a live leaderboard throughout the event to track the best performing models across all languages. The leaderboard will track your models performance across *all* the speech recognition models available on the hub for your chosen language and dataset.
+
+You can find the leaderboard [here](https://huggingface.co/spaces/autoevaluate/leaderboards?dataset=common_voice_11_0&only_verified=0&task=automatic-speech-recognition&config=th&split=train%2Bvalidation&metric=wer) 📈.
 
 Each participant should evaluate their fine-tuned Whisper checkpoint on the `"test"` split of the Common Voice 11 
 dataset for their respective language. For languages that are not part of the Common Voice 11 dataset, please contact 
@@ -932,6 +940,7 @@ identifier to your fine-tuned model (line 9). Scroll to the bottom of the page a
 The demo will reboot, this time using your fine-tuned model. You can share this demo with your friends and family so 
 that they can use the model that you've trained!
 
+Come checkout our video tutorial to get a better understanding 👉️ [YouTube Video](https://www.youtube.com/watch?v=VQYuvl6-9VE)
 <!--- TODO: VB - Add YT space link when ready --->
 
 ## Communication and Problems
