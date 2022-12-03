@@ -361,86 +361,9 @@ load_dataset("mozilla-foundation/common_voice_10_0", "en", split="train+validati
 This notation for combining splits (`"split_a+split_b"`) is consistent for all resources in the event. You can combine 
 splits in this same way using the fine-tuning scripts in the following section [Fine-Tune Whisper](#fine-tune-whisper).
 
-In addition to the Common Voice corpus, incorporating supplementary training data is usually beneficial. The Whisper 
-paper demonstrates the significant effect that increasing the amount of training data can have on downstream 
-performance (_c.f._ Section 4.2 of the [paper](https://cdn.openai.com/papers/whisper.pdf)). There are a number of datasets that are available on the Hugging Face Hub that can be downloaded via 
-the 🤗 Datasets library in much the same way as Common Voice 11.
-
-We recommend the following four datasets on the Hugging Face Hub for multilingual speech recognition:
-
-<details>
-<summary>
-
-#### Common Voice 11
-
-</summary>
-
-[Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) is a crowd-sourced 
-open-licensed speech dataset where speakers record text from Wikipedia in various languages. Since anyone can contribute 
-recordings, there is significant variation in both audio quality and speakers. The audio conditions are challenging, with 
-recording artefacts, accented speech, hesitations, and the presence of foreign words. The transcriptions are both cased 
-and punctuated. As of version 11, there are over 100 languages available, both low and high-resource.
-</details>
-<details>
-<summary>
-
-#### VoxPopuli
-
-</summary>
-
-[VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli) is a large-scale multilingual speech corpus consisting 
-of data sourced from 2009-2020 European Parliament event recordings. Consequently, it occupies the unique domain of 
-oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
-15 European languages. The transcriptions are punctuated but not cased.
-</details>
-<details>
-<summary>
-
-#### Multilingual LibriSpeech
-
-</summary>
-
-[Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) is the multilingual 
-equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. It comprises a large corpus 
-of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making it a suitable dataset for academic 
-research. It contains data split into eight high-resource languages - English, German, Dutch, Spanish, French, Italian, 
-Portuguese and Polish. The transcriptions are neither punctuated nor cased.
-</details>
-<details>
-<summary>
-
-#### FLEURS
-
-</summary>
-
-[FLEURS](https://huggingface.co/datasets/google/fleurs) (Few-shot Learning Evaluation of Universal Representations of 
-Speech) is a dataset for evaluating speech recognition systems in 102 languages, including many that are classified as 
-'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) dataset, a machine 
-translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers are recorded 
-narrating the sentence transcriptions in their native language. The recorded audio data is paired with the sentence 
-transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
-approximately 10 hours of supervised audio-transcription data per language. Transcriptions come in two formats: un-normalised 
-(`"raw_transcription"`) and normalised (`"transcription"`).
-</details>
-
-The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
-multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
-
-You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: [ASR datasets on the Hub](https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads).
-
-If one wants to combine multiple datasets for training, it might make sense to take a look at 
-the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) function.
-
-<!--- TODO: SG - example script for doing this --->
-
-In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data 
-for training. When using your own audio data, please make sure that you **are allowed to use the audio data**. For 
-instance, if the audio data is taken from media platforms, such as YouTube, please verify that the media platform and 
-the owner of the data have given their approval to use the audio data in the context of machine learning research. If 
-you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face team 
-on Discord.
-
-<!--- TODO: VB - tutorial for adding own data via audio folder --->
+If combining the `"train"` and `"validation"` splits of the Common Voice 11 dataset still gives insufficient training 
+data for your language, you can explore using other datasets on the Hub to train your model and try 
+[Mixing Datasets](#mixing-datasets-optional) to give larger training splits.
 
 ### Streaming Mode
 
@@ -533,6 +456,88 @@ With the provided training scripts, it is trivial to toggle between removing or 
 requiring at most three lines of code change. Switching between the different modes is explained in more detail in the 
 following section [Fine-Tune Whisper](#fine-tune-whisper).
 
+If you want to find out more about pre- and post-processing for speech recognition, we refer you in the direction of 
+the paper: [ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition](https://arxiv.org/abs/2210.13352).
+
+The following two subsections are optional. They cover how you can mix datasets to form larger training splits and how 
+you can use custom data to fine-tune your model. If the Common Voice 11 dataset has sufficient data in your language to 
+fine-tune your model, you can skip to the next section [Fine-Tune Whisper](#fine-tune-whisper).
+
+### Mixing Datasets (optional)
+
+If the Common Voice 11 dataset contains insufficient training data to fine-tune Whisper in your language, you can explore mixing 
+different datasets to create a larger combined training set. Incorporating supplementary training data is almost always beneficial for training. 
+The Whisper paper demonstrates the significant effect that increasing the amount of training data can have on downstream 
+performance (_c.f._ Section 4.2 of the [paper](https://cdn.openai.com/papers/whisper.pdf)). There are a number of datasets 
+that are available on the Hugging Face Hub that can be downloaded via the 🤗 Datasets library in much the same way as 
+Common Voice 11.
+
+We recommend selecting from the following four datasets on the Hugging Face Hub for multilingual speech recognition:
+
+<details>
+<summary>
+
+#### Common Voice 11
+
+</summary>
+
+[Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0) is a crowd-sourced 
+open-licensed speech dataset where speakers record text from Wikipedia in various languages. Since anyone can contribute 
+recordings, there is significant variation in both audio quality and speakers. The audio conditions are challenging, with 
+recording artefacts, accented speech, hesitations, and the presence of foreign words. The transcriptions are both cased 
+and punctuated. As of version 11, there are over 100 languages available, both low and high-resource.
+</details>
+<details>
+<summary>
+
+#### VoxPopuli
+
+</summary>
+
+[VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli) is a large-scale multilingual speech corpus consisting 
+of data sourced from 2009-2020 European Parliament event recordings. Consequently, it occupies the unique domain of 
+oratory, political speech, largely sourced from non-native speakers. It contains labelled audio-transcription data for 
+15 European languages. The transcriptions are punctuated but not cased.
+</details>
+<details>
+<summary>
+
+#### Multilingual LibriSpeech
+
+</summary>
+
+[Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) is the multilingual 
+equivalent of the [LibriSpeech ASR](https://huggingface.co/datasets/librispeech_asr) corpus. It comprises a large corpus 
+of read audiobooks taken from the [LibriVox](https://librivox.org/) project, making it a suitable dataset for academic 
+research. It contains data split into eight high-resource languages - English, German, Dutch, Spanish, French, Italian, 
+Portuguese and Polish. The transcriptions are neither punctuated nor cased.
+</details>
+<details>
+<summary>
+
+#### FLEURS
+
+</summary>
+
+[FLEURS](https://huggingface.co/datasets/google/fleurs) (Few-shot Learning Evaluation of Universal Representations of 
+Speech) is a dataset for evaluating speech recognition systems in 102 languages, including many that are classified as 
+'low-resource'. The data is derived from the [FLoRes-101](https://arxiv.org/abs/2106.03193) dataset, a machine 
+translation corpus with 3001 sentence translations from English to 101 other languages. Native speakers are recorded 
+narrating the sentence transcriptions in their native language. The recorded audio data is paired with the sentence 
+transcriptions to yield a multilingual speech recognition over all 101 languages. The training sets contain 
+approximately 10 hours of supervised audio-transcription data per language. Transcriptions come in two formats: un-normalised 
+(`"raw_transcription"`) and normalised (`"transcription"`).
+</details>
+
+<!---
+The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
+multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
+
+You can also explore all speech recognition datasets on the Hub to find one suited for your language and needs: [ASR datasets on the Hub](https://huggingface.co/datasets?task_categories=task_categories:automatic-speech-recognition&sort=downloads).
+--->
+
+You can try training on these datasets individually, or mix them to form larger train sets.
+
 When mixing datasets, you should ensure the transcription format is consistent across datasets. For example, if you mix 
 Common Voice 11 (cased + punctuated) with VoxPopuli (un-cased + punctuated), you will need to lower-case **all the text** 
 for both training and evaluation, such that the transcriptions are consistent across training samples (un-cased + punctuated). 
@@ -551,8 +556,21 @@ model.
 | [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) | ❌      | ❌           |
 | [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | ✅      | ✅           |
 
-If you want to find out more about pre- and post-processing for speech recognition, we refer you in the direction of 
-the paper: [ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition](https://arxiv.org/abs/2210.13352).
+
+If one wants to combine multiple datasets for training, it might make sense to take a look at 
+the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) 
+function. We will provide a code-snippet for mixing datasets shortly.
+
+### Custom Data (optional)
+
+In addition to publicly available data on the Hugging Face Hub, participants can also make use of their own audio data 
+for training. When using your own audio data, please make sure that you **are allowed to use the audio data**. For 
+instance, if the audio data is taken from media platforms, such as YouTube, please verify that the media platform and 
+the owner of the data have given their approval to use the audio data in the context of machine learning research. If 
+you are not sure whether the data you want to use has the appropriate licensing, please contact the Hugging Face team 
+on Discord.
+
+<!--- TODO: VB - tutorial for adding own data via audio folder --->
 
 ## Fine-Tune Whisper
 
