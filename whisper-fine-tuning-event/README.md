@@ -76,6 +76,10 @@ We've partnered up with Lambda to provide cloud compute for this event. They'll 
 40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda API makes it easy to spin-up and launch 
 a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
+<figure>
+<img src="https://raw.githubusercontent.com/sanchit-gandhi/codesnippets/main/hf_x_lambda.jpg" alt="Trulli" style="width:100%">
+</figure>
+
 This section is split into three parts:
 
 1. [Signing-Up with Lambda](#signing-up-with-lambda)
@@ -915,7 +919,7 @@ or other datasets of your choice.
 
 ## Building a Demo
 
-Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/sanchit-gandhi/whisper-small) 
+Finally, on to the fun part! Time to sit back and watch the model transcribe audio. We've created a [template Gradio demo](https://huggingface.co/spaces/whisper-event/whisper-demo) 
 that you can use to showcase your fine-tuned Whisper model 📢
 
 Click the link to duplicate the template demo to your account: https://huggingface.co/spaces/whisper-event/whisper-demo?duplicate=true
