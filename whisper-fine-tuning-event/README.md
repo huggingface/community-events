@@ -930,6 +930,8 @@ identifier to your fine-tuned model (line 9). Scroll to the bottom of the page a
 The demo will reboot, this time using your fine-tuned model. You can share this demo with your friends and family so 
 that they can use the model that you've trained!
 
+[![[WFTE] Create a Gradio Demo for your fine-tuned Whisper model](https://img.youtube.com/vi/VQYuvl6-9VE/0.jpg)](https://www.youtube.com/watch?v=VQYuvl6-9VE)
+
 <!--- TODO: VB - Add YT space link when ready --->
 
 ## Communication and Problems
