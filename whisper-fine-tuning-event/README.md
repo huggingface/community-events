@@ -76,9 +76,9 @@ We've partnered up with Lambda to provide cloud compute for this event. They'll 
 40 GB GPUs, so you'll be loaded with some serious firepower! The Lambda API makes it easy to spin-up and launch 
 a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
-<figure>
-<img src="https://raw.githubusercontent.com/sanchit-gandhi/codesnippets/main/hf_x_lambda.jpg" alt="Trulli" style="width:100%">
-</figure>
+<p align="center" width="100%">
+    <img width="50%" src="https://raw.githubusercontent.com/sanchit-gandhi/codesnippets/main/hf_x_lambda.jpg">
+</p>
 
 This section is split into three parts:
 
