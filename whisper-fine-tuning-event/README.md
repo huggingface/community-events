@@ -95,6 +95,7 @@ available for training, we advise that you shut down GPUs when you are not using
 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
+
 *You can also follow our video tutorial to set up a cloud instance on Lambda here* 👉️ [YouTube Video](https://www.youtube.com/watch?v=Ndm9CROuk5g&list=PLo2EIpI_JMQtncHQHdHq2cinRVk_VZdGW)
 
 1. Click the link: https://cloud.lambdalabs.com/instances
@@ -161,6 +162,7 @@ Your GPU device is now deleted and will stop consuming GPU credits.
 
 ## Set Up an Environment
 Estimated time to complete: 5 mins
+
 *Follow along our video tutorial detailing the setup* 👉️ [YouTube Video](https://www.youtube.com/playlist?list=PLo2EIpI_JMQtzC5feNpqQL7eToYKcOxYf)
 
 The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**, and, **🤗 Datasets**. In this 
