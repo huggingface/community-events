@@ -459,6 +459,10 @@ following section [Fine-Tune Whisper](#fine-tune-whisper).
 If you want to find out more about pre- and post-processing for speech recognition, we refer you in the direction of 
 the paper: [ESB: A Benchmark For Multi-Domain End-to-End Speech Recognition](https://arxiv.org/abs/2210.13352).
 
+The following two subsections are optional. They cover how you can mix datasets to form larger training splits and how 
+you can use custom data to fine-tune your model. If the Common Voice 11 dataset has sufficient data in your language to 
+fine-tune your model, you can skip to the next section [Fine-Tune Whisper](#fine-tune-whisper).
+
 ### Mixing Datasets (optional)
 
 If the Common Voice 11 dataset contains insufficient training data to fine-tune Whisper in your language, you can explore mixing 
