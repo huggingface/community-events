@@ -557,9 +557,8 @@ model.
 | [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | ✅      | ✅           |
 
 
-If one wants to combine multiple datasets for training, it might make sense to take a look at 
-the [`interleave_datasets`](https://huggingface.co/docs/datasets/package_reference/main_classes.html?highlight=interleave#datasets.interleave_datasets) 
-function. We will provide a code-snippet for mixing datasets shortly.
+If you want to combine multiple datasets for training, you can refer to the code-snippet provided for interleaving 
+datasets with streaming mode: [interleave_streaming_datasets.ipynb](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/interleave_streaming_datasets.ipynb).
 
 ### Custom Data (optional)
 

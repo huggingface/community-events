@@ -52,7 +52,6 @@ from transformers.trainer_utils import get_last_checkpoint, is_main_process
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
 
-
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
 check_min_version("4.25.0.dev0")
 
@@ -467,6 +466,7 @@ def main():
         input_str = batch[text_column_name].lower() if do_lower_case else batch[text_column_name]
         if do_remove_punctuation:
             input_str = re.sub(punctuation_to_remove_regex, " ", input_str).strip()
+            input_str = re.sub("\s\s+", " ", input_str)
         batch["labels"] = tokenizer(input_str).input_ids
         return batch
 
