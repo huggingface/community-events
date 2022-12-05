@@ -474,6 +474,15 @@ Common Voice 11.
 
 We recommend selecting from the following four datasets on the Hugging Face Hub for multilingual speech recognition:
 
+| Dataset                                                                                       | Languages | Casing | Punctuation |
+|-----------------------------------------------------------------------------------------------|-----------|--------|-------------|
+| [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0)       | 100+      | ✅      | ✅           |
+| [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli)                               | 15        | ❌      | ✅           |
+| [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) | 6         | ❌      | ❌           |
+| [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | 100+      | ✅      | ✅           |
+
+
+<!---
 <details>
 <summary>
 
@@ -529,7 +538,6 @@ approximately 10 hours of supervised audio-transcription data per language. Tran
 (`"raw_transcription"`) and normalised (`"transcription"`).
 </details>
 
-<!---
 The previously mentioned blog post provides a more in-depth explanation of the main English speech recognition, 
 multilingual speech recognition and speech translation datasets on the Hub: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets#a-tour-of-audio-datasets-on-the-hub)  
 
@@ -548,14 +556,6 @@ all transcriptions are un-cased and un-punctuated for all training samples.
 
 Having a mismatch in formatting for different training samples can reduce the final performance of your fine-tuned Whisper 
 model.
-
-| Dataset                                                                                       | Casing | Punctuation |
-|-----------------------------------------------------------------------------------------------|--------|-------------|
-| [Common Voice 11](https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0)       | ✅      | ✅           |
-| [VoxPopuli](https://huggingface.co/datasets/facebook/voxpopuli)                               | ❌      | ✅           |
-| [Multilingual LibriSpeech](https://huggingface.co/datasets/facebook/multilingual_librispeech) | ❌      | ❌           |
-| [FLEURS](https://huggingface.co/datasets/google/fleurs)                                       | ✅      | ✅           |
-
 
 If you want to combine multiple datasets for training, you can refer to the code-snippet provided for interleaving 
 datasets with streaming mode: [interleave_streaming_datasets.ipynb](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/interleave_streaming_datasets.ipynb).
