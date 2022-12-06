@@ -96,7 +96,7 @@ This section is split into three parts:
 100 hours of 1x A100 usage should enable you to complete 5-10 fine-tuning runs. To redeem these credits, you will need to 
 authorise a valid payment method with Lambda. Provided that you remain within $110 of compute spending, your card **will not** 
 be charged 💸. Registering your card with Lambda is a mandatory sign-up step that we unfortunately cannot bypass. But we 
-reiterate that you will not be charged provided you remain within $110 of compute spending!
+reiterate: you will not be charged provided you remain within $110 of compute spending!
 
 Follow steps 1-4 in the next section [Creating a Cloud Instance](#creating-a-cloud-instance) to register your
 card. If you experience issues with registering your card, contact the Lambda team on Discord (see [Communications and Problems](#communication-and-problems)).
