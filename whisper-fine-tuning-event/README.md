@@ -916,15 +916,14 @@ upwards of 12 hours for 5k training steps. We reckon you're better off training 
 
 ### Punctuation, Casing and Normalisation
 
-When using the Python training script, normalisation is only applied during evaluation by setting the flag 
-`--do_normalize_eval_only` (which we recommend setting). Removing casing for the training data is enabled by passing the 
-flag `--do_lower_case`. Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. 
-The punctuation characters removed are defined in [run_speech_recognition_seq2seq_streaming.py#L449](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_seq2seq_streaming.py#L449).
+When using the Python training script, normalisation is only applied during evaluation according to the 'official' 
+Whisper normaliser by setting the flag `--do_normalize_eval` (which we recommend setting). Removing casing for the 
+training data is enabled by passing the flag `--do_lower_case`. Removing punctuation in the training data is achieved by 
+passing the flag `--do_remove_punctuation`.
 
 Similarly, in the notebooks, normalisation is only applied during evaluation by setting the variable 
-`do_normalize_eval_only=True` (which we recommend setting). Removing casing in the training data is enabled by setting 
-the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. The same characters are removed 
-as the Python training script.
+`do_normalize_eval=True` (which we recommend setting). Removing casing in the training data is enabled by setting 
+the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`.
 
 ## Evaluation
 
