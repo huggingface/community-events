@@ -916,15 +916,21 @@ upwards of 12 hours for 5k training steps. We reckon you're better off training 
 
 ### Punctuation, Casing and Normalisation
 
-When using the Python training script, normalisation is only applied during evaluation by setting the flag 
-`--do_normalize_eval_only` (which we recommend setting). Removing casing for the training data is enabled by passing the 
-flag `--do_lower_case`. Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. 
-The punctuation characters removed are defined in [run_speech_recognition_seq2seq_streaming.py#L449](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_speech_recognition_seq2seq_streaming.py#L449).
+When using the Python training script, removing casing for the training data is enabled by passing the flag `--do_lower_case`. 
+Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. Both of these flags 
+default to False, and do not recommend setting either of them to True. Normalisation is only applied during evaluation 
+according to the 'official' Whisper normaliser by setting the flag `--do_normalize_eval` (which defaults to True and recommend setting).
+This normaliser applies the following basic standardisation for non-English text:
+1. Remove any phrases between matching brackets ([, ]).
+2. Remove any phrases between matching parentheses ((, )).
+3. Replace any markers, symbols, and punctuation characters with a space, i.e. when the Unicode category of each character in the NFKC-normalized string starts with M, S, or P.
+4. Make the text lowercase.
+5. Replace any successive whitespace characters with a space.
 
-Similarly, in the notebooks, normalisation is only applied during evaluation by setting the variable 
-`do_normalize_eval_only=True` (which we recommend setting). Removing casing in the training data is enabled by setting 
-the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. The same characters are removed 
-as the Python training script.
+Similarly, in the notebooks, removing casing in the training data is enabled by setting 
+the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. We do not recommend setting either 
+of these to True and thus they are set to False by default. Normalisation is only applied during evaluation by setting 
+the variable `do_normalize_eval=True` (which we do recommend setting). 
 
 ## Evaluation
 
