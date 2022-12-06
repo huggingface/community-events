@@ -87,15 +87,22 @@ This section is split into three parts:
 3. [Deleting a Cloud Instance](#deleting-a-cloud-instance)
 
 ### Signing-Up with Lambda
-<!--- TODO: SG - the first 100 people to sign up with lambda get GPU credit? --->
 
 1. Create an account with Lambda using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
 2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `Lambda cloud account for HuggingFace Whisper event - payment authentication and credit request`.
 3. Each user who emails as above will receive $110 in credits (amounting to 100 hours of 1x A100 usage).
+4. Register a valid payment method with Lambda in order to redeem the credits (see instructions below).
 
-100 hours of 1x A100 usage should enable you to complete 5-10 fine-tuning runs. To maximise the GPU hours you have 
-available for training, we advise that you shut down GPUs when you are not using them and closely monitor your GPU usage 
-(see [Deleting a Cloud Instance](#deleting-a-cloud-instance)).
+100 hours of 1x A100 usage should enable you to complete 5-10 fine-tuning runs. To redeem these credits, you will need to 
+authorise a valid payment method with Lambda. Provided that you remain within $110 of compute spending, your card **will not** 
+be charged 💸. Registering your card with Lambda is a mandatory sign-up step that we unfortunately cannot bypass. But we 
+reiterate that you will not be charged provided you remain within $110 of compute spending!
+
+Follow steps 1-4 in the next section [Creating a Cloud Instance](#creating-a-cloud-instance) to register your
+card. If you experience issues with registering your card, contact the Lambda team on Discord (see [Communications and Problems](#communication-and-problems)).
+
+In order to maximise the free GPU hours you have available for training, we advise that you shut down GPUs when you are 
+not using them and closely monitor your GPU usage. We've detailed the steps you can follow to achieve this in [Deleting a Cloud Instance](#deleting-a-cloud-instance).
 
 ### Creating a Cloud Instance
 Estimated time to complete: 5 mins
@@ -918,19 +925,20 @@ upwards of 12 hours for 5k training steps. We reckon you're better off training 
 
 When using the Python training script, removing casing for the training data is enabled by passing the flag `--do_lower_case`. 
 Removing punctuation in the training data is achieved by passing the flag `--do_remove_punctuation`. Both of these flags 
-default to False, and do not recommend setting either of them to True. Normalisation is only applied during evaluation 
-according to the 'official' Whisper normaliser by setting the flag `--do_normalize_eval` (which defaults to True and recommend setting).
-This normaliser applies the following basic standardisation for non-English text:
+default to False, and we **do not** recommend setting either of them to True. This will ensure your fine-tuned model 
+learns to predict casing and punctuation. Normalisation is only applied during evaluation by setting the flag 
+`--do_normalize_eval` (which defaults to True and recommend setting). Normalisation is performed according to the 
+'official' Whisper normaliser. This normaliser applies the following basic standardisation for non-English text:
 1. Remove any phrases between matching brackets ([, ]).
 2. Remove any phrases between matching parentheses ((, )).
 3. Replace any markers, symbols, and punctuation characters with a space, i.e. when the Unicode category of each character in the NFKC-normalized string starts with M, S, or P.
 4. Make the text lowercase.
 5. Replace any successive whitespace characters with a space.
 
-Similarly, in the notebooks, removing casing in the training data is enabled by setting 
-the variable `do_lower_case = True`, and punctuation by `do_remove_punctuation = True`. We do not recommend setting either 
-of these to True and thus they are set to False by default. Normalisation is only applied during evaluation by setting 
-the variable `do_normalize_eval=True` (which we do recommend setting). 
+Similarly, in the notebooks, removing casing in the training data is enabled by setting the variable `do_lower_case = True`, 
+and punctuation by `do_remove_punctuation = True`. We do not recommend setting either of these to True to ensure that 
+your model learns to predict casing and punctuation. Thus, they are set to False by default. Normalisation is only 
+applied during evaluation by setting the variable `do_normalize_eval=True` (which we do recommend setting). 
 
 ## Evaluation
 
