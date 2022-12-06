@@ -701,6 +701,9 @@ echo 'python run_speech_recognition_seq2seq_streaming.py \
 	--text_column_name="sentence" \
 	--freeze_feature_encoder="False" \
 	--report_to="tensorboard" \
+	--metric_for_best_model="wer" \
+	--greater_is_better="False" \
+	--load_best_model_at_end \
 	--gradient_checkpointing \
 	--fp16 \
 	--overwrite_output_dir \
