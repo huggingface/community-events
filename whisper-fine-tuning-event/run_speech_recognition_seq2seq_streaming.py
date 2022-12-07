@@ -28,7 +28,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import datasets
 import torch
-from datasets import IterableDatasetDict, interleave_datasets, load_dataset
+from datasets import DatasetDict, IterableDatasetDict, interleave_datasets, load_dataset
 from torch.utils.data import IterableDataset
 
 import evaluate
@@ -45,11 +45,12 @@ from transformers import (
     TrainerCallback,
     set_seed,
 )
+from transformers.models.whisper.english_normalizer import BasicTextNormalizer
 from transformers.trainer_pt_utils import IterableDatasetShard
 from transformers.trainer_utils import get_last_checkpoint, is_main_process
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
-from transformers.models.whisper.english_normalizer import BasicTextNormalizer
+
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
 check_min_version("4.25.0.dev0")
@@ -220,6 +221,10 @@ class DataTrainingArguments:
             )
         },
     )
+    streaming: bool = field(
+        default=True,
+        metadata={"help": "Whether to use streaming mode to load and pre-process the data."},
+    )
 
 
 @dataclass
@@ -260,7 +265,7 @@ class DataCollatorSpeechSeq2SeqWithPadding:
         return batch
 
 
-def load_streaming_dataset(dataset_name, dataset_config_name, split="train", **kwargs):
+def load_maybe_streaming_dataset(dataset_name, dataset_config_name, split="train", streaming=True, **kwargs):
     """
     Utility function to load a dataset in streaming mode. For datasets with multiple splits,
     each split is loaded individually and then splits combined by taking alternating examples from
@@ -269,7 +274,7 @@ def load_streaming_dataset(dataset_name, dataset_config_name, split="train", **k
     if "+" in split:
         # load multiple splits separated by the `+` symbol with streaming mode
         dataset_splits = [
-            load_dataset(dataset_name, dataset_config_name, split=split_name, streaming=True, **kwargs)
+            load_dataset(dataset_name, dataset_config_name, split=split_name, streaming=streaming, **kwargs)
             for split_name in split.split("+")
         ]
         # interleave multiple splits to form one dataset
@@ -277,7 +282,7 @@ def load_streaming_dataset(dataset_name, dataset_config_name, split="train", **k
         return interleaved_dataset
     else:
         # load a single split *with* streaming mode
-        dataset = load_dataset(dataset_name, dataset_config_name, split=split, streaming=True, **kwargs)
+        dataset = load_dataset(dataset_name, dataset_config_name, split=split, streaming=streaming, **kwargs)
         return dataset
 
 
@@ -345,22 +350,24 @@ def main():
     set_seed(training_args.seed)
 
     # 4. Load dataset
-    raw_datasets = IterableDatasetDict()
+    raw_datasets = IterableDatasetDict() if data_args.streaming else DatasetDict()
 
     if training_args.do_train:
-        raw_datasets["train"] = load_streaming_dataset(
+        raw_datasets["train"] = load_maybe_streaming_dataset(
             data_args.dataset_name,
             data_args.dataset_config_name,
             split=data_args.train_split_name,
             use_auth_token=True if model_args.use_auth_token else None,
+            streaming=data_args.streaming,
         )
 
     if training_args.do_eval:
-        raw_datasets["eval"] = load_streaming_dataset(
+        raw_datasets["eval"] = load_maybe_streaming_dataset(
             data_args.dataset_name,
             data_args.dataset_config_name,
             split=data_args.eval_split_name,
             use_auth_token=True if model_args.use_auth_token else None,
+            streaming=data_args.streaming,
         )
 
     raw_datasets_features = list(next(iter(raw_datasets.values())).features.keys())
@@ -392,6 +399,9 @@ def main():
 
     config.update({"forced_decoder_ids": model_args.forced_decoder_ids, "suppress_tokens": model_args.suppress_tokens})
 
+    if training_args.gradient_checkpointing:
+        config.update({"use_cache": False})
+
     feature_extractor = AutoFeatureExtractor.from_pretrained(
         model_args.feature_extractor_name if model_args.feature_extractor_name else model_args.model_name_or_path,
         cache_dir=model_args.cache_dir,
@@ -421,7 +431,6 @@ def main():
 
     if model_args.freeze_encoder:
         model.freeze_encoder()
-        model.model.encoder.gradient_checkpointing = False
 
     if data_args.language is not None:
         # We only need to set the task id when the language is specified (i.e. in a multilingual setting)
@@ -446,10 +455,18 @@ def main():
     normalizer = BasicTextNormalizer()  # 'official' text normalizer from OpenAI
 
     if data_args.max_train_samples is not None:
-        raw_datasets["train"] = raw_datasets["train"].take(data_args.max_train_samples)
+        raw_datasets["train"] = (
+            raw_datasets["train"].take(data_args.max_train_samples)
+            if data_args.streaming
+            else raw_datasets["train"].select(range(data_args.max_train_samples))
+        )
 
     if data_args.max_eval_samples is not None:
-        raw_datasets["eval"] = raw_datasets["eval"].take(data_args.max_eval_samples)
+        raw_datasets["eval"] = (
+            raw_datasets["eval"].take(data_args.max_eval_samples)
+            if data_args.streaming
+            else raw_datasets["eval"].select(range(data_args.max_eval_samples))
+        )
 
     def prepare_dataset(batch):
         # process audio
@@ -472,7 +489,8 @@ def main():
             remove_columns=raw_datasets_features,
         ).with_format("torch")
 
-        if training_args.do_train:
+        if training_args.do_train and data_args.streaming:
+            # manually shuffle if streaming (done by the trainer for non-streaming)
             vectorized_datasets["train"] = vectorized_datasets["train"].shuffle(
                 buffer_size=data_args.shuffle_buffer_size,
                 seed=training_args.seed,
@@ -526,6 +544,7 @@ def main():
 
     # 11. Configure Trainer
     # Trainer callback to reinitialise and reshuffle the streamable datasets at the beginning of each epoch
+    # Only required for streaming: Trainer automatically shuffles non-streaming datasets
     class ShuffleCallback(TrainerCallback):
         def on_epoch_begin(self, args, state, control, train_dataloader, **kwargs):
             if isinstance(train_dataloader.dataset, IterableDatasetShard):
@@ -542,7 +561,7 @@ def main():
         tokenizer=feature_extractor,
         data_collator=data_collator,
         compute_metrics=compute_metrics if training_args.predict_with_generate else None,
-        callbacks=[ShuffleCallback()],
+        callbacks=[ShuffleCallback()] if data_args.streaming else None,
     )
 
     # 12. Training
@@ -590,7 +609,7 @@ def main():
         else:
             kwargs["dataset"] = data_args.dataset_name
         if "common_voice" in data_args.dataset_name:
-            kwargs["language"] = data_args.dataset_config_name
+            kwargs["language"] = data_args.dataset_config_name[:2]
         if model_args.model_index_name is not None:
             kwargs["model_name"] = model_args.model_index_name
 
