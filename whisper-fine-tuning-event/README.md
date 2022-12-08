@@ -391,10 +391,11 @@ print(next(iter(common_voice["train"])))
 ```
 
 However, both these issues can be solved with 🤗 Datasets. Rather than downloading the whole dataset at once, we 
-download small chunks of the dataset at a time, in a process called _streaming_. Since the data is downloaded 
-progressively as we iterate over the dataset, we can get started with a dataset without waiting for the entire dataset 
-to download. Once we're done with a chunk, it's automatically deleted. This way, we only have the data when we need it, 
-and not when we don't!
+load individual samples as we cycle over the dataset, in a process called _streaming_. Since the data is loaded 
+progressively as we iterate over the dataset, we can get started with a dataset as soon as the first sample is ready. 
+This way, we don't have to wait for the entire dataset to download before we can run our code! We are also free of any 
+disk space contraints: once we're done with a sample, we discard it and load the next one to memory. This way, we only 
+have the data when we need it, and not when we don't!
 
 Streaming is enabled by passing the argument `streaming=True` to the `load_dataset` function. We can then use our 
 audio datasets in much the same way as before! For these reasons, **we highly recommend** that you try out the following 
@@ -414,8 +415,17 @@ speech recognition dataset on the Hub with just 20GB of disk space**. As a speec
 game changing! The largest speech recognition datasets are available to us regardless of our device disk space. We are 
 extremely excited to be showcasing streaming mode in this event and hope that you will enjoy using it.
 
+There is one caveat to streaming mode. When downloading a dataset to disk, the processed data is saved to our cache. If 
+we want to re-use this data, we can directly load the processed data from cache, skipping the download and processing 
+steps. Consequently, we only have to perform the downloading and processing operations once. With streaming mode, the 
+data is not downloaded to disk. Thus, neither the download nor pre-processing are cached. If we want to re-use the data, 
+the streaming steps must be repeated, with the audio files loaded and pre-processed again. Therefore, we recommend not 
+using streaming mode if your dataset is small (< 10 hours). In this case, it is faster to download and pre-process the 
+dataset in the conventional way once at the start, and then re-use it at each epoch. We provide pointers for disabling 
+streaming mode in the section [Fine-Tune Whisper](#fine-tune-whisper).
+
 If you want to read more about streaming mode, we 
-recommend you check out the aforementioned blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets). 
+recommend you check out the aforementioned blog post: [A Complete Guide To Audio Datasets](https://huggingface.co/blog/audio-datasets).
 
 ### Pre-Processing
 
@@ -711,6 +721,7 @@ echo 'python run_speech_recognition_seq2seq_streaming.py \
 	--do_eval \
 	--predict_with_generate \
 	--do_normalize_eval \
+	--streaming \
 	--use_auth_token \
 	--push_to_hub' >> run.sh
 ```
@@ -718,7 +729,8 @@ echo 'python run_speech_recognition_seq2seq_streaming.py \
 Make sure to change the `--dataset_config_name` and `--language` to the correct values for your language! See also how 
 we combine the train and validation splits as `--train_split_name="train+validation"`. This is recommended for low-resource 
 languages (it probably isn't strictly necessary for Spanish, where the `"train"` split for Common Voice 11 contains 
-ample training data). We also assign a `"model_index_name"` - a pretty name that will go on the model card.
+ample training data). We also assign a `"model_index_name"` - a pretty name that will go on the model card. If you are 
+training on a very small dataset (< 10 hours), it is advisable to disable streaming mode: `--streaming="False"`.
 
 We provide the train/eval batch sizes for the "small" checkpoint fine-tuned on a 1x A100 device. Depending on your device and checkpoint, 
 you might need to lower these values. Refer to the subsection [Recommended Training Configurations](#recommended-training-configurations) 
@@ -820,14 +832,21 @@ cd whisper-small-es
 We encourage participants to add all the training notebook directly to the model repository. This way, 
 training runs are fully reproducible.
 
-We are providing a iPython notebook for fine-tuning Whisper with 🤗 Datasets' streaming mode: [`fine_tune_whisper_streaming.ipynb`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine_tune_whisper_streaming.ipynb)
+We provide an iPython notebook for fine-tuning Whisper with 🤗 Datasets' streaming mode: [`fine-tune-whisper-streaming.ipynb`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine-tune-whisper-streaming.ipynb)
 This notebook can be copied to your model repository with the following command:
 
 ```bash
 cp ~/community-events/whisper-fine-tuning-event/fine-tune-whisper-streaming.ipynb .
 ```
 
-This will download a copy of the iPython notebook to your model repository.
+If you are fine-tuning Whisper on a very small dataset (< 10 hours), it is advised that you use the non-streaming notebook 
+[`fine-tune-whisper-non-streaming.ipynb`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/fine-tune-whisper-non-streaming.ipynb) 
+(see section [Streaming Mode](#streaming-mode)). This notebook can be copied to your model repository with the following 
+command:
+
+```bash
+cp ~/community-events/whisper-fine-tuning-event/fine-tune-whisper-non-streaming.ipynb .
+```
 
 4. **Launch Jupyter**
 
