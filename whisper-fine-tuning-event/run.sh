@@ -7,7 +7,7 @@ python stream_with_augmentations.py \
 --eval_split_name="test" \
 --model_index_name="Whisper Small Spanish" \
 --max_steps="5000" \
---output_dir="./" \
+--output_dir="whisper-small-spanish-augmented" \
 --per_device_train_batch_size="64" \
 --per_device_eval_batch_size="32" \
 --logging_steps="25" \
@@ -28,10 +28,10 @@ python stream_with_augmentations.py \
 --load_best_model_at_end \
 --gradient_checkpointing \
 --fp16 \
+--overwrite_output_dir \
 --do_train \
 --do_eval \
 --predict_with_generate \
 --do_normalize_eval \
 --use_auth_token \
---augment_dataset \
 --push_to_hub

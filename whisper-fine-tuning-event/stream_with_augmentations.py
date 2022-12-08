@@ -293,9 +293,9 @@ def augment_dataset_pitch(batch):
     return batch
 
 def augment_dataset(dataset_name):
-    augmented_noise = dataset_name.map(augment_dataset_noise, batched=True, num_proc=1)
-    augmented_pitch = dataset_name.map(augment_dataset_pitch, batched=True, num_proc=1)
-    augmented_time_stretch = dataset_name.map(augment_dataset_time_stretch, batched=True, num_proc=1)
+    augmented_noise = dataset_name.map(augment_dataset_noise, batched=True)
+    augmented_pitch = dataset_name.map(augment_dataset_pitch, batched=True)
+    augmented_time_stretch = dataset_name.map(augment_dataset_time_stretch, batched=True)
     dataset_name = interleave_datasets([dataset_name, augmented_noise, augmented_pitch, augmented_time_stretch])
     return dataset_name
 
@@ -395,8 +395,7 @@ def main():
             streaming=data_args.streaming,
         )
 
-    if training_args.augment_dataset:
-        raw_datasets["train"] = augment_dataset(raw_datasets["train"])
+    raw_datasets["train"] = augment_dataset(raw_datasets["train"])
 
     if training_args.do_eval:
         raw_datasets["eval"] = load_maybe_streaming_dataset(
