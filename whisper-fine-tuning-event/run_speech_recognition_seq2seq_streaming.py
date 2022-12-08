@@ -501,10 +501,11 @@ def main():
     def is_audio_in_length_range(length):
         return min_input_length < length < max_input_length
 
-    vectorized_datasets["train"] = vectorized_datasets["train"].filter(
-        is_audio_in_length_range,
-        input_columns=["input_length"],
-    )
+    if training_args.do_train:
+        vectorized_datasets["train"] = vectorized_datasets["train"].filter(
+            is_audio_in_length_range,
+            input_columns=["input_length"],
+        )
 
     # 8. Load Metric
     metric = evaluate.load("wer")
