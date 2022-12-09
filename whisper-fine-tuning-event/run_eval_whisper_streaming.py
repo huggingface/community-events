@@ -25,7 +25,7 @@ def get_text(sample):
     elif "transcript" in sample:
         return sample["transcript"]
     elif "transcription" in sample:
-        return sample["transcription"]        
+        return sample["transcription"]
     else:
         raise ValueError(
             f"Expected transcript column of either 'text', 'sentence', 'normalized_text' or 'transcript'. Got sample of "
@@ -51,8 +51,12 @@ def main(args):
     whisper_asr = pipeline(
         "automatic-speech-recognition", model=args.model_id, device=args.device
     )
-    
-    whisper_asr.model.config.forced_decoder_ids = whisper_asr.tokenizer.get_decoder_prompt_ids(language=args.language, task="transcribe")
+
+    whisper_asr.model.config.forced_decoder_ids = (
+        whisper_asr.tokenizer.get_decoder_prompt_ids(
+            language=args.language, task="transcribe"
+        )
+    )
 
     dataset = load_dataset(
         args.dataset,
@@ -140,7 +144,7 @@ if __name__ == "__main__":
         type=str,
         required=True,
         help="Two letter language code for the transcription language, e.g. use 'en' for English.",
-    )    
+    )
     args = parser.parse_args()
 
     main(args)
