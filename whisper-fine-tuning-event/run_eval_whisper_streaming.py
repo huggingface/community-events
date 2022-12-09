@@ -1,6 +1,7 @@
 import argparse
 
 from transformers import pipeline
+from transformers.models.whisper.english_text_normalizer import BasicTextNormalizer
 from datasets import load_dataset, Audio
 import evaluate
 
@@ -24,7 +25,10 @@ def get_text(sample):
     elif "transcript" in sample:
         return sample["transcript"]
     else:
-        raise ValueError(f"Sample: {sample.keys()} has no transcript.")
+        raise ValueError(
+            f"Expected transcript column of either 'text', 'sentence', 'normalized_text' or 'transcript'. Got sample of "
+            ".join{sample.keys()}. Ensure a text column name is present in the dataset."
+        )
 
 
 def data(dataset):
@@ -37,9 +41,8 @@ def main(args):
     whisper_asr = pipeline(
         "automatic-speech-recognition", model=args.model_id, device=args.device
     )
-    whisper_asr.model.config.max_length = 128
 
-    whisper_norm = whisper_asr.tokenizer._normalize
+    whisper_norm = BasicTextNormalizer()
 
     def normalise(batch):
         batch["norm_text"] = whisper_norm(get_text(batch))
@@ -82,6 +85,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset",
         type=str,
+        default="mozilla-foundation/common_voice_11_0",
         required=True,
         help="Dataset name to evaluate the `model_id`. Should be loadable with 🤗 Datasets",
     )
@@ -89,16 +93,20 @@ if __name__ == "__main__":
         "--config",
         type=str,
         required=True,
-        help="Config of the dataset. *E.g.* `'en'`  for Common Voice",
+        help="Config of the dataset. *E.g.* `'en'` for the English split of Common Voice",
     )
     parser.add_argument(
-        "--split", type=str, required=True, help="Split of the dataset. *E.g.* `'test'`"
+        "--split",
+        type=str,
+        default="test",
+        required=True,
+        help="Split of the dataset. *E.g.* `'test'`",
     )
 
     parser.add_argument(
         "--device",
         type=int,
-        default=None,
+        default=-1,
         help="The device to run the pipeline on. -1 for CPU (default), 0 for the first GPU and so on.",
     )
     parser.add_argument(
