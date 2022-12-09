@@ -1,7 +1,7 @@
 import argparse
 
 from transformers import pipeline
-from transformers.models.whisper.english_text_normalizer import BasicTextNormalizer
+from transformers.models.whisper.english_normalizer import BasicTextNormalizer
 from datasets import load_dataset, Audio
 import evaluate
 
@@ -49,11 +49,15 @@ def main(args):
         return batch
 
     dataset = load_dataset(
-        args.dataset, args.config, split=args.split, streaming=True, use_auth_token=True
+        args.dataset,
+        args.config,
+        split=args.split,
+        streaming=args.streaming,
+        use_auth_token=True,
     )
 
     # Only uncomment for debugging
-    dataset = dataset.take(64)
+    dataset = dataset.take(args.max_eval_samples)
 
     dataset = dataset.cast_column("audio", Audio(sampling_rate=16000))
     dataset = dataset.map(normalise)
@@ -86,7 +90,6 @@ if __name__ == "__main__":
         "--dataset",
         type=str,
         default="mozilla-foundation/common_voice_11_0",
-        required=True,
         help="Dataset name to evaluate the `model_id`. Should be loadable with 🤗 Datasets",
     )
     parser.add_argument(
@@ -99,7 +102,6 @@ if __name__ == "__main__":
         "--split",
         type=str,
         default="test",
-        required=True,
         help="Split of the dataset. *E.g.* `'test'`",
     )
 
@@ -114,6 +116,18 @@ if __name__ == "__main__":
         type=int,
         default=16,
         help="Number of samples to go through each streamed batch.",
+    )
+    parser.add_argument(
+        "--max_eval_samples",
+        type=int,
+        default=None,
+        help="Number of samples to be evaluated. Put a lower number e.g. 64 for testing this script.",
+    )
+    parser.add_argument(
+        "--streaming",
+        type=bool,
+        default=True,
+        help="Choose whether you'd like to download the entire dataset or stream it for evaluation",
     )
     args = parser.parse_args()
 
