@@ -31,6 +31,14 @@ def get_text(sample):
         )
 
 
+whisper_norm = BasicTextNormalizer()
+
+
+def normalise(batch):
+    batch["norm_text"] = whisper_norm(get_text(batch))
+    return batch
+
+
 def data(dataset):
     for i, item in enumerate(dataset):
         yield {**item["audio"], "reference": item["norm_text"]}
@@ -41,12 +49,6 @@ def main(args):
     whisper_asr = pipeline(
         "automatic-speech-recognition", model=args.model_id, device=args.device
     )
-
-    whisper_norm = BasicTextNormalizer()
-
-    def normalise(batch):
-        batch["norm_text"] = whisper_norm(get_text(batch))
-        return batch
 
     dataset = load_dataset(
         args.dataset,
