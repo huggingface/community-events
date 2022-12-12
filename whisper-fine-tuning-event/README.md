@@ -180,6 +180,28 @@ The Whisper model should be fine-tuned using **PyTorch**, **🤗 Transformers**,
 section, we'll cover how to set up an environment with the required libraries. This section assumes that you are SSH'd 
 into your GPU device. This section does not apply if you are fine-tuning the Whisper model in a Google Colab.
 
+If you are returning to this section having read through it previously and want to quickly set up an environment, you 
+can do so in one call by executing the following code cell. If this is your first time setting up an environment, we 
+recommend you read this section to understand the steps involved.
+
+```bash
+sudo add-apt-repository -y ppa:jonathonf/ffmpeg-4
+sudo apt update
+sudo apt install -y ffmpeg
+
+sudo apt-get install git-lfs
+
+python3 -m venv hf_env
+source hf_env/bin/activate
+echo "source ~/hf_env/bin/activate" >> ~/.bashrc
+
+git clone https://github.com/huggingface/community-events.git
+pip install -r community-events/whisper-fine-tuning-event/requirements.txt
+
+git config --global credential.helper store
+huggingface-cli login
+ ```
+
 ### Unix Libraries
 
 First, we need to make sure we have the required NVIDIA drivers installed. We can check that we have these drivers 
