@@ -998,7 +998,23 @@ We recommend running evaluation during training by setting your eval dataset to 
 We'll also provide you with a standalone evaluation script so that you can test your model after training on Common Voice 
 or other datasets of your choice.
 
-<!--- TODO: VB - Add the streaming evaluation script here once tested. --->
+In addition to running evaluation while training, you can noe use your Whisper checkpoints to run evaluation on *any* speech recognition dataset on the hub. The [run_eval_whisper_streaming.py](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/run_eval_whisper_streaming.py) script loads your whisper checkpoints, runs batch inference on your specified dataset and returns the WER.
+
+You can use the script as follows:
+```bash
+python run_eval_whisper_streaming.py --model_id="openai/whisper-tiny" --dataset="google/fleurs" --config="ar_eg" --device=0 --language="ar"
+```
+
+The evaluation script can be customised with the following parameters:
+1. `model_id` - Whisper model identifier e.g. `openai/whisper-tiny`
+2. `dataset` - Dataset name to evaluate the `model_id` on. Default value: `mozilla-foundation/common_voice_11_0`
+3. `config` - Config of the dataset. e.g. `'en'` for the English split of Common Voice
+4. `split` - Split of the dataset. Default value: `test`
+5. `batch_size` - Number of samples to go through each streamed batch for inference. Default value: `16`
+6. `max_eval_samples` - Max number of samples to be evaluated from the dataset. Put a lower number e.g. `64` for testing this script. **Only use this for testing the script**
+7. `streaming` - Whether you'd like to download the entire dataset or stream it during the evaluation. Default value: `True`
+8. `language` - Language you want the `model_id` to transcribe the audio in.
+9. `device` - The device to run the pipeline on. e.g. `0` for running on GPU 0. Default value: -1 for CPU.
 
 ## Building a Demo
 
