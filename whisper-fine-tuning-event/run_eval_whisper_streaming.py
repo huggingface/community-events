@@ -85,6 +85,18 @@ def main(args):
     wer = round(100 * wer, 2)
 
     print("WER:", wer)
+    evaluate.push_to_hub(
+        model_id=args.model_id,
+        metric_value=wer,
+        metric_type="wer",
+        metric_name="WER",
+        dataset_name=args.dataset,
+        dataset_type=args.dataset,
+        dataset_split=args.split,
+        dataset_config=args.config,
+        task_type="automatic-speech-recognition",
+        task_name="Automatic Speech Recognition"
+    )
 
 
 if __name__ == "__main__":
