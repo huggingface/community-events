@@ -1113,6 +1113,13 @@ param, but [Adafactor](https://arxiv.org/abs/1804.04235) uses only one. To enabl
 A word of caution: Adafactor is untested for fine-tuning Whisper, so we are unsure sure how 
 Adafactor performance compares to Adam! For this reason, we recommend Adafactor as an **experimental feature** only.
 
+## Scripts & Colabs
+
+1. [Whirlwind tour of Whispering with 🤗Transformers](https://colab.research.google.com/drive/1l290cRv4RdvuLNlSeo9WexByHaNWs3s3?usp=sharing)
+2. [8bit inference for Whisper large model (6.5 gig VRAM) 🤯](https://colab.research.google.com/drive/1EMOwwfm1V1fHxH7eT1LLg7yBjhTooB6j?usp=sharing)
+
+<!--- TODO: VB - Move these colabs to a GitHub repo --->
+
 ## Feedback
 
 We would love to get your feedback on the event! If you have a spare ten minutes, we'd appreciate you filling out the 
