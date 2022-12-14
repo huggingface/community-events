@@ -1124,12 +1124,12 @@ cp ~/community-events/whisper-fine-tuning-event/ds_config.json .
 ### Python Script
 
 Using DeepSpeed with the Python training script requires two changes to the `run.sh` file. Firstly, we launch the script using `deepspeed` 
-instead of Python. Secondly, we pass the DeepSpeed config `ds_config.json` as a training argument:
+instead of Python. Secondly, we pass the DeepSpeed config `ds_config.json` as a training argument. The remainder of the `run.sh` 
+file takes the same format as using the native Trainer configuration:
 
-```diff
-- python run_speech_recognition_seq2seq_streaming.py \
-+ deepspeed run_speech_recognition_seq2seq_streaming.py \
-+	--deepspeed="ds_config.json" \
+```bash
+deepspeed run_speech_recognition_seq2seq_streaming.py \
+	--deepspeed="ds_config.json" \
 	--model_name_or_path="openai/whisper-small" \
 	--dataset_name="mozilla-foundation/common_voice_11_0" \
 	--dataset_config_name="es" \
@@ -1194,16 +1194,25 @@ training_args = Seq2SeqTrainingArguments(..., deepspeed="ds_config.json")
 
 ### Recommended Batch Sizes with DeepSpeed
 
+Using DeepSpeed, it is possible to fit larger batch sizes and even larger checkpoints on your device, be it a V100 or 
+A100. We provide recommended batch sizes for the three checkpoint sizes of interest for 16GB GPUs and 40GB GPUs. As before,
+these batch sizes are only indicative: you should tune the batch size depending on your device, checkpoint and language.
+
 #### V100 / 16 GB GPU
 
-| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size |
-|--------|------------------|--------------------|-----------------|
+| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size | Speed   |
+|--------|------------------|--------------------|-----------------|---------|
+| small  | 32               | 1                  | 16              | 1.3s/it |
+| medium | 16               | 1 or 2             | 8               | 2.0s/it |
+| large  | 8                | 2 or 4             | 4               | 3.8s/it |
 
 #### A100 / 40GB GPU
 
-| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size |
-|--------|------------------|--------------------|-----------------|
-
+| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size | Speed   |
+|--------|------------------|--------------------|-----------------|---------|
+| small  | 64               | 1                  | 32              | 2.3s/it |
+| medium | 64               | 1                  | 32              | 5.8s/it |
+| large  | 32               | 1 or 2             | 16              | 5.9s/it |
 
 
 ## Feedback
