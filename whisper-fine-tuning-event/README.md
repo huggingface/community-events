@@ -1060,14 +1060,14 @@ We are very excited to be hosting talks from Open AI, Meta AI and Hugging Face t
 
 ## Tips and Tricks
 
-We include two memory saving tricks that you can explore to run the fine-tuning scripts with larger batch-sizes and 
+We include three memory saving tricks that you can explore to run the fine-tuning scripts with larger batch-sizes and 
 potentially larger checkpoints.
 
 ### Adam 8bit
 The [Adam optimiser](https://arxiv.org/abs/1412.6980a) requires two params (betas) for every model parameter. So the memory requirement of the optimiser is 
 **two times** that of the model. You can switch to using an 8bit version of the Adam optimiser from [`bitsandbytes`](https://github.com/TimDettmers/bitsandbytes#bitsandbytes). 
 This will cast the optimiser parameters into 8bit precision, saving you a lot of memory and potentially allowing you to run bigger batch sizes.
-To use Adam 8bti, you first need to pip install `bitsandbytes`:
+To use Adam 8bit, you first need to pip install `bitsandbytes`:
 
 ```bash
 pip install bitsandbytes
@@ -1111,7 +1111,125 @@ param, but [Adafactor](https://arxiv.org/abs/1804.04235) uses only one. To enabl
 `Seq2SeqTrainingArguments`. You can expect to double your training batch size when using Adafactor compared to Adam. 
 
 A word of caution: Adafactor is untested for fine-tuning Whisper, so we are unsure sure how 
-Adafactor performance compares to Adam! For this reason, we recommend Adafactor as an **experimental feature** only.
+Adafactor performance compares to Adam! Typically, using Adafactor results in **slower convergence** than using Adam or 
+Adam 8bit. For this reason, we recommend Adafactor as an **experimental feature** only.
+
+### DeepSpeed
+
+DeepSpeed is a framework for training larger deep learning models with limited GPU resources by optimising GPU utilisation. 
+We provide implementation details for DeepSpeed ZeRo Stage 2, which partitions the optimiser states (ZeRO stage 1) and gradients 
+(ZeRO stage 2). With DeepSpeed, it is more than possible to train the medium Whisper checkpoint on a V100, or the large 
+checkpoint on an A100. For more details, we refer you to the blog post by the original authors: [DeepSpeed ZeRO](https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/).
+
+Using DeepSpeed with 🤗 Transformers is straightforward. First, we need to install the packages 🤗 Accelerate and DeepSpeed: 
+
+```bash
+pip install -U accelerate deepspeed
+```
+
+The DeepSpeed configuration file specifies precisely what form of optimiser/gradient offloading we are going to perform.
+The key to getting a huge improvement on a single GPU with DeepSpeed is to have at least the provided DeepSpeed configuration 
+in the configuration file [`ds_config.json`](https://github.com/huggingface/community-events/blob/main/whisper-fine-tuning-event/ds_config.json). 
+
+You can copy the DeepSpeed configuration file to your model repository as follows:
+
+```bash
+cp ~/community-events/whisper-fine-tuning-event/ds_config.json .
+```
+
+### Python Script
+
+Using DeepSpeed with the Python training script requires two changes to the `run.sh` file. Firstly, we launch the script using `deepspeed` 
+instead of Python. Secondly, we pass the DeepSpeed config `ds_config.json` as a training argument. The remainder of the `run.sh` 
+file takes the same format as using the native Trainer configuration:
+
+```bash
+deepspeed run_speech_recognition_seq2seq_streaming.py \
+	--deepspeed="ds_config.json" \
+	--model_name_or_path="openai/whisper-small" \
+	--dataset_name="mozilla-foundation/common_voice_11_0" \
+	--dataset_config_name="es" \
+	--language="spanish" \
+	--train_split_name="train+validation" \
+	--eval_split_name="test" \
+	--model_index_name="Whisper Small Spanish" \
+	--max_steps="5000" \
+	--output_dir="./" \
+	--per_device_train_batch_size="64" \
+	--per_device_eval_batch_size="32" \
+	--logging_steps="25" \
+	--learning_rate="1e-5" \
+	--warmup_steps="500" \
+	--evaluation_strategy="steps" \
+	--eval_steps="1000" \
+	--save_strategy="steps" \
+	--save_steps="1000" \
+	--generation_max_length="225" \
+	--length_column_name="input_length" \
+	--max_duration_in_seconds="30" \
+	--text_column_name="sentence" \
+	--freeze_feature_encoder="False" \
+	--report_to="tensorboard" \
+	--metric_for_best_model="wer" \
+	--greater_is_better="False" \
+	--load_best_model_at_end \
+	--gradient_checkpointing \
+	--fp16 \
+	--overwrite_output_dir \
+	--do_train \
+	--do_eval \
+	--predict_with_generate \
+	--do_normalize_eval \
+	--streaming \
+	--use_auth_token \
+	--push_to_hub
+```
+
+### Jupyter Notebook
+
+Using DeepSpeed with the template Jupyter Notebooks requires two changes. Firstly, we add the following code cell at the 
+start of the notebook to configure the DeepSpeed environment:
+
+```python
+# DeepSpeed requires a distributed environment even when only one process is used.
+# This emulates a launcher in the notebook
+import os
+
+os.environ["MASTER_ADDR"] = "localhost"
+os.environ["MASTER_PORT"] = "9994"  # modify if RuntimeError: Address already in use
+os.environ["RANK"] = "0"
+os.environ["LOCAL_RANK"] = "0"
+os.environ["WORLD_SIZE"] = "1"
+```
+
+Secondly, we pass the DeepSpeed config file to the training args:
+
+```python
+training_args = Seq2SeqTrainingArguments(..., deepspeed="ds_config.json")
+```
+
+### Recommended Batch Sizes with DeepSpeed
+
+Using DeepSpeed, it is possible to fit larger batch sizes and even larger checkpoints on your device, be it a V100 or 
+A100. We provide recommended batch sizes for the three checkpoint sizes of interest for 16GB GPUs and 40GB GPUs. As before,
+these batch sizes are only indicative: you should tune the batch size depending on your device, checkpoint and language.
+
+#### V100 / 16 GB GPU
+
+| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size | Speed   |
+|--------|------------------|--------------------|-----------------|---------|
+| small  | 32               | 1                  | 16              | 1.3s/it |
+| medium | 16               | 1 or 2             | 8               | 2.0s/it |
+| large  | 8                | 2 or 4             | 4               | 3.8s/it |
+
+#### A100 / 40GB GPU
+
+| Model  | Train Batch Size | Gradient Acc Steps | Eval Batch size | Speed   |
+|--------|------------------|--------------------|-----------------|---------|
+| small  | 64               | 1                  | 32              | 2.3s/it |
+| medium | 64               | 1                  | 32              | 5.8s/it |
+| large  | 32               | 1 or 2             | 16              | 5.9s/it |
+
 
 ## Scripts & Colabs
 
