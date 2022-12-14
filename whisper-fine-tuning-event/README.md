@@ -1103,7 +1103,7 @@ Adam 8bit. For this reason, we recommend Adafactor as an **experimental feature*
 DeepSpeed is a framework for training larger deep learning models with limited GPU resources by optimising GPU utilisation. 
 We provide implementation details for DeepSpeed ZeRo Stage 2, which partitions the optimiser states (ZeRO stage 1) and gradients 
 (ZeRO stage 2). With DeepSpeed, it is more than possible to train the medium Whisper checkpoint on a V100, or the large 
-checkpoint on an A100. For more details, we refer you to the blog post by the original authors: [DeepSpeed ZeRo](https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/).
+checkpoint on an A100. For more details, we refer you to the blog post by the original authors: [DeepSpeed ZeRO](https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/).
 
 Using DeepSpeed with 🤗 Transformers is straightforward. First, we need to install the packages 🤗 Accelerate and DeepSpeed: 
 
