@@ -613,7 +613,7 @@ def main():
         else:
             kwargs["dataset"] = data_args.dataset_name
         if "common_voice" in data_args.dataset_name:
-            kwargs["language"] = data_args.dataset_config_name[:2]
+            kwargs["language"] = data_args.dataset_config_name.split('-')[0]
         if model_args.model_index_name is not None:
             kwargs["model_name"] = model_args.model_index_name
 
