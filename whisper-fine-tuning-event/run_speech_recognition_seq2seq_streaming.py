@@ -59,6 +59,11 @@ require_version("datasets>=1.18.2", "To fix: pip install -r examples/pytorch/spe
 
 logger = logging.getLogger(__name__)
 
+dataset_names = ["mozilla-foundation/common_voice_11_0", "google/fleurs", "cohogain/living_audio_ga-IE"]
+dataset_config_names = ["ga-IE", "ga_ie", ""]
+text_column_names = ["sentence", "transcription", "transcription"]
+splits = ["train+validation", "train+validation", ""]
+
 
 @dataclass
 class ModelArguments:
@@ -265,6 +270,55 @@ class DataCollatorSpeechSeq2SeqWithPadding:
         return batch
 
 
+def load_multiple_streaming_datasets(
+    dataset_names: List,
+    dataset_config_names: List,
+    splits: Optional[List] = None,
+    text_column_names: Optional[List] = None,
+    sampling_rate: Optional[int] = 16000,
+    stopping_strategy: Optional[str] = "all_exhausted",
+    streaming=True,
+    **kwargs
+) -> IterableDataset:
+
+    if len(dataset_names) != len(dataset_config_names):
+        raise ValueError(
+            f"Ensure one config is passed for each dataset, got {len(dataset_names)} datasets and"
+            f" {len(dataset_config_names)} configs."
+        )
+
+    if splits is not None and len(splits) != len(dataset_names):
+        raise ValueError(
+            f"Ensure one split is passed for each dataset, got {len(dataset_names)} datasets and {len(splits)} splits."
+        )
+
+    if text_column_names is not None and len(text_column_names) != len(dataset_names):
+        raise ValueError(
+            f"Ensure one text column name is passed for each dataset, got {len(dataset_names)} datasets and"
+            f" {len(text_column_names)} text column names."
+        )
+
+    splits = splits if splits is not None else ["train" for i in range(len(dataset_names))]
+    text_column_names = (
+        text_column_names if text_column_names is not None else ["text" for i in range(len(dataset_names))]
+    )
+
+    all_datasets = []
+    # iterate over the datasets we want to interleave
+    for i, dataset_name in enumerate(dataset_names):
+        dataset = load_dataset(dataset_name, dataset_config_names[i], split=splits[i], streaming=streaming, **kwargs)
+        # resample to specified sampling rate
+        dataset = dataset.cast_column("audio", Audio(sampling_rate))
+        #  normalise columns to ["audio", "sentence"]
+        if text_column_names[i] != "sentence":
+            dataset = dataset.rename_column(text_column_names[i], "sentence")
+        dataset = dataset.remove_columns(set(dataset.features.keys()) - set(["audio", "sentence"]))
+        all_datasets.append(dataset)
+
+    interleaved_dataset = interleave_datasets(all_datasets, stopping_strategy=stopping_strategy)
+    return interleaved_dataset
+
+
 def load_maybe_streaming_dataset(dataset_name, dataset_config_name, split="train", streaming=True, **kwargs):
     """
     Utility function to load a dataset in streaming mode. For datasets with multiple splits,
@@ -353,19 +407,20 @@ def main():
     raw_datasets = IterableDatasetDict() if data_args.streaming else DatasetDict()
 
     if training_args.do_train:
-        raw_datasets["train"] = load_maybe_streaming_dataset(
-            data_args.dataset_name,
-            data_args.dataset_config_name,
-            split=data_args.train_split_name,
+        raw_datasets["train"] = load_multiple_streaming_datasets(
+            dataset_names, 
+            dataset_config_names=dataset_config_names,
+            text_column_names=text_column_names, 
+            split=splits,
             use_auth_token=True if model_args.use_auth_token else None,
             streaming=data_args.streaming,
         )
 
     if training_args.do_eval:
         raw_datasets["eval"] = load_maybe_streaming_dataset(
-            data_args.dataset_name,
-            data_args.dataset_config_name,
-            split=data_args.eval_split_name,
+            "mozilla-foundation/common_voice_11_0",
+            "ga-IE",
+            split="test",
             use_auth_token=True if model_args.use_auth_token else None,
             streaming=data_args.streaming,
         )
