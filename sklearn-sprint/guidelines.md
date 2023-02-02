@@ -1,7 +1,7 @@
 
 ![Hugging Face x Scikit-learn](./hfxsklearn.png)
 
-In this sprint, we will build interactive demos to scikit-learn documentation and later, contribute them. 
+In this sprint, we will build interactive demos from the scikit-learn documentation and, afterwards, contribute the demos directly to the docs.
 
 ## To get started 🤩
 
