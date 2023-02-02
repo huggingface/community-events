@@ -36,7 +36,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     Another way of creating an application is to use [Blocks](https://gradio.app/quickstart/#blocks-more-flexibility-and-control). You can see usage of Blocks in the example applications linked in this guide. 
     
-    After we create our application, we will create a Space. You can go to [huggingface.co](http://huggingface.co), click on your profile on top right and select “New Space”.
+    After we create our application, we will create a Space. You can go to [hf.co](http://huggingface.co), click on your profile on top right and select “New Space”.
     
     ![New Space](new_space.png)
     
