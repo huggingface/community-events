@@ -6,7 +6,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
 ## To get started 🤩
 
 1. Head to [this page](https://scikit-learn.org/stable/auto_examples/) and pick an example you’d like to build on. 
-2. Leave a comment to [this spreadsheet](https://docs.google.com/spreadsheets/d/14EThtIyF4KfpU99Fm2EW3Rz9t6SSEqDyzV4jmw3fjyI/edit?usp=sharing) with your name under Owner column, claiming the example. The spreadsheet has limited number of examples, feel free to add yours with a comment if it doesn’t exist in the spreadsheet.
+2. Leave a comment on [this spreadsheet](https://docs.google.com/spreadsheets/d/14EThtIyF4KfpU99Fm2EW3Rz9t6SSEqDyzV4jmw3fjyI/edit?usp=sharing) with your name under Owner column, claiming the example. The spreadsheet has a limited number of examples. Feel free to add yours with a comment if it doesn’t exist in the spreadsheet.
 3. Start building!
     
     We will be hosting our applications in [scikit-learn](https://huggingface.co/scikit-learn) organization of Hugging Face. 
