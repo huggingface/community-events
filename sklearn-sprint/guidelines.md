@@ -32,7 +32,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     ![Simple Interface](./interface.png)
     
-    This is very customizable, you can specify rows, columns, add a title and description an example input and more. There’s a more detailed guide [here](https://gradio.app/using-gradio-for-tabular-workflows/). 
+    This is very customizable. You can specify rows and columns, add a title and description, an example input, and more. There’s a more detailed guide [here](https://gradio.app/using-gradio-for-tabular-workflows/). 
     
     Another way of creating an application is to use [Blocks](https://gradio.app/quickstart/#blocks-more-flexibility-and-control). You can see usage of Blocks in the example applications linked in this guide. 
     
