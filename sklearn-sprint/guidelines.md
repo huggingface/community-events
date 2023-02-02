@@ -44,7 +44,10 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     ![Screenshot 2023-02-01 at 14.02.04.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e60550f5-0d1a-4b51-9ed6-e8cb7f0dad7a/Screenshot_2023-02-01_at_14.02.04.png)
     
-    After creating the Space, you can use either the instructions below to clone the repository locally, adding your files and push, OR, graphical interface to drag and drop your application file (which we will show you).
+    After creating the Space, you have three options
+     * You can clone the repository locally, add your files, and then push them to the Hub.
+     * You can do all your coding directly in the browser.
+     *  (shown below) You can do the coding locally and then drag and drop your application file to the Hub.
     
     ![Space Config](./space_config.png)
     
