@@ -73,7 +73,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     [Hierarchical Clustering Linkage - a Hugging Face Space by scikit-learn](https://huggingface.co/spaces/scikit-learn/hierarchical-clustering-linkage)
     
-    Note: If your demo is e.g. an image classifier that receives an input and outputs classes or if it doesn’t make visualizations based on a change in a model or technique but is to train a model, you can train an e.g. image classifier and push it to the Hub using [skops](https://skops.readthedocs.io/en/stable/) and build a Gradio demo on top of it. For such submission, we expect a model repository with model card and the model, and, a simple Space with the interface that receives input and outputs results. You can use this tutorial to get started with [skops](insert KDNuggets tutorial when released).
+    Note: If for your demo you're training a model from scratch (e.g. training an image classifier), you can push it to the Hub using [skops](https://skops.readthedocs.io/en/stable/) and build a Gradio demo on top of it.  For such submission, we expect a model repository with a model card and the model weight as well as a simple Space with the interface that receives input and outputs results. You can use this tutorial to get started with [skops](insert KDNuggets tutorial when released).
     
     You can find an example submission for a model repository below.
     
