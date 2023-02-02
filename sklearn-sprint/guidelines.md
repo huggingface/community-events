@@ -18,8 +18,13 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     ```python
     import gradio as gr
     
+    # implement your classifier here 
+    clf.fit(X_train, y_train)
+
     def cancer_classifier(df):
-        # implement your classifier here
+        # simply infer and return predictions
+        predictions = clf.predict(df)
+        return predictions
     
     gr.Interface(fn=cancer_classifier, inputs="dataframe", 
     outputs="label").launch()
