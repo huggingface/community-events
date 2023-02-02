@@ -13,7 +13,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     For complete starters: in the Hugging Face Hub, there are repositories for models, datasets, and [Spaces](https://huggingface.co/spaces). Spaces are a special type of repository hosting ML applications, such as showcasing a model. To write our apps, we will only be using Gradio. [Gradio](https://gradio.app/) is a library that lets you build a cool front-end application for your models, completely in Python, and supports many libraries! In this sprint, we will be using mostly visualization support (`matplotlib`, `plotly`, `altair` and more) and [skops](https://skops.readthedocs.io/en/stable/) integration (which you can launch an interface for a given classification or regression interface with one line of code). 
     
-    In Gradio, there’s two ways to create a demo. One is to use `Interface`, which is a very simple abstraction. Let’s see a simple example.
+    In Gradio, there are two ways to create a demo. One is to use `Interface`, which is a very simple abstraction. Let’s see an example.
     
     ```python
     import gradio as gr
