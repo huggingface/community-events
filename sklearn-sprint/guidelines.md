@@ -1,5 +1,5 @@
 
-![Hugging Face x Scikit-learn](./hfxsklearn.png)
+![Hugging Face x Scikit-learn](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/hfxsklearn.png)
 
 In this sprint, we will build interactive demos from the scikit-learn documentation and, afterwards, contribute the demos directly to the docs.
 
@@ -30,7 +30,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     This will result in following interface:
     
-    ![Simple Interface](./interface.png)
+    ![Simple Interface](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/interface.png)
     
     This is very customizable. You can specify rows and columns, add a title and description, an example input, and more. There’s a more detailed guide [here](https://gradio.app/using-gradio-for-tabular-workflows/). 
     
@@ -38,22 +38,22 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     After we create our application, we will create a Space. You can go to [hf.co](http://huggingface.co), click on your profile on top right and select “New Space”.
     
-    ![New Space](new_space.png)
+    ![New Space](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/new_space.png)
     
     We can name our Space, pick a license and select Space SDK as “Gradio”. Free hardware is enough for our app, so no need to change it.
     
-    ![Screenshot 2023-02-01 at 14.02.04.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e60550f5-0d1a-4b51-9ed6-e8cb7f0dad7a/Screenshot_2023-02-01_at_14.02.04.png)
+    ![Space Configuration](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
     
     After creating the Space, you have three options
      * You can clone the repository locally, add your files, and then push them to the Hub.
      * You can do all your coding directly in the browser.
      *  (shown below) You can do the coding locally and then drag and drop your application file to the Hub.
     
-    ![Space Config](./space_config.png)
+    ![Space Config](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main//space_config.png)
     
     To upload your application file, pick “Add File” and drag and drop your file.
     
-    ![New Space Landing](./space_landing.png)
+    ![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main//space_landing.png)
     
     Lastly, if your application includes any library other than Gradio, create a file called requirements.txt and add requirements like below: 
     
@@ -73,7 +73,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
     
     [Hierarchical Clustering Linkage - a Hugging Face Space by scikit-learn](https://huggingface.co/spaces/scikit-learn/hierarchical-clustering-linkage)
     
-    Note: If for your demo you're training a model from scratch (e.g. training an image classifier), you can push it to the Hub using [skops](https://skops.readthedocs.io/en/stable/) and build a Gradio demo on top of it.  For such submission, we expect a model repository with a model card and the model weight as well as a simple Space with the interface that receives input and outputs results. You can use this tutorial to get started with [skops](insert KDNuggets tutorial when released).
+    Note: If for your demo you're training a model from scratch (e.g. training an image classifier), you can push it to the Hub using [skops](https://skops.readthedocs.io/en/stable/) and build a Gradio demo on top of it.  For such submission, we expect a model repository with a model card and the model weight as well as a simple Space with the interface that receives input and outputs results. You can use this tutorial to get started with [skops](https://www.kdnuggets.com/2023/02/skops-new-library-improve-scikitlearn-production.html).
     
     You can find an example submission for a model repository below.
     
