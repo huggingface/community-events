@@ -54,11 +54,11 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
      * You can do all your coding directly in the browser.
      *  (shown below) You can do the coding locally and then drag and drop your application file to the Hub.
     
-    ![Space Config](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main//space_config.png)
+    ![Space Config](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
     
     To upload your application file, pick “Add File” and drag and drop your file.
     
-    ![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main//space_landing.png)
+    ![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_landing.png)
     
     Lastly, if your application includes any library other than Gradio, create a file called requirements.txt and add requirements like below: 
     
