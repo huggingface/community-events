@@ -9,7 +9,7 @@ We will be training dreambooth models using KerasCV and building demos on them.
 
 **Getting Started** 🚀 
 
-To get started, join us in [hf.co/join/discord](http://hf.co/join/discord) in #keras-working-group channel. 
+To get started, join us in [hf.co/join/discord](http://hf.co/join/discord) and take the role #open-source, and meet us in #keras-working-group channel. 
 
 We will be hosting our demos in this organization on Hugging Face Hub: [keras-dreambooth](https://huggingface.co/keras-dreambooth), send a request to join if you’d like to make a submission 🙂
 
@@ -28,7 +28,7 @@ We will:
 
 You can find the notebook here and adjust it according to your own dataset 👇  
 
-[https://colab.research.google.com/drive/1Bh49YBYgaNc3X5aRzaMZNska4ErvU3lJ?usp=sharing](https://colab.research.google.com/drive/1Bh49YBYgaNc3X5aRzaMZNska4ErvU3lJ?usp=sharing) 
+[Link to notebook](https://colab.research.google.com/drive/1Bh49YBYgaNc3X5aRzaMZNska4ErvU3lJ?usp=sharing) 
 
 You can fine-tune on any concept that you want. Couple of inspirations for you: 
 
@@ -44,7 +44,7 @@ If you need more pointers on Dreambooth implementation with Keras, you can check
 
 ### Dreambooth Diffusers Integration with KerasCV
 
-As of now, inference and deployment options of `KerasCV` is limited, which `diffusers` library could come for a rescue. With only few lines of code, we can convert a `KerasCV` model into a `diffusers` one and use `diffusers`’ pipelines to perform inference. You can get more information [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/kerascv).
+As of now, inference and deployment options of `KerasCV` is limited, which `diffusers` library could come for a rescue. With only few lines of code, we can convert a `KerasCV` model into a `diffusers` one and use `diffusers`’ pipelines to perform inference. You can get more information [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/kerascv). Also check out [this Space](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) for converting your `KerasCV` model to `diffusers`one.
 
 ```
 from diffusers import StableDiffusionPipeline
@@ -86,7 +86,7 @@ import gradio as gr
 
 # write function for inference
 def infer(prompt):
-		# assume you loaded the model
+	# assume you loaded the model
     generated_images = sd_dreambooth_model.text_to_image(
         prompt, batch_size=4
     )
@@ -113,7 +113,7 @@ After our application is written, we can create a Hugging Face Space to host our
 ![New Space](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/new_space.png)
 
 
-We can name our Space, pick a license and select Space SDK as “Gradio”. Free hardware is enough for our app, so no need to change it.
+We can name our Space, pick a license and select Space SDK as “Gradio”. 
 
 ![Space Configuration](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
 
@@ -144,7 +144,7 @@ You can make submission in three themes:
 - Consentful (`consentful`): Partner up with an artist to fine-tune on their style, with their consent! Make sure to include a reference to the artist’s express consent (e.g. a tweet) in your model card.
 - Wild Card (`wild-card`): If your submission belongs to any category that is not above, feel free to tag it with wild-card so we can evaluate it out of that category.
 
-Add the category with their IDs to the model cards for submission and add `keras-dreambooth` to model card metadata in tags section. All the submissions will be populated [in this leaderboard](https://huggingface.co/spaces/keras-dreambooth/leaderboard) and ranked according to likes on a given Space to determine the winners.
+Add the category with their IDs to the model cards for submission and add `keras-dreambooth` to model card metadata in tags section. Here's an example [model card](https://huggingface.co/spaces/keras-dreambooth/example-submission/blob/main/README.md). All the submissions will be populated [in this leaderboard](https://huggingface.co/spaces/keras-dreambooth/leaderboard) and ranked according to likes on a given Space to determine the winners.
 
 We will pick three winners among the applications submitted, according to the number of likes given to a Space in a given category. 
 
