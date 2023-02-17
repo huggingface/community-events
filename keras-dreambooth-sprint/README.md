@@ -15,7 +15,7 @@ We will be hosting our demos in this organization on Hugging Face Hub: [keras-dr
 
 ### But what are we going to do?
 
-We will..
+We will:
 
 1. Fine-tune Stable Diffusion on any concept we want using Dreambooth,
 2. Push the model to Hugging Face Hub,
