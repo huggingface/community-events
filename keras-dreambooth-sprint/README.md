@@ -3,6 +3,8 @@
 
 **Welcome to Keras Dreambooth event!** 🤗 
 
+Dreambooth is a  fine-tuning technique to teach new visual concepts to text-conditioned Diffusion models with just 3-5 images. With Dreambooth, you could generate funny and realistic images of your dog, yourself and any concept with few images using Stable Diffusion. 
+DreamBooth was proposed in [DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven Generation](https://arxiv.org/abs/2208.12242) by Ruiz et al.
 In this guide, we will walk you through what we will do in this event.
 
 We will be training dreambooth models using KerasCV and building demos on them. 
@@ -11,7 +13,7 @@ We will be training dreambooth models using KerasCV and building demos on them.
 
 To get started, join us in [hf.co/join/discord](http://hf.co/join/discord) and take the role #open-source, and meet us in #keras-working-group channel. 
 
-We will be hosting our demos in this organization on Hugging Face Hub: [keras-dreambooth](https://huggingface.co/keras-dreambooth), send a request to join if you’d like to make a submission 🙂
+We will be hosting our demos in this organization on Hugging Face Hub: [keras-dreambooth](https://huggingface.co/keras-dreambooth), send a request to join [here](https://huggingface.co/organizations/keras-dreambooth/share/RMocthadPgpxxUDHtAesrbBzieDLgUfPmv) if you’d like to make a submission 🙂
 
 ### But what are we going to do?
 
