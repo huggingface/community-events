@@ -7,7 +7,7 @@ Dreambooth is a  fine-tuning technique to teach new visual concepts to text-con
 DreamBooth was proposed in [DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven Generation](https://arxiv.org/abs/2208.12242) by Ruiz et al.
 In this guide, we will walk you through what we will do in this event.
 
-We will be training dreambooth models using KerasCV and building demos on them. 
+We will be training Dreambooth models using KerasCV and building demos on them. 
 
 **Getting Started** 🚀 
 
