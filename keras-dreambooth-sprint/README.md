@@ -88,7 +88,7 @@ import gradio as gr
 
 # write function for inference
 def infer(prompt):
-	# assume you loaded the model
+# assume you loaded the model
     generated_images = sd_dreambooth_model.text_to_image(
         prompt, batch_size=4
     )
