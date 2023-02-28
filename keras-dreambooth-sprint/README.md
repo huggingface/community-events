@@ -11,8 +11,15 @@ This document summarises all the relevant information required for the event �
 
 ## Table of Contents
 
-* [Introduction]
-* [Important Dates]
+* [Introduction](#introduction)
+* [Important Dates](#important-dates)
+* [Getting Started](#getting-started--)
+* [Submission Categories](#submission-categories)
+* [Compute](#compute)
+* [Model Training](#model-training)
+* [Model Hosting](#model-hosting)
+* [Building Demo](#building-demo)
+* [Sprint Prizes](#sprint-prizes)
 
 ## Introduction
 
@@ -154,6 +161,7 @@ We can name our Space, pick a license and select Space SDK as “Gradio”.
 
 After creating the Space, you can use either the instructions below to clone the repository locally, adding your files and push, OR, graphical interface to create the files and write the code in the browser.
 
+TODO: image below is broken
 ![Screenshot 2023-02-01 at 14.04.09.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1c332e06-c3ac-4e4d-b1af-5a5836cded7c/Screenshot_2023-02-01_at_14.04.09.png)
 
 To upload your application file, pick “Add File” and drag and drop your file.
