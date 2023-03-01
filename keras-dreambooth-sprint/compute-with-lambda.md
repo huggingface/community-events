@@ -7,7 +7,7 @@ If you do not have access to a local GPU or Colab Pro/Pro+, we'll endeavour to p
 We've partnered up with Lambda to provide cloud compute for this event. They'll be providing the NVIDIA A10 24 GB GPUs. The Lambda API makes it easy to spin-up and launch a GPU instance. In this section, we'll go through the steps for spinning up an instance one-by-one.
 
 <p align="center" width="100%">
-    <img width="50%" src="https://raw.githubusercontent.com/sanchit-gandhi/codesnippets/main/hf_x_lambda.jpg">
+    <img width="50%" src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/hf_lambda.png">
 </p>
 
 This section is split into three parts:

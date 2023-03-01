@@ -73,7 +73,7 @@ image = pipeline(prompt, num_inference_steps=50).images[0]
 
 ### Model Hosting
 
-At the end of this notebook you will see a section dedicated for hosting, and a separate one for inference. We will be using the `huggingface_hub` library’s Keras-specific model pushing and loading functions: `push_to_hub_keras` and `from_pretrained_keras` . We will first push the model using `push_to_hub_keras`. After model is pushed, you will see the model is hosted with a model card like below 👇 
+At the end of [this notebook](https://colab.research.google.com/drive/1Bh49YBYgaNc3X5aRzaMZNska4ErvU3lJ?usp=sharing) you will see a section dedicated for hosting, and a separate one for inference. We will be using the `huggingface_hub` library’s Keras-specific model pushing and loading functions: `push_to_hub_keras` and `from_pretrained_keras` . We will first push the model using `push_to_hub_keras`. After model is pushed, you will see the model is hosted with a model card like below 👇 
 
 ![Repository](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/dreamboothrepo.png)
 
@@ -106,7 +106,7 @@ sd_dreambooth_model._diffusion_model = db_diffusion_model
 # generate images
 def infer(prompt):
     generated_images = sd_dreambooth_model.text_to_image(
-        prompt, batch_size=2
+        prompt
     )
     return generated_images 
     
