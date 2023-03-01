@@ -77,7 +77,7 @@ At the end of [this notebook](https://colab.research.google.com/drive/1Bh49YBYga
 
 ![Repository](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/dreamboothrepo.png)
 
-To version the models better, enable discoverability and reproducibility, we will fill the model card.  Click `Edit model card` . We will first fill the Metadata section of the model card. If your model is trained with a dataset from the Hugging Face Hub, you can fill the datasets section with the dataset. We will provide fill `pipeline_tag` with `text-to-Image` and pick a license for our model. 
+To version the models better, enable discoverability and reproducibility, we will fill the model card.  Click `Edit model card`. We will first fill the Metadata section of the model card. If your model is trained with a dataset from the Hugging Face Hub, you can fill the datasets section with the dataset. We will provide fill `pipeline_tag` with `text-to-image` and pick a license for our model. 
 
 ![Metadata](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/dreambooth-etadata.png)
 
