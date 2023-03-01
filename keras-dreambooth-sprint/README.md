@@ -3,6 +3,10 @@
 
 **Welcome to Keras Dreambooth event!** 🤗 
 
+This document summarises all the relevant information required for the event 📋.
+
+## Introduction
+
 Dreambooth is a  fine-tuning technique to teach new visual concepts to text-conditioned Diffusion models with just 3-5 images. With Dreambooth, you could generate funny and realistic images of your dog, yourself and any concept with few images using Stable Diffusion. 
 DreamBooth was proposed in [DreamBooth: Fine Tuning Text-to-Image Diffusion Models for Subject-Driven Generation](https://arxiv.org/abs/2208.12242) by Ruiz et al.
 In this guide, we will walk you through what we will do in this event.
@@ -15,7 +19,7 @@ To get started, join us in [hf.co/join/discord](http://hf.co/join/discord) and t
 
 We will be hosting our demos in this organization on Hugging Face Hub: [keras-dreambooth](https://huggingface.co/keras-dreambooth), send a request to join [here](https://huggingface.co/organizations/keras-dreambooth/share/RMocthadPgpxxUDHtAesrbBzieDLgUfPmv) if you’d like to make a submission 🙂
 
-### But what are we going to do?
+
 
 We will:
 
@@ -37,8 +41,6 @@ You can fine-tune on any concept that you want. Couple of inspirations for you:
 1. Lowpoly World: This [model](https://huggingface.co/MirageML/lowpoly-world) generates lowpoly worlds 🤯🌍
 2. Future Diffusion: This [model](https://huggingface.co/nitrosocke/Future-Diffusion) generates images in futuristic sci-fi concepts 🤖
 3. Fantasy sword: This [model](https://huggingface.co/MirageML/fantasy-sword) generates swords for fantasy themed games 🧙‍♂️
-
-Are you looking to stand out from the crowd? If you partner up with an artist to fine-tune on a **********consentful********** concept, you’ll be eligible to submit your model under the `consentful` theme!
 
 If you need more pointers on Dreambooth implementation with Keras, you can check out [this repository](https://github.com/sayakpaul/dreambooth-keras). 
 
@@ -62,13 +64,13 @@ prompt = f"A photo of {unique_id} {class_label} in a bucket"
 image = pipeline(prompt, num_inference_steps=50).images[0]
 ```
 
-### **Model Hosting**
+### Model Hosting
 
-At the end of this notebook you will see a section dedicated for hosting, and a separate one for inference. We will be using huggingface_hub library’s Keras-specific model pushing and loading functions, `push_to_hub_keras` and `from_pretrained_keras` . We will first push the model using `push_to_hub_keras`. After model is pushed, you will see the model is hosted with a model card like below 👇 
+At the end of this notebook you will see a section dedicated for hosting, and a separate one for inference. We will be using the `huggingface_hub` library’s Keras-specific model pushing and loading functions: `push_to_hub_keras` and `from_pretrained_keras` . We will first push the model using `push_to_hub_keras`. After model is pushed, you will see the model is hosted with a model card like below 👇 
 
 ![Repository](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/dreamboothrepo.png)
 
-to version the models better, enable discoverability and reproducibility, we will fill the model card.  Click `Edit model card` . We will first fill the Metadata section of the model card. If your model is trained with a dataset from Hugging Face Hub, you can fill the datasets section with the dataset. We will provide fill `pipeline_tag` with `Text-to-Image` and pick a license for our model. 
+To version the models better, enable discoverability and reproducibility, we will fill the model card.  Click `Edit model card` . We will first fill the Metadata section of the model card. If your model is trained with a dataset from the Hugging Face Hub, you can fill the datasets section with the dataset. We will provide fill `pipeline_tag` with `text-to-Image` and pick a license for our model. 
 
 ![Metadata](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/dreambooth-etadata.png)
 
@@ -77,22 +79,30 @@ Then, we will fill the markdown part. Hyperparameters and plot is automatically 
 
 You can find the example repository below 👇 
 
-[keras-dreambooth/dreambooth_diffusion_model · Hugging Face](https://huggingface.co/keras-dreambooth/dreambooth_diffusion_model)
+[keras-dreambooth/dreambooth_diffusion_model](https://huggingface.co/keras-dreambooth/dreambooth_diffusion_model)
 
 ### Model Demo
 
 We will use Gradio to build our demos for the models we have trained. With `Interface` class it’s straightforward 👇  
 
 ```python
+from huggingface_hub import from_pretrained_keras
+from keras_cv import models
 import gradio as gr
 
-# write function for inference
+sd_dreambooth_model = models.StableDiffusion(
+    img_width=512, img_height=512
+)
+db_diffusion_model = from_pretrained_keras("merve/dreambooth_diffusion_model")
+sd_dreambooth_model._diffusion_model = db_diffusion_model
+
+# generate images
 def infer(prompt):
-# assume you loaded the model
     generated_images = sd_dreambooth_model.text_to_image(
-        prompt, batch_size=4
+        prompt, batch_size=2
     )
     return generated_images 
+    
     
 output = gr.Gallery(label="Outputs").style(grid=(2,2))
 
@@ -108,7 +118,7 @@ This app generates images of a corgi 🐶
 
 ![Dreambooth App](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/dreambooth_corgi.png)
 
-**Creating a Space**
+## Hosting the Demo on Spaces
 
 After our application is written, we can create a Hugging Face Space to host our app. You can go to [huggingface.co](http://huggingface.co), click on your profile on top right and select “New Space”.
 
@@ -119,13 +129,13 @@ We can name our Space, pick a license and select Space SDK as “Gradio”.
 
 ![Space Configuration](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
 
-After creating the Space, you can use either the instructions below to clone the repository locally, adding your files and push, OR, graphical interface to drag and drop your application file (which we will show you).
+After creating the Space, you can use either the instructions below to clone the repository locally, adding your files and push, OR, graphical interface to create the files and write the code in the browser.
 
-![Screenshot 2023-02-01 at 14.04.09.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1c332e06-c3ac-4e4d-b1af-5a5836cded7c/Screenshot_2023-02-01_at_14.04.09.png)
+![Spaces Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/repository_landing.png)
 
 To upload your application file, pick “Add File” and drag and drop your file.
 
-![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_landing.png)
+![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/add_file.png)
 
 Lastly, we have to create a file called `requirements.txt` and add requirements of Dreambooth project like below: 
 
@@ -137,7 +147,7 @@ huggingface-hub
 
  And your app should be up and running!
 
-### Sprint **Prizes**
+### Submission 
 
 You can make submission in three themes: 
 
@@ -146,7 +156,10 @@ You can make submission in three themes:
 - Consentful (`consentful`): Partner up with an artist to fine-tune on their style, with their consent! Make sure to include a reference to the artist’s express consent (e.g. a tweet) in your model card.
 - Wild Card (`wild-card`): If your submission belongs to any category that is not above, feel free to tag it with wild-card so we can evaluate it out of that category.
 
+
 Add the category with their IDs to the model cards for submission and add `keras-dreambooth` to model card metadata in tags section. Here's an example [model card](https://huggingface.co/spaces/keras-dreambooth/example-submission/blob/main/README.md). All the submissions will be populated [in this leaderboard](https://huggingface.co/spaces/keras-dreambooth/leaderboard) and ranked according to likes on a given Space to determine the winners.
+
+### Sprint **Prizes**
 
 We will pick three winners among the applications submitted, according to the number of likes given to a Space in a given category. 
 
