@@ -39,7 +39,7 @@ Estimated time to complete: 5 mins
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $20 in GPU credits. Exceeding 25 hours of 1x A10 usage may incur charges on your credit card. Contact the Lambda team on Discord if you have issues authenticating your payment method (see [Communications and Problems](#communication-and-problems))
 5. Launching an instance:
-   1. In "Instance type", select the instance type "1x A10 (40 GB SXM4)"
+   1. In "Instance type", select the instance type "1x A10 (24 GB PCle)"
    2. In "Select region", select the region with availability closest to you.
    3. In "Select filesystem", select "Don't attach a filesystem".
 6. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
