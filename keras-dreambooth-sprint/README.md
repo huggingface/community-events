@@ -13,12 +13,19 @@ In this guide, we will walk you through what we will do in this event.
 
 We will be training Dreambooth models using KerasCV and building demos on them. 
 
+### Important Dates
+
+- Kick-Off Event: March 6th, 2023
+- Sprint start: March 7th, 2023
+- Sprint end: April 1st, 2023
+- Results: April 7th, 2023
+
+
 **Getting Started** 🚀 
 
 To get started, join us in [hf.co/join/discord](http://hf.co/join/discord) and take the role #open-source, and meet us in #keras-working-group channel. 
 
 We will be hosting our demos in this organization on Hugging Face Hub: [keras-dreambooth](https://huggingface.co/keras-dreambooth), send a request to join [here](https://huggingface.co/organizations/keras-dreambooth/share/RMocthadPgpxxUDHtAesrbBzieDLgUfPmv) if you’d like to make a submission 🙂
-
 
 
 We will:
@@ -44,7 +51,7 @@ You can fine-tune on any concept that you want. Couple of inspirations for you:
 
 If you need more pointers on Dreambooth implementation with Keras, you can check out [this repository](https://github.com/sayakpaul/dreambooth-keras). 
 
-[ADD DETAILS ABOUT COMPUTE SPONSORSHIP]
+**Important**: To learn how to launch a cloud GPU instance and train with Lambda, please refer to [Compute with Lambda](./compute-with-lambda.md).
 
 ### Dreambooth Diffusers Integration with KerasCV
 
@@ -145,7 +152,7 @@ tensorflow
 huggingface-hub
 ```
 
- And your app should be up and running!
+And your app should be up and running!
 
 ### Submission 
 
