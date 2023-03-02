@@ -55,8 +55,6 @@ If you need more pointers on Dreambooth implementation with Keras, you can check
 
 ### Dreambooth Diffusers Integration with KerasCV
 
-Inference and deployment options of `KerasCV` are limited, which is when the `diffusers` library comes to the rescue. You can easily convert a `KerasCV` model into a `diffusers` one and use `diffusers`’ pipelines to perform inference. You can automatically open a Pull Request to convert your model using [this Space](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) and get more information
-
 As of now, inference and deployment options of `KerasCV` are limited, which is when the `diffusers` library comes to the rescue. With only few lines of code, we can convert a `KerasCV` model into a `diffusers` one and use `diffusers`’ pipelines to perform inference. You can get more information [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/kerascv). Also check out [this Space](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) for converting your `KerasCV` model to `diffusers`one. 
 
 `diffusers`repositories on the Hub get a free Inference API and small widgets in the model page where users can play with the model.
