@@ -82,7 +82,7 @@ We will use **TensorFlow** and **Keras CV** to train DreamBooth model, and later
 You can setup your environment like below. 
 Below script:
 1. Creates a python virtual environment,
-2. Clones into this repository and installs requirements,
+2. Installs the requirements,
 3. Does authentication for Hugging Face. 
 After you run `huggingface-cli login`, pass your write token that you can get from [here](https://huggingface.co/settings/tokens). This will authenticate you to push your models to Hugging Face Hub.
 
@@ -93,8 +93,7 @@ python3 -m venv hf_env
 source hf_env/bin/activate
 echo "source ~/hf_env/bin/activate" >> ~/.bashrc
 
-git clone https://github.com/huggingface/community-events.git
-pip install -r community-events/keras-dreambooth-sprint/requirements.txt
+pip install -r https://raw.githubusercontent.com/huggingface/community-events/main/keras-dreambooth-sprint/requirements.txt
 
 git config --global credential.helper store
 huggingface-cli login
