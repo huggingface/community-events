@@ -69,6 +69,47 @@ Here, you can see the total charges that you have incurred since the start of th
 
 If you are unable to SSH into your Lambda GPU in step 11, there is a workaround that you can try. On the [GPU instances page](https://cloud.lambdalabs.com/instances), under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this terminal window to set up Python environment and install dependencies and run scripts.
 
+
+## Setting up your environment
+
+You can establish an SSH tunnel to your instance using below command: 
+```
+ssh ubuntu@ADDRESS_OF_INSTANCE -L 8888:localhost:8888
+```
+This will establish the tunnel to a remote machine and also forward the SSH port to a local port, so you can open a jupyter notebook on the remote machine and access it from your own local machine. 
+We will use **TensorFlow** and **Keras CV** to train DreamBooth model, and later use **diffusers** for conversion. In this section, we'll cover how to set up an environment with the required libraries. This section assumes that you are SSH'd into your GPU device. 
+
+You can setup your environment like below. 
+Below script:
+1. Creates a python virtual environment,
+2. Clones into this repository and installs requirements,
+3. Does authentication for Hugging Face. 
+After you run `huggingface-cli login`, pass your write token that you can get from [here](https://huggingface.co/settings/tokens). This will authenticate you to push your models to Hugging Face Hub.
+
+```bash
+sudo apt-get install git-lfs
+
+python3 -m venv hf_env
+source hf_env/bin/activate
+echo "source ~/hf_env/bin/activate" >> ~/.bashrc
+
+git clone https://github.com/huggingface/community-events.git
+pip install -r community-events/keras-dreambooth-sprint/requirements.txt
+
+git config --global credential.helper store
+huggingface-cli login
+ ```
+
+
+### Check if dependencies are installed correctly
+
+Running below line makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
+
+```python
+python -c "import tensorflow as tf; print(tf.test.is_built_with_cuda()); print(tf.config.list_logical_devices('GPU'))"
+```
+You're all set! You can simply launch a jupyter notebook and start training models! 🚀 
+
 ### Deleting a Cloud Instance
 
 30 1x A10 hours should provide you with enough time for 60 fine-tuning runs for Dreambooth. To maximise the GPU time you have for training, we advise that you shut down GPUs over prolonged periods of time when they are not in use. So be smart and shut down your GPU when you're not training.
