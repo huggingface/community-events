@@ -13,7 +13,8 @@ In this guide, we will walk you through what we will do in this event.
 
 We will be training Dreambooth models using KerasCV and building demos on them. 
 
-### Important Dates
+
+## Important Dates
 
 - Kick-Off Event: March 6th, 2023
 - Sprint start: March 7th, 2023
@@ -21,12 +22,11 @@ We will be training Dreambooth models using KerasCV and building demos on them.
 - Results: April 7th, 2023
 
 
-**Getting Started** 🚀 
+## Getting Started 🚀 
 
 To get started, join us in [hf.co/join/discord](http://hf.co/join/discord) and take the role #open-source, and meet us in #keras-working-group channel. 
 
 We will be hosting our demos in this organization on Hugging Face Hub: [keras-dreambooth](https://huggingface.co/keras-dreambooth), send a request to join [here](https://huggingface.co/organizations/keras-dreambooth/share/RMocthadPgpxxUDHtAesrbBzieDLgUfPmv) if you’d like to make a submission 🙂
-
 
 We will:
 
@@ -35,9 +35,11 @@ We will:
 3. Fill the model card,
 4. Build a demo on top of the model.
 
+**Warning:** The trained models need to be in one of the 4 categories mentioned in the Submission section. Please take a look at that before training your model.
+
 **Let’s get started** 🚀 
 
-### **Model Training**
+## **Model Training**
 
 You can find the notebook here and adjust it according to your own dataset 👇  
 
@@ -53,7 +55,7 @@ If you need more pointers on Dreambooth implementation with Keras, you can check
 
 **Important**: To learn how to launch a cloud GPU instance and train with Lambda, please refer to [Compute with Lambda](./compute-with-lambda.md).
 
-### Dreambooth Diffusers Integration with KerasCV
+## Dreambooth Diffusers Integration with KerasCV
 
 As of now, inference and deployment options of `KerasCV` are limited, which is when the `diffusers` library comes to the rescue. With only few lines of code, we can convert a `KerasCV` model into a `diffusers` one and use `diffusers`’ pipelines to perform inference. You can get more information [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/kerascv). Also check out [this Space](https://huggingface.co/spaces/sayakpaul/convert-kerascv-sd-diffusers) for converting your `KerasCV` model to `diffusers`one. 
 
@@ -73,7 +75,7 @@ prompt = f"A photo of {unique_id} {class_label} in a bucket"
 image = pipeline(prompt, num_inference_steps=50).images[0]
 ```
 
-### Model Hosting
+## Model Hosting
 
 At the end of [this notebook](https://colab.research.google.com/drive/1Bh49YBYgaNc3X5aRzaMZNska4ErvU3lJ?usp=sharing) you will see a section dedicated for hosting, and a separate one for inference. We will be using the `huggingface_hub` library’s Keras-specific model pushing and loading functions: `push_to_hub_keras` and `from_pretrained_keras` . We will first push the model using `push_to_hub_keras`. After model is pushed, you will see the model is hosted with a model card like below 👇 
 
@@ -90,7 +92,7 @@ You can find the example repository below 👇
 
 [keras-dreambooth/dreambooth_diffusion_model](https://huggingface.co/keras-dreambooth/dreambooth_diffusion_model)
 
-### Model Demo
+## Model Demo
 
 We will use Gradio to build our demos for the models we have trained. With `Interface` class it’s straightforward 👇  
 
@@ -156,7 +158,7 @@ huggingface-hub
 
 And your app should be up and running!
 
-### Submission 
+## Submission 
 
 You can make submission in three themes: 
 
@@ -168,7 +170,7 @@ You can make submission in three themes:
 
 Add the category with their IDs to the model cards for submission and add `keras-dreambooth` to model card metadata in tags section. Here's an example [model card](https://huggingface.co/spaces/keras-dreambooth/example-submission/blob/main/README.md). All the submissions will be populated [in this leaderboard](https://huggingface.co/spaces/keras-dreambooth/leaderboard) and ranked according to likes on a given Space to determine the winners.
 
-### Sprint **Prizes**
+## Sprint **Prizes**
 
 We will pick three winners among the applications submitted, according to the number of likes given to a Space in a given category. 
 
