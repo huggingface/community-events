@@ -18,7 +18,7 @@ This section is split into three parts:
 
 ### Signing-Up with Lambda
 
-1. Create an account with Lambda using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
+1. Create an account with Lambda using your email address of choice: http://lambdalabs.com/HF-dreambooth-signup. If you already have an account, skip to step 2.
 2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `Lambda cloud account for HuggingFace Keras DreamBooth - payment authentication and credit request`.
 3. Each user who emails as above will receive $20 in credits (amounting to 60 fine-tuning runs/30 hours of A10).
 4. Register a valid payment method with Lambda in order to redeem the credits (see instructions below).
@@ -34,7 +34,7 @@ Estimated time to complete: 5 mins
 
 *You can also follow our video tutorial to set up a cloud instance on Lambda* 👉️ [YouTube Video](https://www.youtube.com/watch?v=Ndm9CROuk5g&list=PLo2EIpI_JMQtncHQHdHq2cinRVk_VZdGW)
 
-1. Click the link: https://cloud.lambdalabs.com/instances
+1. Click the link: http://lambdalabs.com/HF-dreambooth-instances
 2. You'll be asked to sign in to your Lambda account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $20 in GPU credits. Exceeding 25 hours of 1x A10 usage may incur charges on your credit card. Contact the Lambda team on Discord if you have issues authenticating your payment method (see [Communications and Problems](#communication-and-problems))
