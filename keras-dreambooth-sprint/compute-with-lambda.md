@@ -67,7 +67,7 @@ You can see your total GPU usage from the Lambda cloud interface: https://cloud.
 
 Here, you can see the total charges that you have incurred since the start of the event. We advise that you check your total on a daily basis to make sure that it remains below the credit allocation of $20. This ensures that you are not inadvertently charged for GPU hours.
 
-If you are unable to SSH into your Lambda GPU in step 11, there is a workaround that you can try. On the [GPU instances page](https://cloud.lambdalabs.com/instances), under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this terminal window to set up Python environment and install dependencies and run scripts.
+If you are unable to SSH into your Lambda GPU in step 11, there is a workaround that you can try. On the [GPU instances page](http://lambdalabs.com/HF-dreambooth-instances), under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this terminal window to set up Python environment and install dependencies and run scripts.
 
 
 ## Setting up your environment
@@ -117,7 +117,7 @@ Creating an instance and setting it up for the first time may take up to 20 minu
 
 We'll quickly run through the steps for deleting a Lambda GPU. You can come back to these steps after you've performed your first training run and you want to shut down the GPU:
 
-1. Go to the instances page: https://cloud.lambdalabs.com/instances
+1. Go to the instances page: http://lambdalabs.com/HF-dreambooth-instances
 2. Click the checkbox on the left next to the GPU device you want to delete
 3. Click the button "Terminate" in the top right-hand side of your screen (under the purple button "Launch instance")
 4. Type "erase data on instance" in the text box and press "ok"
