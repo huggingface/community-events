@@ -18,7 +18,7 @@ This section is split into three parts:
 
 ### Signing-Up with Lambda
 
-1. Create an account with Lambda using your email address of choice: https://cloud.lambdalabs.com/sign-up. If you already have an account, skip to step 2.
+1. Create an account with Lambda using your email address of choice: http://lambdalabs.com/HF-dreambooth-signup. If you already have an account, skip to step 2.
 2. Using this same email address, email `cloud@lambdal.com` with the Subject line: `Lambda cloud account for HuggingFace Keras DreamBooth - payment authentication and credit request`.
 3. Each user who emails as above will receive $20 in credits (amounting to 60 fine-tuning runs/30 hours of A10).
 4. Register a valid payment method with Lambda in order to redeem the credits (see instructions below).
@@ -34,7 +34,7 @@ Estimated time to complete: 5 mins
 
 *You can also follow our video tutorial to set up a cloud instance on Lambda* 👉️ [YouTube Video](https://www.youtube.com/watch?v=Ndm9CROuk5g&list=PLo2EIpI_JMQtncHQHdHq2cinRVk_VZdGW)
 
-1. Click the link: https://cloud.lambdalabs.com/instances
+1. Click the link: http://lambdalabs.com/HF-dreambooth-instances
 2. You'll be asked to sign in to your Lambda account (if you haven't done so already).
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $20 in GPU credits. Exceeding 25 hours of 1x A10 usage may incur charges on your credit card. Contact the Lambda team on Discord if you have issues authenticating your payment method (see [Communications and Problems](#communication-and-problems))
@@ -67,7 +67,7 @@ You can see your total GPU usage from the Lambda cloud interface: https://cloud.
 
 Here, you can see the total charges that you have incurred since the start of the event. We advise that you check your total on a daily basis to make sure that it remains below the credit allocation of $20. This ensures that you are not inadvertently charged for GPU hours.
 
-If you are unable to SSH into your Lambda GPU in step 11, there is a workaround that you can try. On the [GPU instances page](https://cloud.lambdalabs.com/instances), under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this terminal window to set up Python environment and install dependencies and run scripts.
+If you are unable to SSH into your Lambda GPU in step 11, there is a workaround that you can try. On the [GPU instances page](http://lambdalabs.com/HF-dreambooth-instances), under the column "Cloud IDE", click the button "Launch". This will launch a Jupyter Lab on your GPU which will be displayed in your browser. In the top left-hand corner, click "File" -> "New" -> "Terminal". This will open up a new terminal window. You can use this terminal window to set up Python environment and install dependencies and run scripts.
 
 
 ## Setting up your environment
@@ -117,7 +117,7 @@ Creating an instance and setting it up for the first time may take up to 20 minu
 
 We'll quickly run through the steps for deleting a Lambda GPU. You can come back to these steps after you've performed your first training run and you want to shut down the GPU:
 
-1. Go to the instances page: https://cloud.lambdalabs.com/instances
+1. Go to the instances page: http://lambdalabs.com/HF-dreambooth-instances
 2. Click the checkbox on the left next to the GPU device you want to delete
 3. Click the button "Terminate" in the top right-hand side of your screen (under the purple button "Launch instance")
 4. Type "erase data on instance" in the text box and press "ok"
