@@ -72,6 +72,8 @@ If you are unable to SSH into your Lambda GPU in step 11, there is a workaround 
 
 ## Setting up your environment
 
+**Note: Please do not use notebook in lambda's UI, and follow below workflow to establish an SSH tunnel and work through it.**
+
 You can establish an SSH tunnel to your instance using below command: 
 ```
 ssh ubuntu@ADDRESS_OF_INSTANCE -L 8888:localhost:8888
