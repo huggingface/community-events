@@ -102,7 +102,7 @@ huggingface-cli login
 jupyter notebook
  ```
 
-** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.
+** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.**
 If you use conda, run following:
 ```
 conda install nb_conda_kernels
