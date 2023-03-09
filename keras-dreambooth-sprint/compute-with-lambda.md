@@ -98,8 +98,20 @@ pip install -r https://raw.githubusercontent.com/huggingface/community-events/ma
 
 git config --global credential.helper store
 huggingface-cli login
+
+jupyter notebook
  ```
 
+** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.
+If you use conda, run following:
+```
+conda install nb_conda_kernels
+conda create --name my-env
+conda activate my-env
+conda install ipykernel
+ipython kernel install --user --name=my-env
+```
+When you open jupyter, select your environment in `New` dropdown and it will create your notebook with conda environment you've created.
 
 ### Check if dependencies are installed correctly
 
