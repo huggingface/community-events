@@ -87,6 +87,7 @@ Below script:
 After you run `huggingface-cli login`, pass your write token that you can get from [here](https://huggingface.co/settings/tokens). This will authenticate you to push your models to Hugging Face Hub.
 
 ```bash
+sudo apt-get install cuda
 sudo apt-get install git-lfs
 
 python3 -m venv hf_env
