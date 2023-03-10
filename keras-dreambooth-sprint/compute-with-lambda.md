@@ -114,16 +114,21 @@ Now inside the notebook:
 ```python
 # install the dependencies with magic pip to make sure they're correctly installed
 !conda install -y -c conda-forge tensorflow=2.11.0
-%pip install -r keras_cv==0.4.2 tensorflow_datasets>=4.8.1 pillow==9.4.0 imutils opencv-python huggingface-hub[cli]
 ```
 
 Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
-
+Please restart your kernel before running below line. 
 ```python
 import tensorflow as tf
 print(tf.test.is_built_with_cuda())
 print(tf.config.list_logical_devices('GPU'))
 ```
+
+Now install rest of the dependencies:
+```python
+%pip install keras_cv==0.4.2 tensorflow_datasets>=4.8.1 pillow==9.4.0 imutils opencv-python huggingface-hub[cli]
+```
+
 
 You're all set! You can simply launch a jupyter notebook and start training models! 🚀 
 
