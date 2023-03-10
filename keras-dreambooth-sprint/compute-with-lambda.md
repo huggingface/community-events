@@ -114,8 +114,8 @@ Now inside the notebook:
 
 ```python
 # install the dependencies with magic pip to make sure they're correctly installed
-%pip install -r https://raw.githubusercontent.com/huggingface/community-events/main/keras-dreambooth-sprint/requirements.txt
 !conda install -y -c conda-forge tensorflow=2.11.0
+%pip install -r keras_cv==0.4.2 tensorflow_datasets>=4.8.1 pillow==9.4.0 imutils opencv-python huggingface-hub[cli]
 ```
 
 Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
