@@ -86,32 +86,20 @@ Below script:
 3. Does authentication for Hugging Face. 
 After you run `huggingface-cli login`, pass your write token that you can get from [here](https://huggingface.co/settings/tokens). This will authenticate you to push your models to Hugging Face Hub.
 
+We will use conda for this (follow this especially if you are training on A10). Install miniconda like below:
 ```bash
-sudo apt -y install nvidia-cuda-toolkit
-sudo apt-get install git-lfs
-
-python3 -m venv hf_env
-source hf_env/bin/activate
-echo "source ~/hf_env/bin/activate" >> ~/.bashrc
-
-pip install -r https://raw.githubusercontent.com/huggingface/community-events/main/keras-dreambooth-sprint/requirements.txt
-
-git config --global credential.helper store
-huggingface-cli login
-
-jupyter notebook
+sudo wget -c https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+sudo chmod +x Miniconda3-latest-Linux-x86_64.sh
+```
+Accept the terms and close the terminal. Open a new terminal and establish the SSH tunnel again. 
+```
+conda activate
+conda create -n my_env python==3.10
+conda activate my_env
  ```
 
-Note: when installing packages, you might see warnings such as:
-
-```bash
-  error: invalid command 'bdist_wheel'
-  ----------------------------------------
-  ERROR: Failed building wheel for audioread
-```
-You can ignore them.
-
 ** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.**
+
 If you use conda, run following:
 ```
 conda install nb_conda_kernels
@@ -120,8 +108,15 @@ conda activate my-env
 conda install ipykernel
 ipython kernel install --user --name=my-env
 ```
-When you open jupyter, select your environment in `New` dropdown and it will create your notebook with conda environment you've created.
 
+When you open jupyter, select your environment in `New` dropdown and it will create your notebook with conda environment you've created.
+Now inside the notebook:
+
+```python
+# install the dependencies with magic pip to make sure they're correctly installed
+%pip install -r https://raw.githubusercontent.com/huggingface/community-events/main/keras-dreambooth-sprint/requirements.txt
+!conda install -y -c conda-forge tensorflow=2.11.0
+```
 
 Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
 
@@ -130,6 +125,7 @@ import tensorflow as tf
 print(tf.test.is_built_with_cuda())
 print(tf.config.list_logical_devices('GPU'))
 ```
+
 You're all set! You can simply launch a jupyter notebook and start training models! 🚀 
 
 ### Deleting a Cloud Instance
