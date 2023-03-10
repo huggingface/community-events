@@ -102,6 +102,15 @@ huggingface-cli login
 jupyter notebook
  ```
 
+Note: when installing packages, you might see warnings such as:
+
+```bash
+  error: invalid command 'bdist_wheel'
+  ----------------------------------------
+  ERROR: Failed building wheel for audioread
+```
+You can ignore them.
+
 ** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.**
 If you use conda, run following:
 ```
@@ -113,12 +122,13 @@ ipython kernel install --user --name=my-env
 ```
 When you open jupyter, select your environment in `New` dropdown and it will create your notebook with conda environment you've created.
 
-### Check if dependencies are installed correctly
 
-Running below line makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
+Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
 
 ```python
-python -c "import tensorflow as tf; print(tf.test.is_built_with_cuda()); print(tf.config.list_logical_devices('GPU'))"
+import tensorflow as tf
+print(tf.test.is_built_with_cuda())
+print(tf.config.list_logical_devices('GPU'))
 ```
 You're all set! You can simply launch a jupyter notebook and start training models! 🚀 
 

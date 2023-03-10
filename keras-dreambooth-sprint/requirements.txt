@@ -4,3 +4,4 @@ tensorflow_datasets>=4.8.1
 pillow==9.4.0
 imutils
 opencv-python
+huggingface-hub[cli]
