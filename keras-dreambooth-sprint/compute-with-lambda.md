@@ -90,8 +90,9 @@ We will use conda for this (follow this especially if you are training on A10). 
 ```bash
 sudo wget -c https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 sudo chmod +x Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh
 ```
-Accept the terms and close the terminal. Open a new terminal and establish the SSH tunnel again. 
+Accept the terms by typing "yes", confirm the path by pressing enter and then confirm `conda init` by typing in yes again, and close the terminal. Open a new terminal and establish the SSH tunnel again. Run below commands in CLI.
 ```
 conda activate
 conda create -n my_env python==3.10
@@ -100,13 +101,11 @@ conda activate my_env
 
 ** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.**
 
-If you use conda, run following:
+If you use conda, run following in CLI:
 ```
 conda install nb_conda_kernels
-conda create --name my-env
-conda activate my-env
 conda install ipykernel
-ipython kernel install --user --name=my-env
+ipython kernel install --user --name=my_env
 ```
 
 When you open jupyter, select your environment in `New` dropdown and it will create your notebook with conda environment you've created.
