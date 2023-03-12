@@ -12,9 +12,11 @@ We've partnered up with Lambda to provide cloud compute for this event. They'll 
 
 This section is split into three parts:
 
-1. [Signing-Up with Lambda](#signing-up-with-lambda)
-2. [Creating a Cloud Instance](#creating-a-cloud-instance)
-3. [Deleting a Cloud Instance](#deleting-a-cloud-instance)
+- [Launch a Lambda Cloud GPU](#launch-a-lambda-cloud-gpu)
+  - [Signing-Up with Lambda](#signing-up-with-lambda)
+  - [Creating a Cloud Instance](#creating-a-cloud-instance)
+- [Setting up your environment](#setting-up-your-environment)
+  - [Deleting a Cloud Instance](#deleting-a-cloud-instance)
 
 ### Signing-Up with Lambda
 
@@ -39,7 +41,7 @@ Estimated time to complete: 5 mins
 3. Once on the GPU instance page, click the purple button "Launch instance" in the top right.
 4. Verify a payment method if you haven't done so already. IMPORTANT: if you have followed the instructions in the previous section, you will have received $20 in GPU credits. Exceeding 25 hours of 1x A10 usage may incur charges on your credit card. Contact the Lambda team on Discord if you have issues authenticating your payment method (see [Communications and Problems](#communication-and-problems))
 5. Launching an instance:
-   1. In "Instance type", select the instance type "1x A10 (24 GB PCle)"
+   1. In "Instance type", select the instance type "1x A10 (24 GB PCle)". In case you run out or memory while training, come back here and choose instance of type "1x A100(40GB PCIe)" or "1x A100(40GB SXM4)".
    2. In "Select region", select the region with availability closest to you.
    3. In "Select filesystem", select "Don't attach a filesystem".
 6. You will be asked to provide your public SSH key. This will allow you to SSH into the GPU device from your local machine.
@@ -93,23 +95,61 @@ sudo chmod +x Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 ```
 Accept the terms by typing "yes", confirm the path by pressing enter and then confirm `conda init` by typing in yes again, and close the terminal. Open a new terminal and establish the SSH tunnel again. Run below commands in CLI.
+```bash
+conda config --set auto_activate_base false
+conda deactivate
 ```
+Open a new terminal and establish the SSH tunnel again. The reason we need to do that is make sure `pip` will point to the correct path i.e. path of your conda environment `my_env`.
+
+Now activate conda and create your own envirment
+```bash
 conda activate
 conda create -n my_env python==3.10
 conda activate my_env
  ```
+Next check if pip path is correct with following command
+ ```bash
+ which pip
+ ```
+ It should point to 
+ ```bash
+ /home/ubuntu/miniconda3/envs/my_env/bin/pip
+ ```
+
+Next you need to setup path to CUDA library with following comamnd
+ ```bash
+export  XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
+ ```
+** Note: you need to set this every time you close and open the terminal via SSH tunnel. If you do not do this, the `fit` method will fail. Please read through the error logs to see where to find the missing library and set the above path accordingly.
 
 ** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.**
 
-If you use conda, run following in CLI:
-```
+If you use conda, run following in CLI making sure you are inside the `my_env` conda you created in previous step:
+```bash
 conda install nb_conda_kernels
 conda install ipykernel
 ipython kernel install --user --name=my_env
 ```
+Now run 
+```bash
+jupyter notebook
+```
 
-When you open jupyter, select your environment in `New` dropdown and it will create your notebook with conda environment you've created.
+When you open jupyter, select your environment `my_env` in `New` dropdown and it will create your notebook with conda environment you've created.
 Now inside the notebook:
+
+First check the pip and python are poinitng to right places by running following commands. First check for pip path by running:
+```python
+!which pip
+```
+It should point to `/home/ubuntu/miniconda3/envs/my_env/bin/pip`. If it is pointing to `/home/ubuntu/.local/bin/pip`, you have not have run `conda config --set auto_activate_base false`. Please run it again and activate `my_env` again. Also check that your notebook is running in the proper kernel `my_env`. Once inside the notebook, you can change it from the menu navigation `Kernel->Change Kernel -> my_env`. You should now see `my_env` in the top right of the notebook. 
+
+Now check for python path also:
+```python
+!which python
+```
+It should point to: `/home/ubuntu/miniconda3/envs/my_env/bin/python`
+
 
 ```python
 # install the dependencies with magic pip to make sure they're correctly installed
@@ -126,9 +166,10 @@ print(tf.config.list_logical_devices('GPU'))
 
 Now install rest of the dependencies:
 ```python
-%pip install keras_cv==0.4.2 tensorflow_datasets>=4.8.1 pillow==9.4.0 imutils opencv-python huggingface-hub[cli]
+%pip install keras_cv==0.4.2 tensorflow_datasets>=4.8.1 pillow==9.4.0 imutils opencv-python matplotlib huggingface-hub[cli] pycocotools
 ```
 
+You can either creatr your own notebook or clone the notebook `https://github.com/huggingface/community-events/blob/main/keras-dreambooth-sprint/Dreambooth_on_Hub.ipynb`
 
 You're all set! You can simply launch a jupyter notebook and start training models! 🚀 
 
