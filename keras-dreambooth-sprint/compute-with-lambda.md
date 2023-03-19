@@ -91,51 +91,67 @@ After you run `huggingface-cli login`, pass your write token that you can get fr
 We will use conda for this (follow this especially if you are training on A10). Install miniconda like below:
 ```bash
 sudo wget -c https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-sudo chmod +x Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
+sudo chmod +x Miniconda3-latest-Linux-x86_64.sh && ./Miniconda3-latest-Linux-x86_64.sh
 ```
-Accept the terms by typing "yes", confirm the path by pressing enter and then confirm `conda init` by typing in yes again, and close the terminal. Open a new terminal and establish the SSH tunnel again. Run below commands in CLI.
+Accept the terms by typing "yes", confirm the path by pressing enter and then confirm `conda init` by typing in yes again.
+To make conda commands accessible in the current shell environment enter:
+```bash
+source ~/.bashrc
+```
+Disable the base virtual conda environment:
 ```bash
 conda config --set auto_activate_base false
 conda deactivate
 ```
-Open a new terminal and establish the SSH tunnel again. The reason we need to do that is make sure `pip` will point to the correct path i.e. path of your conda environment `my_env`.
-
-Now activate conda and create your own envirment
+Now activate conda and create your own environment (in this example we use `my_env` for simplicity).
 ```bash
-conda activate
 conda create -n my_env python==3.10
 conda activate my_env
  ```
-Next check if pip path is correct with following command
+As a next step, we may confirm that pip points to the correct path:
  ```bash
  which pip
  ```
- It should point to 
- ```bash
- /home/ubuntu/miniconda3/envs/my_env/bin/pip
- ```
-
-Next you need to setup path to CUDA library with following comamnd
- ```bash
-export  XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
- ```
-** Note: you need to set this every time you close and open the terminal via SSH tunnel. If you do not do this, the `fit` method will fail. Please read through the error logs to see where to find the missing library and set the above path accordingly.
+The path should point to `/home/ubuntu/miniconda3/envs/my_env/bin/pip`.
 
 ** Note: Please make sure you are opening the notebook either in env (if you are using Python virtual environment by following above commands) or use ipykernel to add your environment to jupyter. For first one, you can get into env folder itself and create your notebook there and it should work.**
 
-If you use conda, run following in CLI making sure you are inside the `my_env` conda you created in previous step:
+As a next step, we need to install necessary dependencies for CUDA Support to work properly and getting a jupyter notebook running. Ensure you are inside the `my_env` conda environment you created previously:
 ```bash
 conda install nb_conda_kernels
-conda install ipykernel
 ipython kernel install --user --name=my_env
+conda install -c conda-forge cudatoolkit=11.2.2 cudnn=8.1.0
 ```
-Now run 
+Next you need to setup XLA to the correct CUDA library path with following command:
+ ```bash
+export XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+ ```
+ ** Note: you need to set this every time you close and open the terminal via SSH tunnel. If you do not do this, the `fit` method will fail. Please read through the error logs to see where to find the missing library and set the above path accordingly.
+
+Now, we also must install Tensorflow inside our virtual environment. It is recommend, doing so with pip:
+
+ ```bash
+python -m pip install tensorflow
+ ```
+ To confirm the installed version, and the success of setting up our drivers in the CUDA environment:
+ ```bash
+ python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU')); print(tf.__version__)"
+ ```
+It should return True, and display an array with one physical device. The version should be equal to atleast 2.11.
+
+We may now install the dependendencies necessary for the jupyter notebook:
+ ```bash
+pip install keras_cv===0.4.2 tensorflow_datasets===4.8.1 pillow===9.4.0 imutils opencv-python matplotlib huggingface-hub pycocotools
+ ```
+ 
+Now we can start our jupyter notebook instance:
 ```bash
 jupyter notebook
 ```
-
+Enter the URL in the browser or connect through VSCode. If this does not work, you likely forgot to forward the 8888 port.
 When you open jupyter, select your environment `my_env` in `New` dropdown and it will create your notebook with conda environment you've created.
+
 Now inside the notebook:
 
 First check the pip and python are poinitng to right places by running following commands. First check for pip path by running:
@@ -144,32 +160,21 @@ First check the pip and python are poinitng to right places by running following
 ```
 It should point to `/home/ubuntu/miniconda3/envs/my_env/bin/pip`. If it is pointing to `/home/ubuntu/.local/bin/pip`, you have not have run `conda config --set auto_activate_base false`. Please run it again and activate `my_env` again. Also check that your notebook is running in the proper kernel `my_env`. Once inside the notebook, you can change it from the menu navigation `Kernel->Change Kernel -> my_env`. You should now see `my_env` in the top right of the notebook. 
 
-Now check for python path also:
+Now check for python path aswell:
 ```python
 !which python
 ```
 It should point to: `/home/ubuntu/miniconda3/envs/my_env/bin/python`
 
-
-```python
-# install the dependencies with magic pip to make sure they're correctly installed
-!conda install -y -c conda-forge tensorflow=2.11.0
-```
-
-Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU.
-Please restart your kernel before running below line. 
+Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU. The version should be equal to or greater than 2.11 to support the correct version of keras_cv.
 ```python
 import tensorflow as tf
 print(tf.test.is_built_with_cuda())
 print(tf.config.list_logical_devices('GPU'))
+print(tf.__version__)
 ```
 
-Now install rest of the dependencies:
-```python
-%pip install keras_cv==0.4.2 tensorflow_datasets>=4.8.1 pillow==9.4.0 imutils opencv-python matplotlib huggingface-hub[cli] pycocotools
-```
-
-You can either creatr your own notebook or clone the notebook `https://github.com/huggingface/community-events/blob/main/keras-dreambooth-sprint/Dreambooth_on_Hub.ipynb`
+You can either create your own notebook or clone the notebook `https://github.com/huggingface/community-events/blob/main/keras-dreambooth-sprint/Dreambooth_on_Hub.ipynb` if you haven't done so previously.
 
 You're all set! You can simply launch a jupyter notebook and start training models! 🚀 
 
