@@ -134,7 +134,7 @@ Now, we also must install Tensorflow inside our virtual environment. It is recom
  ```bash
 python -m pip install tensorflow
  ```
- To confirm the installed version, and the success of setting up our drivers in the CUDA environment:
+ To confirm the installed version, and the success of setting up our drivers in the conda environment:
  ```bash
  python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU')); print(tf.__version__)"
  ```
