@@ -41,7 +41,7 @@ At the end of the community week, each team should submit a demo of their projec
 
 ## Communication
 
-All important communication will take place on our Discord server (TODO: update with more information).
+All important communication will take place on our Discord server. Join the server using [this link](https://hf.co/join/discord). After you join the serve, you will be added to some relevant channels, but you need to sign up with the above-mentioned form first.
 Important announcements of the Hugging Face, Flax/JAX, and Google Cloud team will be posted there. 
 Such announcements include general information about the community week (Dates, Rules, ...), release of relevant training scripts (Flax/JAX example scripts for NLP and Vision), release of other important documents (How to access the TPU), etc. 
 The Discord channel will also be the central place for participants to post about their results, share their learning experiences, ask questions, etc.
@@ -60,4 +60,4 @@ This way, we make sure that the everybody in the community can benefit from your
 
 To be invited to the Discord server, please make sure you have signed up [on the Google form] (TODO). 
 
-**Note**: If you have signed up on the google form, but you are not in the Slack channel, please leave a message on [(TODO) the official forum announcement]( ) and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`.
+> 💡 Note: If you have signed up on the google form, but you are not in the Discord channel, please leave a message on [(TODO) the official forum announcement]( ) and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
