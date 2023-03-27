@@ -8,7 +8,7 @@ Free access to a TPU v4-8 will kindly be provided by the Google Cloud team!
 
 In this document, we list all the important information that you will need during the JAX/Diffusers community week.
 
-Don't forget to sign up [here] (TODO)! 
+Don't forget to sign up [here](https://forms.gle/tqbrG1KDEXSGTwFP9)! 
 
 > 💡 Note: This document is still WIP and it only contains initial details of the event. We will keep updating this document as we make other relevant information available throughout the community week. 
 
@@ -32,7 +32,7 @@ At the end of the community week, each team should submit a demo of their projec
 
 ## Important dates
 
-- **29.03.** Official announcement of the community week. Make sure to sign-up in [this google form] (TODO).
+- **29.03.** Official announcement of the community week. Make sure to sign-up in [this google form](https://forms.gle/tqbrG1KDEXSGTwFP9).
 - **03.04.** Start forming groups.
 - **10.04.** Officially start the week. This phase will mostly focus on data collection, talks, etc. 
 - **14.04. - 17.04.** Start providing access to TPUs. 
@@ -58,6 +58,6 @@ For issues with Flax/JAX, Diffusers, Datasets or for questions that are specific
 Please do **not** post the complete issue/project-specific question in Discord, but instead a link to your issue/question that we will try to answer as soon as possible. 
 This way, we make sure that the everybody in the community can benefit from your questions - even after the community week - and that the same question is not answered twice.
 
-To be invited to the Discord server, please make sure you have signed up [on the Google form] (TODO). 
+To be invited to the Discord server, please make sure you have signed up [on the Google form](https://forms.gle/tqbrG1KDEXSGTwFP9). 
 
-> 💡 Note: If you have signed up on the google form, but you are not in the Discord channel, please leave a message on [(TODO) the official forum announcement]( ) and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
+> 💡 Note: If you have signed up on the google form, but you are not in the Discord channel, please leave a message on [(TODO) the official forum announcement] () and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
