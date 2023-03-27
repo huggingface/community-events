@@ -57,4 +57,4 @@ This way, we make sure that the everybody in the community can benefit from your
 
 > 💡 Note: If you have signed up on the google form, but you are not in the Discord channel, please leave a message on [(TODO) the official forum announcement] () and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
 
-[signup form]: https://forms.gle/tqbrG1KDEXSGTwFP9
+[signup form]: https://forms.gle/t3M7aNPuLL9V1sfa9
