@@ -1,12 +1,12 @@
 # JAX/Diffusers community week 🧨
 
-Welcome to the FJAX/Diffusers community week! The goal of this week is to work on fun and creative Diffusion models using JAX and Diffusers.
+Welcome to the JAX/Diffusers community week! The goal of this week is to work on fun and creative Diffusion models using JAX and Diffusers.
 
 To do so, we will try to teach **you** how to effectively use JAX/Flax on TPU and help you to complete a fun project that involves Diffusion models in JAX/Flax during the community week. 
 
 Free access to a TPU v4-8 will kindly be provided by the Google Cloud team!
 
-In this document, we list all the important information that you will need during the JAX/Diffusers community week week.
+In this document, we list all the important information that you will need during the JAX/Diffusers community week.
 
 Don't forget to sign up [here] (TODO)! 
 
@@ -24,7 +24,7 @@ Participants can propose ideas for an interesting project involving Diffusion mo
 
 To help each team successfully finish their project, we will organize talks by leading scientists and engineers from Google, Hugging Face, and the open-source Diffusion community. The talks will take place before the community week from March 29th to May 1st. Make sure to attend the talks to get the most out of your participation! Check out the [Talks] (TODO) section to get an overview of the talks, including the speaker and the time of the talk.
 
-Each team is then given **free access to a TPU v4-8 VM** from April 14 7th to May 1st. In addition, we will provide a training example in JAX/Flax and Diffusers to train [ControlNets](https://huggingface.co/blog/controlnet) to kick-start your project. Additionally, we will also provide examples of how to prepare datasets for ControlNet training. During the week, we'll make sure to answer any questions you might have about JAX/Flax and Diffusers and help each team as much as possible to complete their project!
+Each team is then given **free access to a TPU v4-8 VM** from April 14 to May 1st. In addition, we will provide a training example in JAX/Flax and Diffusers to train [ControlNets](https://huggingface.co/blog/controlnet) to kick-start your project. We will also provide examples of how to prepare datasets for ControlNet training. During the week, we'll make sure to answer any questions you might have about JAX/Flax and Diffusers and help each team as much as possible to complete their project!
 
 At the end of the community week, each team should submit a demo of their project. All demonstrations will be evaluated by a jury and the top-3 demos will be awarded a prize. Check out the [How to submit a demo] (TODO) section for more information and suggestions on how to submit your project.
 
@@ -55,7 +55,7 @@ For issues with Flax/JAX, Diffusers, Datasets or for questions that are specific
 - Project specific questions: [TODO]()
 - TPU related questions: [TODO]()
 
-Please do **not** post the complete issue/project-specific question in the Slack channel, but instead a link to your issue/question that we will try to answer as soon as possible. 
+Please do **not** post the complete issue/project-specific question in Discord, but instead a link to your issue/question that we will try to answer as soon as possible. 
 This way, we make sure that the everybody in the community can benefit from your questions - even after the community week - and that the same question is not answered twice.
 
 To be invited to the Discord server, please make sure you have signed up [on the Google form] (TODO). 
