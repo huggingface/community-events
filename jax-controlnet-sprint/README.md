@@ -6,7 +6,7 @@ In this event, we will create various applications with diffusion models in JAX/
 
 This document is a walkthrough on all the important information to make a submission to the JAX/Diffusers community sprint.
 
-Don't forget to sign up [here](https://forms.gle/tqbrG1KDEXSGTwFP9)! 
+Don't forget to fill out the [signup form]! 
 
 > 💡 Note: This document is still WIP and it only contains initial details of the event. We will keep updating this document as we make other relevant information available throughout the community sprint.
 
@@ -30,7 +30,7 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 
 ## Important dates
 
-- **29.03.** Official announcement of the community week. Make sure to sign-up in [this google form](https://forms.gle/tqbrG1KDEXSGTwFP9).
+- **29.03.** Official announcement of the community week. Make sure to fill out the [signup form].
 - **03.04.** Start forming groups.
 - **10.04.** Officially start the week. This phase will mostly focus on data collection, talks, etc. 
 - **14.04. - 17.04.** Start providing access to TPUs. 
@@ -39,7 +39,7 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 
 ## Communication
 
-All important communication will take place on our Discord server. Join the server using [this link](https://hf.co/join/discord). After you join the server, take the Diffusers role in #role-assignment channel and head to `#jax-diffusers-ideas` channel to share your idea as a forum post. To sign up for participation, fill out [this form](https://forms.gle/tqbrG1KDEXSGTwFP9) and we will give you access to two more Discord channels on discussions and technical support, and access to TPUs.
+All important communication will take place on our Discord server. Join the server using [this link](https://hf.co/join/discord). After you join the server, take the Diffusers role in `#role-assignment` channel and head to `#jax-diffusers-ideas` channel to share your idea as a forum post. To sign up for participation, fill out the [signup form] and we will give you access to two more Discord channels on discussions and technical support, and access to TPUs.
 Important announcements of the Hugging Face, Flax/JAX, and Google Cloud team will be posted in the server.
 The Discord server will be the central place for participants to post about their results, share their learning experiences, ask questions and get technical support in various obstacles they encounter.
 
@@ -56,3 +56,5 @@ We encourage you to post the link to forum post to the Discord server, instead o
 This way, we make sure that the everybody in the community can benefit from your questions, even after the community sprint.
 
 > 💡 Note: If you have signed up on the google form, but you are not in the Discord channel, please leave a message on [(TODO) the official forum announcement] () and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
+
+[signup form]: https://forms.gle/tqbrG1KDEXSGTwFP9
