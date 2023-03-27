@@ -3,11 +3,18 @@
 
 In this sprint, we will build interactive demos from the scikit-learn documentation and, afterwards, contribute the demos directly to the docs.
 
+## Important Dates
+
+🌅 Sprint Start Date: Apr 12, 2023
+🌃 Sprint Finish Date: Apr 30, 2023
+
 ## To get started 🤩
 
-1. Head to [this page](https://scikit-learn.org/stable/auto_examples/) and pick an example you’d like to build on. 
-2. Leave a comment on [this spreadsheet](https://docs.google.com/spreadsheets/d/14EThtIyF4KfpU99Fm2EW3Rz9t6SSEqDyzV4jmw3fjyI/edit?usp=sharing) with your name under Owner column, claiming the example. The spreadsheet has a limited number of examples. Feel free to add yours with a comment if it doesn’t exist in the spreadsheet.
-3. Start building!
+1. Join our [Discord](https://huggingface.co/join/discord) and take the role #sklearn-sprint-participant. Then, meet us in #sklearn-sprint channel.
+2. Head to [this page](https://scikit-learn.org/stable/auto_examples/) and pick an example you’d like to build on. 
+3. Leave a comment on [this spreadsheet](https://docs.google.com/spreadsheets/d/14EThtIyF4KfpU99Fm2EW3Rz9t6SSEqDyzV4jmw3fjyI/edit?usp=sharing) with your name under Owner column, claiming the example. The spreadsheet has a limited number of examples. Feel free to add yours with a comment if it doesn’t exist in the spreadsheet.
+.
+4. Start building!
     
     We will be hosting our applications in [scikit-learn](https://huggingface.co/scikit-learn) organization of Hugging Face. 
     
@@ -88,4 +95,5 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
 
 **If you need any help** you can join our discord server, take collaborate role and join `sklearn-sprint` channel and ask questions 🤗🫂 
 
-### Sprint Prizes: TBA
+### Sprint Prizes
+To be announced 📣 
