@@ -69,7 +69,7 @@ We will have talks from folks working at JAX & TPU teams at Google, diffusers an
 
 | Speaker	| Topic	| Time	| Video |
 |---|---|---|---|
-| Andreas Steiner, Google Brain	| JAX & ControlNet | 4.00pm-4.40pm CEST / 7am .00am-7.40am PST| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=SOj2sxgvFe0) |
+| Andreas Steiner, Google Brain	| JAX & ControlNet | 4.00pm-4.40pm CEST / 7.00am-7.40am PST| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=SOj2sxgvFe0) |
 | Boris Dayma, craiyon	| DALL-E Mini	| 4.40pm-5.20pm CEST / 7.40am-08.20am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=SOj2sxgvFe0) |
 |Margaret Mitchell, Hugging Face	| Ethics of Text-to-Image |	5.20pm-6.00pm CEST / 08.20am-09.00am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=SOj2sxgvFe0) |
 
