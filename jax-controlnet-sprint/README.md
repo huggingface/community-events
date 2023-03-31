@@ -15,6 +15,7 @@ Don't forget to fill out the [signup form]!
 - [Organization](#organization)
 - [Important dates](#important-dates)
 - [Communication](#communication)
+- [Talks](#talks)
 
 ## Organization 
 
@@ -31,11 +32,12 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 ## Important dates
 
 - **29.03.** Official announcement of the community week. Make sure to fill out the [signup form].
-- **03.04.** Start forming groups.
-- **10.04.** Officially start the week. This phase will mostly focus on data collection, talks, etc. 
+- **31.03.** Start forming groups in #jax-diffusers-ideas channel in Discord. 
+- **10.04.** Receiving acceptance e-mails, starting to collect data.
+- **13.04. - 14.04. - [17.04.](https://www.youtube.com/watch?v=SOj2sxgvFe0)** Kick-off event with talks on Youtube. 
 - **14.04. - 17.04.** Start providing access to TPUs. 
 - **01.05.** Shutdown access to TPUs. 
-- **08.05.**: Project presentation.
+- **08.05.**: Project presentations and determining the prize winners.
 
 ## Communication
 
@@ -49,12 +51,20 @@ For issues with Flax/JAX, Diffusers, Datasets or for questions that are specific
 - JAX: [Issues](https://github.com/google/jax/issues), [Questions](https://github.com/google/jax/discussions)
 - 🤗 Diffusers: [Issues](https://github.com/huggingface/diffusers/issues), [Questions](https://discuss.huggingface.co/c/discussion-related-to-httpsgithubcomhuggingfacediffusers/63)
 - 🤗 Datasets: [Issues](https://github.com/huggingface/datasets/issues), [Questions](https://discuss.huggingface.co/c/datasets/10)
-- Project specific questions: [TODO]()
-- TPU related questions: [TODO]()
+- Project specific questions: Can be asked from each project's own post on #jax-diffusers-ideas channel on Discord.
+- TPU related questions: #jax-diffusers-tpu-support channel on Discord. 
+- General discussion: #jax-diffusers-sprint channel on Discord.
+You will get access to #jax-diffusers-tpu-support and #jax-diffusers-sprint once you are accepted to attend the sprint.
 
-We encourage you to post the link to forum post to the Discord server, instead of directly posting issues or questions. 
+When asking for help, we encourage you to post the link to [forum](https://discuss.huggingface.co) post to the Discord server, instead of directly posting issues or questions. 
 This way, we make sure that the everybody in the community can benefit from your questions, even after the community sprint.
 
-> 💡 Note: If you have signed up on the google form, but you are not in the Discord channel, please leave a message on [(TODO) the official forum announcement] () and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
+> 💡 Note: After 10th of April, if you have signed up on the google form, but you are not in the Discord channel, please leave a message on [the official forum announcement] (https://discuss.huggingface.co/t/controlling-stable-diffusion-with-jax-and-diffusers-using-v4-tpus/35187/2) and ping `@mervenoyan`, `@sayakpaul`, and `@patrickvonplaten`. We might take a day to process these requests.
+
+## Talks
+
+We will have talks from folks working at JAX & TPU teams at Google, diffusers and ethics teams at Hugging Face and awesome open-sorcerers working in generative AI. We will update this post with links to the talks, so keep an eye here or on Discord in diffusion models core-announcements channel and set your reminders!
+
+- [Link to the talks on 17th of April](https://www.youtube.com/watch?v=SOj2sxgvFe0), we will be hosting Andreas Steiner, Margaret Mitchell and Boris Dayma. 
 
 [signup form]: https://forms.gle/t3M7aNPuLL9V1sfa9
