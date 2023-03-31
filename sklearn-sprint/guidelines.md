@@ -10,7 +10,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
 
 ## To get started 🤩
 
-1. Join our [Discord](https://huggingface.co/join/discord) and take the role #sklearn-sprint-participant. Then, meet us in #sklearn-sprint channel.
+1. Join our [Discord](https://huggingface.co/join/discord) and take the role #sklearn-sprint-participant by selecting "Sklearn Working Group" in the #role-assignment channel. Then, meet us in #sklearn-sprint channel.
 2. Head to [this page](https://scikit-learn.org/stable/auto_examples/) and pick an example you’d like to build on. 
 3. Leave a comment on [this spreadsheet](https://docs.google.com/spreadsheets/d/14EThtIyF4KfpU99Fm2EW3Rz9t6SSEqDyzV4jmw3fjyI/edit?usp=sharing) with your name under Owner column, claiming the example. The spreadsheet has a limited number of examples. Feel free to add yours with a comment if it doesn’t exist in the spreadsheet.
 .
