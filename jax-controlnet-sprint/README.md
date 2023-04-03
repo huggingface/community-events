@@ -16,6 +16,7 @@ Don't forget to fill out the [signup form]!
 - [Important dates](#important-dates)
 - [Communication](#communication)
 - [Talks](#talks)
+- [Data and Pre-processing](#data-and-pre-processing)
 
 ## Organization 
 
@@ -74,3 +75,102 @@ We will have talks from folks working at JAX & TPU teams at Google, diffusers an
 |Margaret Mitchell, Hugging Face	| Ethics of Text-to-Image |	5.20pm-6.00pm CEST / 08.20am-09.00am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=SOj2sxgvFe0) |
 
 [signup form]: https://forms.gle/t3M7aNPuLL9V1sfa9
+
+## Data and Pre-Processing
+
+In this section, we will cover how to build your own dataset for ControlNet training.
+
+### Prepare a large local dataset
+
+#### Mount a disk 
+
+If you need extra space, you can follow [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#prerequisites) to create a persistent disk, attach it to your TPU VM, and create a directory to mount the disk. You can then use this directory to store your dataset.
+
+#### Data preprocessing 
+
+Here we demonstrate how to prepare a large dataset to train a ControlNet model with canny edge detection. More specifically, we provide an example script that:
+Select 1 million image-text pairs from an existing dataset [COYO-700M](https://huggingface.co/datasets/kakaobrain/coyo-700m)
+Download each image and use Canny edge detector to generate the conditioning image. 
+Create a metafile that links all the images and processed images to their text captions. 
+
+Use the following command to run the example data preprocessing script. If you've mounted a disk to your TPU, you should place your `train_data_dir` and `cache_dir` on the mounted disk
+
+```bash
+python3 coyo_1m_dataset_preprocess.py \
+ --train_data_dir="/mnt/disks/persist/data" \
+ --cache_dir="/mnt/disks/persist" \
+ --max_train_samples=1000000 \
+ --num_proc=16
+```
+
+Once the script finishes running, you can find a data folder at the specified `train_data_dir` with the below folder structure:
+
+``````
+data
+├── images
+│   ├── image_1.png
+│   ├── .......
+│   └── image_1000000.jpeg
+├── processed_images
+│   ├── image_1.png
+│   ├── .......
+│   └── image_1000000.jpeg
+└── meta.jsonl
+```
+
+#### load dataset
+
+To load a dataset from the data folder you just created, you should add a dataset loading script to your data folder. The dataset loading script should have the same name as the folder. For example, if your data folder is `data`, you should add a data loading script named `data.py`. We provided an [example data loading script](./data.py) for you to use. All you need to do is to update the `DATA_DIR` with the correct path to your data folder. For more details about how to write a dataset loading script, refer to the [documentation](https://huggingface.co/docs/datasets/dataset_script)
+
+once the dataset loading script is added to your data folder, you can load it with 
+
+```python
+dataset = load_dataset("/mnt/disks/persist/data", cache_dir="/mnt/disks/persist" )
+```
+
+Note that you can use the `--train_data_dir` flag to pass your data folder directory to the training script and generate your dataset automatically during the training.
+ 
+For large datasets, we recommend generating the dataset once and saving it on the disk with
+
+```python
+dataset.save_to_disk("/mnt/disks/persist/dataset")
+```
+
+You can then reuse the saved dataset for your training by passing the `--load_from_disk` flag.
+
+Here is an example to run a training script that will load the dataset from the disk 
+
+```python
+export MODEL_DIR="runwayml/stable-diffusion-v1-5"
+export OUTPUT_DIR="/mnt/disks/persist/canny_model"
+export DATASET_DIR="/mnt/disks/persist/dataset"
+export DISK_DIR="/mnt/disks/persist"
+
+python3 train_controlnet_flax.py \
+ --pretrained_model_name_or_path=$MODEL_DIR \
+ --output_dir=$OUTPUT_DIR \
+ --train_data_dir=$DATASET_DIR \
+ --load_from_disk \
+ --cache_dir=$DISK_DIR \
+ --resolution=512 \
+ --learning_rate=1e-5 \
+ --train_batch_size=2 \
+ --revision="non-ema" \
+ --from_pt \
+ --max_train_steps=500000 \
+ --checkpointing_steps=10000 \
+ --dataloader_num_workers=16 
+ ```
+
+
+
+
+
+
+
+
+
+
+
+
+
