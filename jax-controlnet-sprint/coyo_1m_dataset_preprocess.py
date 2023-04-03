@@ -6,6 +6,7 @@ import PIL
 import requests
 import numpy as np
 import random
+import jsonlines
 
 import logging
 logger = logging.getLogger(__name__)
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     # estimation the % of images filtered
     filter_ratio = len(filter_dataset(dataset, 20000))/20000
     # esimate max_train_samples based on filter_ratio and also assumption that only 80% of the URLs are still valid
-    max_train_samples = int(MAX_TRAIN_SAMPLES /filter_ratio/0.8)
+    max_train_samples = int(args.max_train_samples /filter_ratio/0.8)
 
     # filter dataset down to 1 million
     small_dataset = filter_dataset(dataset, max_train_samples)
@@ -102,8 +103,8 @@ if __name__ == "__main__":
             logger.error(f"Failed to process image{image_url}: {str(e)}")
 
     # preprocess -> image, processed image and meta.jsonl
-    small_dataset.map(preprocess_and_save, num_proc=NUM_PROC)
+    small_dataset.map(preprocess_and_save, num_proc=args.num_proc)
 
-    print(f"created data folder at: {train_data_dir}")
+    print(f"created data folder at: {args.train_data_dir}")
 
     
