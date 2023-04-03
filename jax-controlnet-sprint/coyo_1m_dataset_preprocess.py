@@ -51,32 +51,6 @@ def filter_function(example):
         return False
     return True
 
-def preprocess_and_save(example):
-    image_url = example['url']
-    try:
-        # download original image
-        image = Image.open(requests.get(image_url, stream=True, timeout=5).raw)
-        image_path = f"{DIR_DISK}/{DIR_DATA}/images/{example['id']}.png"
-        image.save(image_path)
-        
-        # generate and save canny image
-        processed_image= np.array(image)
-        threholds = (random.randint(0,255), random.randint(0,255))  # generate random threholds 
-        processed_image= cv2.Canny(processed_image, min(threholds), max(threholds))
-        processed_image = processed_image[:, :, None]
-        processed_image = np.concatenate([processed_image, processed_image, processed_image], axis=2)
-        processed_image = Image.fromarray(processed_image)
-        processed_image_path = f"{DIR_DISK}/{DIR_DATA}/processed_images/{example['id']}.png"
-        processed_image.save(processed_image_path)
-        
-        # write to meta.jsonl
-        meta = {'image': image_path, 'conditioning_image': processed_image_path, 'caption': example['text']}
-        with jsonlines.open(f"{DIR_DISK}/{DIR_DATA}/meta.jsonl", "a") as writer:   # for writing
-            writer.write(meta)
-
-    except Exception as e:
-        logger.error(f"Failed to process image{image_url}: {str(e)}")
-
 def filter_dataset(dataset, max_train_samples):
     small_dataset = dataset.select(range(max_train_samples)).filter(filter_function)
     return small_dataset
@@ -84,10 +58,12 @@ def filter_dataset(dataset, max_train_samples):
 
 if __name__ == "__main__":
 
+    args = parse_args()
+
     # load coyo-700
     dataset = load_dataset(
         "kakaobrain/coyo-700m",
-        cache_dir=DIR_DISK,
+        cache_dir=args.cache_dir,
         split='train',
         )
     
@@ -98,9 +74,36 @@ if __name__ == "__main__":
 
     # filter dataset down to 1 million
     small_dataset = filter_dataset(dataset, max_train_samples)
+
+    def preprocess_and_save(example):
+        image_url = example['url']
+        try:
+            # download original image
+            image = Image.open(requests.get(image_url, stream=True, timeout=5).raw)
+            image_path = f"{args.train_data_dir}/images/{example['id']}.png"
+            image.save(image_path)
+        
+            # generate and save canny image
+            processed_image= np.array(image)
+            threholds = (random.randint(0,255), random.randint(0,255))  # generate random threholds 
+            processed_image= cv2.Canny(processed_image, min(threholds), max(threholds))
+            processed_image = processed_image[:, :, None]
+            processed_image = np.concatenate([processed_image, processed_image, processed_image], axis=2)
+            processed_image = Image.fromarray(processed_image)
+            processed_image_path = f"{args.train_data_dir}/processed_images/{example['id']}.png"
+            processed_image.save(processed_image_path)
+        
+            # write to meta.jsonl
+            meta = {'image': image_path, 'conditioning_image': processed_image_path, 'caption': example['text']}
+            with jsonlines.open(f"{args.train_data_dir}/meta.jsonl", "a") as writer:   # for writing
+                writer.write(meta)
+
+        except Exception as e:
+            logger.error(f"Failed to process image{image_url}: {str(e)}")
+
     # preprocess -> image, processed image and meta.jsonl
     small_dataset.map(preprocess_and_save, num_proc=NUM_PROC)
 
-    print(f"created data folder at: {DIR_DISK}/{DIR_DATA}")
+    print(f"created data folder at: {train_data_dir}")
 
     
