@@ -122,7 +122,7 @@ data
 
 To load a dataset from the data folder you just created, you should add a dataset loading script to your data folder. The dataset loading script should have the same name as the folder. For example, if your data folder is `data`, you should add a data loading script named `data.py`. We provide an [example data loading script](./data.py) for you to use. All you need to do is to update the `DATA_DIR` with the correct path to your data folder. For more details about how to write a dataset loading script, refer to the [documentation](https://huggingface.co/docs/datasets/dataset_script).
 
-once the dataset loading script is added to your data folder, you can load it with 
+Once the dataset loading script is added to your data folder, you can load it with: 
 
 ```python
 dataset = load_dataset("/mnt/disks/persist/data", cache_dir="/mnt/disks/persist" )
