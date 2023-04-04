@@ -12,7 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="example of a data preprocessing script.")
+    parser = argparse.ArgumentParser(description="Example of a data preprocessing script.")
     parser.add_argument(
         "--train_data_dir",
         type=str,
