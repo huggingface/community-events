@@ -89,7 +89,7 @@ If you need extra space, you can follow [this guide](https://cloud.google.com/tp
 #### Data preprocessing 
 
 Here we demonstrate how to prepare a large dataset to train a ControlNet model with canny edge detection. More specifically, we provide an [example script](./coyo_1m_dataset_preprocess.py) that:
-* Select 1 million image-text pairs from an existing dataset [COYO-700M](https://huggingface.co/datasets/kakaobrain/coyo-700m)
+* Selects 1 million image-text pairs from an existing dataset [COYO-700M](https://huggingface.co/datasets/kakaobrain/coyo-700m).
 * Download each image and use Canny edge detector to generate the conditioning image. 
 * Create a metafile that links all the images and processed images to their text captions. 
 
