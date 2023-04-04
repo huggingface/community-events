@@ -161,16 +161,3 @@ python3 train_controlnet_flax.py \
  --checkpointing_steps=10000 \
  --dataloader_num_workers=16 
  ```
-
-
-
-
-
-
-
-
-
-
-
-
-

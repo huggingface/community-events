@@ -1,7 +1,7 @@
-import pandas as pd
-from huggingface_hub import hf_hub_url
-import datasets
 import os
+
+import datasets
+import pandas as pd
 
 _VERSION = datasets.Version("0.0.2")
 
@@ -20,7 +20,7 @@ _FEATURES = datasets.Features(
 
 
 _DEFAULT_CONFIG = datasets.BuilderConfig(name="default", version=_VERSION)
-DATA_DIR = '/mnt/disks/persist/data'
+DATA_DIR = "/mnt/disks/persist/data"
 
 
 class coyo(datasets.GeneratorBasedBuilder):
@@ -38,7 +38,6 @@ class coyo(datasets.GeneratorBasedBuilder):
         )
 
     def _split_generators(self, dl_manager):
-        
         metadata_path = f"{DATA_DIR}/meta.jsonl"
         images_dir = f"{DATA_DIR}/images"
         conditioning_images_dir = f"{DATA_DIR}/processed_images"
@@ -60,7 +59,7 @@ class coyo(datasets.GeneratorBasedBuilder):
 
         for _, row in metadata.iterrows():
             text = row["caption"]
-            
+
             try:
                 image_path = row["image"]
                 image_path = os.path.join(images_dir, image_path)
