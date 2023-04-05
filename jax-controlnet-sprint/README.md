@@ -88,7 +88,7 @@ If you need extra space, you can follow [this guide](https://cloud.google.com/tp
 
 #### Data preprocessing 
 
-Here we demonstrate how to prepare a large dataset to train a ControlNet model with canny edge detection. More specifically, we provide an [example script](./coyo_1m_dataset_preprocess.py) that:
+Here we demonstrate how to prepare a large dataset to train a ControlNet model with canny edge detection. More specifically, we provide an [example script](./dataset_tools/coyo_1m_dataset_preprocess.py) that:
 * Selects 1 million image-text pairs from an existing dataset [COYO-700M](https://huggingface.co/datasets/kakaobrain/coyo-700m).
 * Downloads each image and use Canny edge detector to generate the conditioning image. 
 * Create a metafile that links all the images and processed images to their text captions. 
@@ -120,7 +120,7 @@ data
 
 #### Load dataset
 
-To load a dataset from the data folder you just created, you should add a dataset loading script to your data folder. The dataset loading script should have the same name as the folder. For example, if your data folder is `data`, you should add a data loading script named `data.py`. We provide an [example data loading script](./data.py) for you to use. All you need to do is to update the `DATA_DIR` with the correct path to your data folder. For more details about how to write a dataset loading script, refer to the [documentation](https://huggingface.co/docs/datasets/dataset_script).
+To load a dataset from the data folder you just created, you should add a dataset loading script to your data folder. The dataset loading script should have the same name as the folder. For example, if your data folder is `data`, you should add a data loading script named `data.py`. We provide an [example data loading script](./dataset_tools/data.py) for you to use. All you need to do is to update the `DATA_DIR` with the correct path to your data folder. For more details about how to write a dataset loading script, refer to the [documentation](https://huggingface.co/docs/datasets/dataset_script).
 
 Once the dataset loading script is added to your data folder, you can load it with: 
 
