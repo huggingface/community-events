@@ -160,4 +160,19 @@ python3 train_controlnet_flax.py \
  --max_train_steps=500000 \
  --checkpointing_steps=10000 \
  --dataloader_num_workers=16 
- ```
+
+### Prepare a dataset with MediaPipe and Hugging Face 
+
+We provide a notebook ([![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/huggingface/community-events/blob/main/jax-controlnet-sprint/dataset_tools/create_pose_dataset.ipynb)) that shows you how to prepare a dataset for ControlNet training using [MediaPipe](https://developers.google.com/mediapipe) and Hugging Face. Specifically, in the notebook, we show:
+
+* How to leverage MediaPipe solutions to extract pose body joints from the input images.
+* Predict captions using BLIP-2 from the input images using 🤗 Transformers.
+* Build and push the final dataset to the Hugging Face Hub using 🤗 Datasets. 
+
+You can refer to the notebook to create your own datasets using other MediaPipe solutions as well. Below, we list all the relevant ones:
+
+* [Pose Landmark Detection](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker)
+* [Face Landmark Detection](https://developers.google.com/mediapipe/solutions/vision/face_landmarker)
+* [Selfie Segmentation](https://developers.google.com/mediapipe/solutions/vision/image_segmenter)
+
+
