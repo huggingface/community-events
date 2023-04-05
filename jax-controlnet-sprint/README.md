@@ -105,7 +105,7 @@ python3 coyo_1m_dataset_preprocess.py \
 
 Once the script finishes running, you can find a data folder at the specified `train_data_dir` with the below folder structure:
 
-``````
+```
 data
 ├── images
 │   ├── image_1.png
@@ -160,6 +160,7 @@ python3 train_controlnet_flax.py \
  --max_train_steps=500000 \
  --checkpointing_steps=10000 \
  --dataloader_num_workers=16 
+ ```
 
 ### Prepare a dataset with MediaPipe and Hugging Face 
 
