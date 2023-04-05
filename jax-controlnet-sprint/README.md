@@ -17,6 +17,12 @@ Don't forget to fill out the [signup form]!
 - [Communication](#communication)
 - [Talks](#talks)
 - [Data and Pre-processing](#data-and-pre-processing)
+    - [Prepare a large local dataset](#prepare-a-large-local-dataset)
+    - [Prepare a dataset with MediaPipe and Hugging Face](#prepare-a-dataset-with-mediapipe-and-hugging-face)    
+- [Training ControlNet](#training-controlnet)
+    - [Setting up your TPU VM](#setting-up-your-tpu-vm)
+    - [Installing JAX](#installing-jax)
+    - [Running the training script](#running-the-training-script)
 
 ## Organization 
 
@@ -177,3 +183,164 @@ You can refer to the notebook to create your own datasets using other MediaPipe 
 * [Selfie Segmentation](https://developers.google.com/mediapipe/solutions/vision/image_segmenter)
 
 
+## Training ControlNet
+
+This is perhaps the most fun and interesting part of this document as here we show you how to train a custom ControlNet model. 
+
+> 💡 Note: For this sprint, you are NOT restricted to just training ControlNets. We provide this training script as a reference for you to get started. 
+
+For faster training on TPUs and GPUs you can leverage the flax training example. Follow the instructions above to get the model and dataset before running the script.
+
+### Setting up your TPU VM
+
+_Before proceeding with the rest of this section, you must ensure that the
+email address you're using has been added to the `diffusers-jax` project on
+Google Cloud Platform. If it's not the case, please let us know in the Discord server (you can tag `@sayakpaul`, `@merve`, and `@patrickvonplaten`)._
+
+In the following, we will describe how to do so using a standard console, but you should also be able to connect to the TPU VM via IDEs, like Visual Studio Code, etc.
+
+1. You need to install the Google Cloud SDK. Please follow the instructions on cloud.google.com/sdk.
+
+2. Once you've installed the google cloud sdk, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
+  
+    ```bash
+    $ gcloud config set account <your-email-adress>
+    ```
+
+3. Let's also make sure the correct project is set in case your email is used for multiple gcloud projects:
+
+    ```bash
+    $ gcloud config set project diffusers-jax
+    ```
+
+4. Next, you will need to authenticate yourself. You can do so by running:
+
+    ```bash
+    $ gcloud auth login
+    ```
+
+    This should give you a link to a website, where you can authenticate your gmail account.
+
+5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you in the second email.
+
+    ```bash
+    $ gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
+    ```
+
+This should ssh you into the TPU VM!
+
+### Installing JAX
+
+Let's first create a Python virtual environment:
+
+```bash
+$ python3 -m venv <your-venv-name>
+```
+
+We can activate the environment by running:
+
+```bash
+source ~/<your-venv-name>/bin/activate
+```
+
+Now, we can install JAX `0.4.5`:
+
+```bash
+$ pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+```
+
+To verify that JAX was correctly installed, you can run the following command:
+
+```python
+import jax
+jax.device_count()
+```
+
+This should display the number of TPU cores, which should be 8 on a TPUv4-8 VM.
+
+Then install Diffusers and the library's training dependencies:
+
+```bash
+$ pip install git+https://github.com/huggingface/diffusers.git
+```
+
+Then clone this repository and install the other dependencies:
+
+```bash
+$ git clone https://github.com/huggingface/community-events
+$ cd community-events/training_scripts
+$ pip install -U -r requirements_flax.txt
+```
+
+### Running the training script
+
+Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
+
+```bash
+$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
+$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
+```
+
+We encourage you to store or share your model with the community. To use huggingface hub, please login to your Hugging Face account, or ([create one](https://huggingface.co/docs/diffusers/main/en/training/hf.co/join) if you don’t have one already):
+
+```bash
+$ huggingface-cli login
+```
+
+Make sure you have the `MODEL_DIR`,`OUTPUT_DIR` and `HUB_MODEL_ID` environment variables set. The `OUTPUT_DIR` and `HUB_MODEL_ID` variables specify where to save the model to on the Hub:
+
+```bash
+export MODEL_DIR="runwayml/stable-diffusion-v1-5"
+export OUTPUT_DIR="control_out"
+export HUB_MODEL_ID="fill-circle-controlnet"
+```
+
+And finally start the training (make sure you're in the `training_scripts` directory)!
+
+```bash
+python3 train_controlnet_flax.py \
+ --pretrained_model_name_or_path=$MODEL_DIR \
+ --output_dir=$OUTPUT_DIR \
+ --dataset_name=fusing/fill50k \
+ --resolution=512 \
+ --learning_rate=1e-5 \
+ --validation_image "./conditioning_image_1.png" "./conditioning_image_2.png" \
+ --validation_prompt "red circle with blue background" "cyan circle with brown floral background" \
+ --validation_steps=1000 \
+ --train_batch_size=2 \
+ --revision="non-ema" \
+ --from_pt \
+ --report_to="wandb" \
+ --max_train_steps=10000 \
+ --push_to_hub \
+ --hub_model_id=$HUB_MODEL_ID
+ ```
+
+Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your huggingface account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
+
+Our training script also provides limited support for streaming large datasets from the Hugging Face Hub. In order to enable streaming, one must also set `--max_train_samples`.  Here is an example command:
+
+```bash
+python3 train_controlnet_flax.py \
+  --pretrained_model_name_or_path=$MODEL_DIR \
+  --output_dir=$OUTPUT_DIR \
+  --dataset_name=multimodalart/facesyntheticsspigacaptioned \
+  --streaming \
+  --conditioning_image_column=spiga_seg \
+  --image_column=image \
+  --caption_column=image_caption \
+  --resolution=512 \
+  --max_train_samples 50 \
+  --max_train_steps 5 \
+  --learning_rate=1e-5 \
+  --validation_steps=2 \
+  --train_batch_size=1 \
+  --revision="flax" \
+  --report_to="wandb"
+```
+
+Note, however, that the performance of the TPUs might get bottlenecked as streaming with `datasets` is not optimized for images. For ensuring maximum throughput, we encourage you to explore the following options:
+
+* [Webdataset](https://webdataset.github.io/webdataset/)
+* [TorchData](https://github.com/pytorch/data)
+* [TensorFlow Datasets](https://www.tensorflow.org/datasets/tfless_tfds)
