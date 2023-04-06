@@ -16,7 +16,7 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
 .
 4. Start building!
     
-    We will be hosting our applications in [scikit-learn](https://huggingface.co/scikit-learn) organization of Hugging Face. 
+    We will be hosting our applications in [scikit-learn](https://huggingface.co/sklearn-docs) organization of Hugging Face. 
     
     For complete starters: in the Hugging Face Hub, there are repositories for models, datasets, and [Spaces](https://huggingface.co/spaces). Spaces are a special type of repository hosting ML applications, such as showcasing a model. To write our apps, we will only be using Gradio. [Gradio](https://gradio.app/) is a library that lets you build a cool front-end application for your models, completely in Python, and supports many libraries! In this sprint, we will be using mostly visualization support (`matplotlib`, `plotly`, `altair` and more) and [skops](https://skops.readthedocs.io/en/stable/) integration (which you can launch an interface for a given classification or regression interface with one line of code). 
     
