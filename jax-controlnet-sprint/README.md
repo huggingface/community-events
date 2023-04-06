@@ -271,10 +271,12 @@ $ git clone https://github.com/huggingface/community-events
 $ cd community-events/training_scripts
 $ pip install -U -r requirements_flax.txt
 ```
-If you want to use Weights and Bias logging, you should also install `wandb` now
+
+If you want to use Weights and Biases logging, you should also install `wandb` now:
 
 ```bash
 pip install wandb
+```
 ### Running the training script
 
 Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
