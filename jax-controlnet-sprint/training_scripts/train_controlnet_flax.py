@@ -316,10 +316,9 @@ def parse_args():
     parser.add_argument(
         "--report_to",
         type=str,
-        default="tensorboard",
+        default="wandb",
         help=(
-            'The integration to report the results and logs to. Supported platforms are `"tensorboard"`'
-            ' (default), `"wandb"` and `"comet_ml"`. Use `"all"` to report to all integrations.'
+            'The integration to report the results and logs to. currently only supported platforms are `"wandb"`'
         ),
     )
     parser.add_argument(
@@ -429,6 +428,12 @@ def parse_args():
             "Run validation every X steps. Validation consists of running the prompt"
             " `args.validation_prompt` and logging the images."
         ),
+    )
+    parser.agg_argument(
+        "--wandb_entity",
+        type=str,
+        default=None,
+        help=("The wandb entity to use (for teams).")
     )
     parser.add_argument(
         "--tracker_project_name",
@@ -656,6 +661,7 @@ def main():
     # wandb init
     if jax.process_index() == 0 and args.report_to == "wandb":
         wandb.init(
+            entity=args.wandb_entity,
             project=args.tracker_project_name,
             job_type="train",
             config=args,
