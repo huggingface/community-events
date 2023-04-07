@@ -70,9 +70,7 @@ This way, we make sure that the everybody in the community can benefit from your
 
 ## Talks
 
-We will have talks from folks working at JAX & TPU teams at Google, diffusers and ethics teams at Hugging Face and awesome open-sorcerers working in generative AI. We will update this post with links to the talks, so keep an eye here or on Discord in diffusion models core-announcements channel and set your reminders!
-
-- [Link to the talks on 17th of April](https://www.youtube.com/watch?v=SOj2sxgvFe0), we will be hosting Andreas Steiner, Margaret Mitchell and Boris Dayma. 
+We have invited prominent researchers and engineers from Google, Hugging Face, and the open-source community who are working in the Generative AI space. We will update this section with links to the talks, so keep an eye here or on Discord in diffusion models core-announcements channel and set your reminders!
 
 | Speaker	| Topic	| Time	| Video |
 |---|---|---|---|
