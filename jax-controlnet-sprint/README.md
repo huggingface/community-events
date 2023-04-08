@@ -206,19 +206,19 @@ In the following, we will describe how to do so using a standard console, but yo
 2. Once you've installed the google cloud sdk, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
   
     ```bash
-    $ gcloud config set account <your-email-adress>
+    gcloud config set account <your-email-adress>
     ```
 
 3. Let's also make sure the correct project is set in case your email is used for multiple gcloud projects:
 
     ```bash
-    $ gcloud config set project diffusers-jax
+    gcloud config set project diffusers-jax
     ```
 
 4. Next, you will need to authenticate yourself. You can do so by running:
 
     ```bash
-    $ gcloud auth login
+    gcloud auth login
     ```
 
     This should give you a link to a website, where you can authenticate your gmail account.
@@ -226,7 +226,7 @@ In the following, we will describe how to do so using a standard console, but yo
 5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you in the second email.
 
     ```bash
-    $ gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
+    gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
     ```
 
 This should ssh you into the TPU VM!
@@ -236,7 +236,7 @@ This should ssh you into the TPU VM!
 Let's first create a Python virtual environment:
 
 ```bash
-$ python3 -m venv <your-venv-name>
+python3 -m venv <your-venv-name>
 ```
 
 We can activate the environment by running:
@@ -248,7 +248,7 @@ source ~/<your-venv-name>/bin/activate
 Now, we can install JAX `0.4.5`:
 
 ```bash
-$ pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 ```
 
 To verify that JAX was correctly installed, you can run the following command:
@@ -263,15 +263,15 @@ This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM.
 Then install Diffusers and the library's training dependencies:
 
 ```bash
-$ pip install git+https://github.com/huggingface/diffusers.git
+pip install git+https://github.com/huggingface/diffusers.git
 ```
 
 Then clone this repository and install the other dependencies:
 
 ```bash
-$ git clone https://github.com/huggingface/community-events
-$ cd community-events/jax-controlnet-sprint/training_scripts
-$ pip install -U -r requirements_flax.txt
+git clone https://github.com/huggingface/community-events
+cd community-events/jax-controlnet-sprint/training_scripts
+pip install -U -r requirements_flax.txt
 ```
 
 If you want to use Weights and Biases logging, you should also install `wandb` now:
@@ -284,14 +284,14 @@ pip install wandb
 Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
 
 ```bash
-$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
-$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
+wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
+wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
 ```
 
 We encourage you to store or share your model with the community. To use Hugging Face hub, please login to your Hugging Face account, or ([create one](https://huggingface.co/docs/diffusers/main/en/training/hf.co/join) if you don’t have one already):
 
 ```bash
-$ huggingface-cli login
+huggingface-cli login
 ```
 
 Make sure you have the `MODEL_DIR`,`OUTPUT_DIR` and `HUB_MODEL_ID` environment variables set. The `OUTPUT_DIR` and `HUB_MODEL_ID` variables specify where to save the model to on the Hub:
