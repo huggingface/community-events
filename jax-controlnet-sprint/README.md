@@ -191,7 +191,7 @@ This is perhaps the most fun and interesting part of this document as here we sh
 
 > 💡 Note: For this sprint, you are NOT restricted to just training ControlNets. We provide this training script as a reference for you to get started. 
 
-For faster training on TPUs and GPUs you can leverage the flax training example. Follow the instructions above to get the model and dataset before running the script.
+For faster training on TPUs and GPUs you can leverage the Flax training example. Follow the instructions above to get the model and dataset before running the script.
 
 ### Setting up your TPU VM
 
