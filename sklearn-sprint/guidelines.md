@@ -96,4 +96,6 @@ In this sprint, we will build interactive demos from the scikit-learn documentat
 **If you need any help** you can join our discord server, take collaborate role and join `sklearn-sprint` channel and ask questions 🤗🫂 
 
 ### Sprint Prizes
-To be announced 📣 
+We will be giving following vouchers that can be spent at [Hugging Face Store](https://store.huggingface.co/) including shipping,
+- $20 worth of voucher for everyone that builds three demos,
+- $40 worth of voucher for everyone that builds five demos. 
