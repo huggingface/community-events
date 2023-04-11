@@ -23,6 +23,8 @@ Don't forget to fill out the [signup form]!
     - [Setting up your TPU VM](#setting-up-your-tpu-vm)
     - [Installing JAX](#installing-jax)
     - [Running the training script](#running-the-training-script)
+- [How to Make a Submission](#how-to-make-a-submission)
+    - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
 
 ## Organization 
 
@@ -364,3 +366,67 @@ Note, however, that the performance of the TPUs might get bottlenecked as stream
 * [Webdataset](https://webdataset.github.io/webdataset/)
 * [TorchData](https://github.com/pytorch/data)
 * [TensorFlow Datasets](https://www.tensorflow.org/datasets/tfless_tfds)
+
+## How to Make a Submission
+
+To make a full submission, you need to have the following on Hugging Face Hub:
+- Model repository with model weights and model card,
+- Dataset repository with dataset card,
+- A Hugging Face Space that lets others interact with your model.
+
+### Pushing model weights and the model card to Hub
+
+**If you are using the scripts provided in this sprint**
+
+Enabling `push_to_hub` argument in the training arguments will:
+- Create a model repository locally, and remotely on Hugging Face Hub,
+- Create a model card and write it to the local model repository,
+- Save your model to the local model repository,
+- Push the local repository to Hugging Face Hub.
+
+Your automatically generated model card will look like below 👇 
+![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/blob/main/jax_model_card.png)
+
+You can edit the model card to be more informative. 
+
+**If you have trained a custom model and not used the scripts**
+
+You need to authenticate yourself with `huggingface-cli login` as instructed above. If you are using one of the available model classes by `diffusers`, save your model with `save_pretrained` method of your model. 
+
+```python
+model.save_pretrained("path_to_your_model_repository")
+```
+
+After saving your model to a folder, you can simply use below script to push your model to the Hub 👇 
+
+```python
+from huggingface_hub import create_repo, upload_folder
+
+create_repo("username/my-awesome-model")
+upload_folder(
+    folder_path="path_to_your_model_repository",
+    repo_id="username/my-awesome-model"
+    )
+```
+
+This will push your model to Hub. After pushing your model to Hub, you need to create the model card yourself. 
+You can use graphical interface to edit the model card. 
+![Edit Model Card](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/edit_model_card.png)
+
+Every model card consists of two sections, metadata and free text. You can edit metadata from the sections in graphical UI. If you have saved your model using `save_pretrained`, you do not need to provide `pipeline_tag` and `library_name`. If not, provide `pipeline_tag`, `library_name` and dataset if it exists on Hugging Face Hub. Aside from these, you need to add the `jax-diffusers-event` to `tags` section.
+```
+---
+license: apache-2.0
+library_name: diffusers
+tags:
+- jax-diffusers-event
+datasets:
+- red_caps
+pipeline_tag: text-to-image
+---
+```
+![Edit Metadata](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/edit_metadata.png)
+
+### Creating your Space
+
+
