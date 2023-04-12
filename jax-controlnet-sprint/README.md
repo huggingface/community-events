@@ -371,7 +371,7 @@ Note, however, that the performance of the TPUs might get bottlenecked as stream
 
 To make a full submission, you need to have the following on Hugging Face Hub:
 - Model repository with model weights and model card,
-- Dataset repository with dataset card,
+- (Optional) Dataset repository with dataset card, 
 - A Hugging Face Space that lets others interact with your model.
 
 ### Pushing model weights and the model card to Hub
@@ -429,4 +429,122 @@ pipeline_tag: text-to-image
 
 ### Creating your Space
 
+#### Writing our Application
+We will use [Gradio](https://gradio.app/) to build our applications. Gradio has two main APIs: `Interface` and `Blocks`. `Interface` is a high-level API that lets you create an interface with few lines of code and `Blocks` is a lower-level API that gives you more flexibility over interfaces you can build. The code will be in a file called `app.py`.
 
+Let's take a look at an example for ControlNet. The `Interface` API simply works like below 👇 
+
+```python
+import gradio as gr
+
+# inference function takes prompt, negative prompt and image
+def infer(prompt, negative_prompt, image):
+    # implement your inference function here
+    return output_image
+
+# you need to pass inputs and outputs according to inference function
+gr.Interface(fn = infer, inputs = ["text", "text", "image"], outputs = "image").launch()
+```
+You can further customize your interface by passing `title`, `description` and `examples`.
+
+```python
+title = "ControlNet on Canny Filter"
+description = "This is a demo on ControlNet based on canny filter."
+# you need to pass your examples according to your inputs
+# each inner list is one example
+examples = [["a cat with cake texture", "low quality", "cat_image.png"]]
+gr.Interface(fn = infer, inputs = ["text", "text", "image"], outputs = "image",
+            title = title, description = description, examples = examples, theme='gradio/soft').launch()
+```
+Your interface will look like below 👇 
+![ControlNet](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/gradio_controlnet.png)
+
+With Blocks, you can add markdown, tabs, components under columns and rows and more. Assume we have two ControlNets and we want to include them in one Space. We will have them under different tabs under one demo like below 👇 
+
+```python
+import gradio as gr
+
+def infer_segmentation(prompt, negative_prompt, image):
+    # your inference function for segmentation control 
+    return im
+
+def infer_canny(prompt, negative_prompt, image):
+    # your inference function for canny control 
+    return im
+
+with gr.Blocks(theme='gradio/soft') as demo:
+    gr.Markdown("## Stable Diffusion with Different Controls")
+    gr.Markdown("In this app, you can find different ControlNets with different filters. ")
+
+
+    with gr.Tab("ControlNet on Canny Filter "):
+        prompt_input_canny = gr.Textbox(label="Prompt")
+        negative_prompt_canny = gr.Textbox(label="Negative Prompt")
+        canny_input = gr.Image(label="Input Image")
+        canny_output = gr.Image(label="Output Image")
+        submit_btn = gr.Button(value = "Submit")
+        canny_inputs = [prompt_input_canny, negative_prompt_canny, canny_input]
+        submit_btn.click(fn=infer_canny, inputs=canny_inputs, outputs=[canny_output])
+        
+    with gr.Tab("ControlNet with Semantic Segmentation"):
+        prompt_input_seg = gr.Textbox(label="Prompt")
+        negative_prompt_seg = gr.Textbox(label="Negative Prompt")
+        seg_input = gr.Image(label="Image")
+        seg_output = gr.Image(label="Output Image")
+        submit_btn = gr.Button(value = "Submit")
+        seg_inputs = [prompt_input_seg, negative_prompt_seg, seg_input]
+        submit_btn.click(fn=infer_segmentation, inputs=seg_inputs, outputs=[seg_output])
+
+demo.launch()
+```
+
+Above demo will look like below 👇 
+![Gradio Blocks](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/gradio_controlnet_blocks.png)
+
+
+#### Creating a Space
+After our application is written, we can create a Hugging Face Space to host our app. You can go to [huggingface.co](http://huggingface.co), click on your profile on top right and select “New Space”.
+
+![New Space](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/new_space.png)
+
+
+We can name our Space, pick a license and select Space SDK as “Gradio”. 
+
+![Space Configuration](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
+
+After creating the Space, you can use either the instructions below to clone the repository locally, adding your files and push, OR, graphical interface to create the files and write the code in the browser.
+
+![Spaces Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/repository_landing.png)
+
+To upload your application file, pick “Add File” and drag and drop your file.
+
+![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/add_file.png)
+
+Lastly, we have to create a file called `requirements.txt` and add requirements of our project. Make sure to install below versions of jax, diffusers and other dependencies like below. 
+
+```
+-f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+jax[cuda11_cudnn805]
+jaxlib
+git+https://github.com/huggingface/diffusers@main
+opencv-python
+transformers
+flax
+```
+
+We will give you GPU grant so your application can run on GPU.
+
+We have a leaderboard hosted [here](https://huggingface.co/spaces/jax-diffusers-event/leaderboard) and we will be distributing prizes from this leaderboard. To make your Space show up on the leaderboard, simply edit `README.md` of your Space to have the tag `jax-diffusers-event` under tags like below 👇 
+```
+---
+title: Canny Coyo1m
+emoji: 💜 
+...
+tags:
+- jax-diffusers-event
+---
+```
+
+We will host our models and Spaces under [this organization](https://huggingface.co/keras-dreambooth). You can carry your models and Spaces on the settings tab under `Rename or transfer this model` and select `keras-dreambooth` from the dropdown. 
+
+If you don't see `keras-dreambooth` in the dropdown, it's likely that you aren't a member of the organization. Use [this link](https://huggingface.co/organizations/keras-dreambooth/share/bfDDnByLbvPRYypHNUoZJgBgbgtTEYYgVl) to request to join the organization.
