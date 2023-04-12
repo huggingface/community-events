@@ -389,7 +389,7 @@ Your automatically generated model card will look like below 👇
 
 You can edit the model card to be more informative. 
 
-**If you have trained a custom model and not used the scripts**
+**If you have trained a custom model and not used the script**
 
 You need to authenticate yourself with `huggingface-cli login` as instructed above. If you are using one of the available model classes from `diffusers`, save your model with `save_pretrained` method of your model. 
 
