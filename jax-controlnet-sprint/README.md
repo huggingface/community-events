@@ -107,7 +107,7 @@ In this section, we will cover how to build your own dataset for ControlNet trai
 
 If you need extra space, you can follow [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#prerequisites) to create a persistent disk, attach it to your TPU VM, and create a directory to mount the disk. You can then use this directory to store your dataset.
 
-As a side note, the TPU VM allocated to your team has a 3 TB persistent storage drive attached to it. To know how to use it, check out [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#mount-pd). 
+As a side note, the TPU VM allocated to your team has a 3 TB persistent storage drive attached to it. To learn how to use it, check out [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#mount-pd). 
 
 #### Data preprocessing 
 
@@ -238,13 +238,13 @@ In the following, we will describe how to do so using a standard console, but yo
 
     This should give you a link to a website, where you can authenticate your gmail account.
 
-5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you via email from the Hugging Face team.
+5. Finally, you can establish an SSH tunnel into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you via email from the Hugging Face team.
 
     ```bash
     $ gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
     ```
 
-This should ssh you into the TPU VM!
+This should establish an SSH tunnel into the TPU VM!
 
 > 💡 Note: The TPU VMs are already attached to persistent storage drives (of 3 TB). This will be helpful
 in case your team wants to perform training on a large dataset locally. The disk name of the storage drive should also be present in the email you received. Follow [this section](https://github.com/huggingface/community-events/tree/main/jax-controlnet-sprint#mount-a-disk) for more details.
