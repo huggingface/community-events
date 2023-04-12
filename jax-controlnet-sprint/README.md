@@ -107,6 +107,8 @@ In this section, we will cover how to build your own dataset for ControlNet trai
 
 If you need extra space, you can follow [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#prerequisites) to create a persistent disk, attach it to your TPU VM, and create a directory to mount the disk. You can then use this directory to store your dataset.
 
+As a side note, the TPU VM allocated to your team has a 3 TB persistent storage drive attached to it. To know how to use it, check out [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#mount-pd). 
+
 #### Data preprocessing 
 
 Here we demonstrate how to prepare a large dataset to train a ControlNet model with canny edge detection. More specifically, we provide an [example script](./dataset_tools/coyo_1m_dataset_preprocess.py) that:
@@ -209,14 +211,14 @@ For faster training on TPUs and GPUs you can leverage the flax training example.
 ### Setting up your TPU VM
 
 _Before proceeding with the rest of this section, you must ensure that the
-email address you're using has been added to the `diffusers-jax` project on
+email address you're using has been added to the `hf-flax` project on
 Google Cloud Platform. If it's not the case, please let us know in the Discord server (you can tag `@sayakpaul`, `@merve`, and `@patrickvonplaten`)._
 
 In the following, we will describe how to do so using a standard console, but you should also be able to connect to the TPU VM via IDEs, like Visual Studio Code, etc.
 
-1. You need to install the Google Cloud SDK. Please follow the instructions on cloud.google.com/sdk.
+1. You need to install the [Google Cloud SDK](https://cloud.google.com/sdk). Please follow the instructions on https://cloud.google.com/sdk.
 
-2. Once you've installed the google cloud sdk, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
+2. Once you've installed the Google Cloud SDK, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
   
     ```bash
     $ gcloud config set account <your-email-adress>
@@ -225,7 +227,7 @@ In the following, we will describe how to do so using a standard console, but yo
 3. Let's also make sure the correct project is set in case your email is used for multiple gcloud projects:
 
     ```bash
-    $ gcloud config set project diffusers-jax
+    $ gcloud config set project hf-flax
     ```
 
 4. Next, you will need to authenticate yourself. You can do so by running:
@@ -236,13 +238,16 @@ In the following, we will describe how to do so using a standard console, but yo
 
     This should give you a link to a website, where you can authenticate your gmail account.
 
-5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you in the second email.
+5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you via email from the Hugging Face team.
 
     ```bash
     $ gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
     ```
 
 This should ssh you into the TPU VM!
+
+> 💡 Note: The TPU VMs are already attached to persistent storage drives (of 3 TB). This will be helpful
+in case your team wants to perform training on a large dataset locally. The disk name of the storage drive should also be present in the email you received. Follow [this section](https://github.com/huggingface/community-events/tree/main/jax-controlnet-sprint#mount-a-disk) for more details.
 
 ### Installing JAX
 
