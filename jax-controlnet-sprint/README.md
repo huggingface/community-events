@@ -26,7 +26,7 @@ Don't forget to fill out the [signup form]!
 
 ## Organization 
 
-Participants can propose ideas for an interesting project involving Diffusion models. Teams of 3 to 5 will then be formed around the most promising and interesting projects. Make sure to read through the [Projects] (TODO) section on how to propose projects, comment on other participants' project ideas, and create a team.
+Participants can propose ideas for an interesting project involving diffusion models. Teams of 3 to 5 will then be formed around the most promising and interesting projects. Make sure to read through the [Communication](#communication) section on how to propose projects, comment on other participants' project ideas, and create a team.
 
 To help each team successfully finish their project, we will organize talks by leading scientists and engineers from Google, Hugging Face, and the open-source diffusion community. The talks will take place on 17th of April. Make sure to attend the talks to get the most out of your participation! Check out the [Talks](#talks) section to get an overview of the talks, including the speaker and the time of the talk.
 
@@ -34,7 +34,7 @@ Each team is then given **free access to a TPU v4-8 VM** from April 14 to May 1s
 
 At the end of the community sprint, each submission will be evaluated by a jury and the top-3 demos will be awarded a prize. Check out the [How to submit a demo] (TODO) section for more information and suggestions on how to submit your project.
 
-> 💡 Note: Even though we provide an example for performing ControlNet training, participants can propose ideas that do not involve ControlNets at all. But the ideas need to be centered around Diffusion models.
+> 💡 Note: Even though we provide an example for performing ControlNet training, participants can propose ideas that do not involve ControlNets at all. But the ideas need to be centered around diffusion models.
 
 ## Important dates
 
@@ -50,6 +50,7 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 
 All important communication will take place on our Discord server. Join the server using [this link](https://hf.co/join/discord). After you join the server, take the Diffusers role in `#role-assignment` channel and head to `#jax-diffusers-ideas` channel to share your idea as a forum post. To sign up for participation, fill out the [signup form] and we will give you access to two more Discord channels on discussions and technical support, and access to TPUs.
 Important announcements of the Hugging Face, Flax/JAX, and Google Cloud team will be posted in the server.
+
 The Discord server will be the central place for participants to post about their results, share their learning experiences, ask questions and get technical support in various obstacles they encounter.
 
 For issues with Flax/JAX, Diffusers, Datasets or for questions that are specific to your project we will be interacting through public repositories and forums:
@@ -204,7 +205,7 @@ This is perhaps the most fun and interesting part of this document as here we sh
 
 > 💡 Note: For this sprint, you are NOT restricted to just training ControlNets. We provide this training script as a reference for you to get started. 
 
-For faster training on TPUs and GPUs you can leverage the flax training example. Follow the instructions above to get the model and dataset before running the script.
+For faster training on TPUs and GPUs you can leverage the Flax training example. Follow the instructions above to get the model and dataset before running the script.
 
 ### Setting up your TPU VM
 
@@ -219,19 +220,19 @@ In the following, we will describe how to do so using a standard console, but yo
 2. Once you've installed the google cloud sdk, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
   
     ```bash
-    $ gcloud config set account <your-email-adress>
+    gcloud config set account <your-email-adress>
     ```
 
 3. Let's also make sure the correct project is set in case your email is used for multiple gcloud projects:
 
     ```bash
-    $ gcloud config set project diffusers-jax
+    gcloud config set project diffusers-jax
     ```
 
 4. Next, you will need to authenticate yourself. You can do so by running:
 
     ```bash
-    $ gcloud auth login
+    gcloud auth login
     ```
 
     This should give you a link to a website, where you can authenticate your gmail account.
@@ -239,7 +240,7 @@ In the following, we will describe how to do so using a standard console, but yo
 5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you in the second email.
 
     ```bash
-    $ gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
+    gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
     ```
 
 This should ssh you into the TPU VM!
@@ -249,7 +250,7 @@ This should ssh you into the TPU VM!
 Let's first create a Python virtual environment:
 
 ```bash
-$ python3 -m venv <your-venv-name>
+python3 -m venv <your-venv-name>
 ```
 
 We can activate the environment by running:
@@ -261,7 +262,7 @@ source ~/<your-venv-name>/bin/activate
 Now, we can install JAX `0.4.5`:
 
 ```bash
-$ pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 ```
 
 To verify that JAX was correctly installed, you can run the following command:
@@ -276,15 +277,15 @@ This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM.
 Then install Diffusers and the library's training dependencies:
 
 ```bash
-$ pip install git+https://github.com/huggingface/diffusers.git
+pip install git+https://github.com/huggingface/diffusers.git
 ```
 
 Then clone this repository and install the other dependencies:
 
 ```bash
-$ git clone https://github.com/huggingface/community-events
-$ cd community-events/training_scripts
-$ pip install -U -r requirements_flax.txt
+git clone https://github.com/huggingface/community-events
+cd community-events/jax-controlnet-sprint/training_scripts
+pip install -U -r requirements_flax.txt
 ```
 
 If you want to use Weights and Biases logging, you should also install `wandb` now:
@@ -299,14 +300,14 @@ pip install wandb
 Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
 
 ```bash
-$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
-$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
+wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
+wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
 ```
 
-We encourage you to store or share your model with the community. To use huggingface hub, please login to your Hugging Face account, or ([create one](https://huggingface.co/docs/diffusers/main/en/training/hf.co/join) if you don’t have one already):
+We encourage you to store or share your model with the community. To use Hugging Face hub, please login to your Hugging Face account, or ([create one](https://huggingface.co/docs/diffusers/main/en/training/hf.co/join) if you don’t have one already):
 
 ```bash
-$ huggingface-cli login
+huggingface-cli login
 ```
 
 Make sure you have the `MODEL_DIR`,`OUTPUT_DIR` and `HUB_MODEL_ID` environment variables set. The `OUTPUT_DIR` and `HUB_MODEL_ID` variables specify where to save the model to on the Hub:
@@ -317,7 +318,7 @@ export OUTPUT_DIR="control_out"
 export HUB_MODEL_ID="fill-circle-controlnet"
 ```
 
-And finally start the training (make sure you're in the `training_scripts` directory)!
+And finally start the training (make sure you're in the `jax-controlnet-sprint/training_scripts` directory)!
 
 ```bash
 python3 train_controlnet_flax.py \
@@ -338,7 +339,7 @@ python3 train_controlnet_flax.py \
  --hub_model_id=$HUB_MODEL_ID
  ```
 
-Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your huggingface account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
+Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your Hugging Face account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
 
 Our training script also provides limited support for streaming large datasets from the Hugging Face Hub. In order to enable streaming, one must also set `--max_train_samples`.  Here is an example command:
 
