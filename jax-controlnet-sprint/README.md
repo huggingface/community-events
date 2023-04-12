@@ -292,6 +292,8 @@ If you want to use Weights and Biases logging, you should also install `wandb` n
 ```bash
 pip install wandb
 ```
+
+> 💡 Note: Weights & Biases is free for students, educators, and academic researchers. All participants of our event are qualified to get an academic Weights & Biases team account. To create your team, you can visit https://wandb.ai/create-team and choose the team type to be "Academic". For more information regarding creation and management of Weights & Biases team, you can checkout https://docs.wandb.ai/guides/app/features/teams.
 ### Running the training script
 
 Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
@@ -364,3 +366,16 @@ Note, however, that the performance of the TPUs might get bottlenecked as stream
 * [Webdataset](https://webdataset.github.io/webdataset/)
 * [TorchData](https://github.com/pytorch/data)
 * [TensorFlow Datasets](https://www.tensorflow.org/datasets/tfless_tfds)
+
+When work with a larger dataset, you may need to run training process for a long time and it’s useful to save regular checkpoints during the process. You can use the following argument to enable intermediate checkpointing:
+
+```bash
+  --checkpointing_steps=500
+```
+This will save the trained model in subfolders of your output_dir. Subfolder names is the number of steps performed so far; for example: a checkpoint saved after 500 training steps would be saved in a subfolder named 500 
+
+You can then start your training from this saved checkpoint with 
+
+```bash
+   --controlnet_model_name_or_path="./control_out/500" 
+```
