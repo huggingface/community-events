@@ -278,6 +278,8 @@ If you want to use Weights and Biases logging, you should also install `wandb` n
 ```bash
 pip install wandb
 ```
+
+> 💡 Note: Weights & Biases is free for students, educators, and academic researchers. All participants of our event are qualified to get an academic Weights & Biases team account. To create your team, you can visit https://wandb.ai/create-team and choose the team type to be "Academic". For more information regarding creation and management of Weights & Biases team, you can checkout https://docs.wandb.ai/guides/app/features/teams.
 ### Running the training script
 
 Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
