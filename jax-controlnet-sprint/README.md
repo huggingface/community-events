@@ -406,7 +406,7 @@ create_repo("username/my-awesome-model")
 upload_folder(
     folder_path="path_to_your_model_repository",
     repo_id="username/my-awesome-model"
-    )
+)
 ```
 
 This will push your model to Hub. After pushing your model to Hub, you need to create the model card yourself. 
