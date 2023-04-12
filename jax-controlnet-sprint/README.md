@@ -376,7 +376,7 @@ To make a full submission, you need to have the following on Hugging Face Hub:
 
 ### Pushing model weights and the model card to Hub
 
-**If you are using the scripts provided in this sprint**
+**If you are using the training script (`train_controlnet_flax.py`) provided in this directory**
 
 Enabling `push_to_hub` argument in the training arguments will:
 - Create a model repository locally, and remotely on Hugging Face Hub,
