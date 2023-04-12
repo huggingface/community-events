@@ -391,7 +391,7 @@ You can edit the model card to be more informative.
 
 **If you have trained a custom model and not used the scripts**
 
-You need to authenticate yourself with `huggingface-cli login` as instructed above. If you are using one of the available model classes by `diffusers`, save your model with `save_pretrained` method of your model. 
+You need to authenticate yourself with `huggingface-cli login` as instructed above. If you are using one of the available model classes from `diffusers`, save your model with `save_pretrained` method of your model. 
 
 ```python
 model.save_pretrained("path_to_your_model_repository")
