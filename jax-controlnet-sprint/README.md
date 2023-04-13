@@ -26,7 +26,7 @@ Don't forget to fill out the [signup form]!
     - [TroubleShoot your TPU VM](#troubleshoot-your-tpu-vm)
 - [How to Make a Submission](#how-to-make-a-submission)
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
-- [Creating your Space](#creating-your-space)
+- [Creating our Space](#creating-our-space)
     - [Writing our Application](#writing-our-application)
 
 ## Organization 
@@ -530,7 +530,7 @@ pipeline_tag: text-to-image
 ```
 ![Edit Metadata](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/edit_metadata.png)
 
-### Creating your Space
+### Creating our Space
 
 #### Writing our Application
 We will use [Gradio](https://gradio.app/) to build our applications. Gradio has two main APIs: `Interface` and `Blocks`. `Interface` is a high-level API that lets you create an interface with few lines of code, and `Blocks` is a lower-level API that gives you more flexibility over interfaces you can build. The code should be included in a file called `app.py`.
@@ -605,7 +605,7 @@ Above demo will look like below 👇
 ![Gradio Blocks](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/gradio_controlnet_blocks.png)
 
 
-#### Creating a Space
+#### Creating our Space
 After our application is written, we can create a Hugging Face Space to host our app. You can go to [huggingface.co](http://huggingface.co), click on your profile on top right and select “New Space”.
 
 ![New Space](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/new_space.png)
