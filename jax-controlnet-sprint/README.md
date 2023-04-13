@@ -23,6 +23,7 @@ Don't forget to fill out the [signup form]!
     - [Setting up your TPU VM](#setting-up-your-tpu-vm)
     - [Installing JAX](#installing-jax)
     - [Running the training script](#running-the-training-script)
+    - [TroubleShoot your TPU VM](#troubleshoot-your-tpu-vm)
 
 ## Organization 
 
@@ -277,7 +278,7 @@ import jax
 jax.device_count()
 ```
 
-This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM.
+This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [this section](#troubleshoot-your-tpu-vm) for solutions.
 
 Then install Diffusers and the library's training dependencies:
 
@@ -385,3 +386,55 @@ You can then start your training from this saved checkpoint with
 ```bash
    --controlnet_model_name_or_path="./control_out/500" 
 ```
+
+### Troubleshoot your TPU VM
+
+**VERY IMPORTANT** - Only one process can access the TPU cores at a time. This means that if multiple team members are trying to connect to the TPU cores, you will get errors such as:
+
+```
+libtpu.so already in used by another process. Not attempting to load libtpu.so in this process.
+```
+
+We recommend every team member create her/his own virtual environment, but only one person should run the heavy training processes. Also, please take turns when setting up the TPUv4-8 so that everybody can verify that JAX is correctly installed.
+
+If your team members are not currently using the TPU but you still get this error message. You should kill the process that is using the TPU with 
+
+```
+kill -9 PID
+```
+
+you will need to replace the term “PID” with the PID of the process that uses TPU. In most cases, this information is included in the error message. For example, if you get 
+
+```
+The TPU is already in use by a process with pid 1378725. Not attempting to load libtpu.so in this process.
+```
+
+you can do
+
+```
+kill -9 1378725
+```
+
+You can also use the below command to find processes using each of the TPU chips (e.g. `/dev/accel0` is one of the TPU chips)
+
+```
+use sudo lsof -w /dev/accel0
+```
+
+To kill all the processes using `/dev/accel0` 
+
+```
+sudo lsof -t /dev/accel0 | xargs kill -9
+```
+
+If Python is not able to detect your TPU device (i.e. when you do `jax.device_count()` and it outputs `0`), it might be because you have no rights to access the tpu logs, or you have a dangling tpu lock file. Run these commands usually fix the issue
+
+```
+sudo rm -f /tmp/libtpu_lockfile
+```
+
+```
+sudo chmod o+w /tmp/tpu_logs/
+```
+
+
