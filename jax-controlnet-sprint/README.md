@@ -23,6 +23,7 @@ Don't forget to fill out the [signup form]!
     - [Setting up your TPU VM](#setting-up-your-tpu-vm)
     - [Installing JAX](#installing-jax)
     - [Running the training script](#running-the-training-script)
+    - [TroubleShoot your TPU VM](#troubleshoot-your-tpu-vm)
 
 ## Organization 
 
@@ -277,7 +278,7 @@ import jax
 jax.device_count()
 ```
 
-This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM.
+This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [this section](#troubleshoot-your-tpu-vm) for solutions.
 
 Then install Diffusers and the library's training dependencies:
 
@@ -407,8 +408,59 @@ pip install tensorflow tensorboard-plugin-profile
 tensorboard --logdir runs/fill-circle-100steps-20230411_165612/
 ```
 
+
 The profile can then be inspected at http://localhost:6006/#profile
 
 Sometimes you'll get version conflicts (error messages like `Duplicate plugins for name projector`), which means that you have to uninstall and reinstall all versions of Tensorflow/Tensorboard (e.g. with `pip uninstall tensorflow tf-nightly tensorboard tb-nightly tensorboard-plugin-profile && pip install tf-nightly tbp-nightly tensorboard-plugin-profile`).
 
 Note that the debugging functionality of the Tensorboard `profile` plugin is still under active development. Not all views are fully functional, and for example the `trace_viewer` cuts off events after 1M (which can result in all your device traces getting lost if you for example profile the compilation step by accident).
+
+### Troubleshoot your TPU VM
+
+**VERY IMPORTANT** - Only one process can access the TPU cores at a time. This means that if multiple team members are trying to connect to the TPU cores, you will get errors such as:
+
+```
+libtpu.so already in used by another process. Not attempting to load libtpu.so in this process.
+```
+
+We recommend every team member create her/his own virtual environment, but only one person should run the heavy training processes. Also, please take turns when setting up the TPUv4-8 so that everybody can verify that JAX is correctly installed.
+
+If your team members are not currently using the TPU but you still get this error message. You should kill the process that is using the TPU with 
+
+```
+kill -9 PID
+```
+
+you will need to replace the term “PID” with the PID of the process that uses TPU. In most cases, this information is included in the error message. For example, if you get 
+
+```
+The TPU is already in use by a process with pid 1378725. Not attempting to load libtpu.so in this process.
+```
+
+you can do
+
+```
+kill -9 1378725
+```
+
+You can also use the below command to find processes using each of the TPU chips (e.g. `/dev/accel0` is one of the TPU chips)
+
+```
+use sudo lsof -w /dev/accel0
+```
+
+To kill all the processes using `/dev/accel0` 
+
+```
+sudo lsof -t /dev/accel0 | xargs kill -9
+```
+
+If Python is not able to detect your TPU device (i.e. when you do `jax.device_count()` and it outputs `0`), it might be because you have no rights to access the tpu logs, or you have a dangling tpu lock file. Run these commands usually fix the issue
+
+```
+sudo rm -f /tmp/libtpu_lockfile
+```
+
+```
+sudo chmod o+w /tmp/tpu_logs/
+```
