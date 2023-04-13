@@ -23,12 +23,15 @@ Don't forget to fill out the [signup form]!
     - [Setting up your TPU VM](#setting-up-your-tpu-vm)
     - [Installing JAX](#installing-jax)
     - [Running the training script](#running-the-training-script)
+    - [TroubleShoot your TPU VM](#troubleshoot-your-tpu-vm)
 - [How to Make a Submission](#how-to-make-a-submission)
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
+- [Creating your Space](#creating-your-space)
+    - [Writing our Application](#writing-our-application)
 
 ## Organization 
 
-Participants can propose ideas for an interesting project involving Diffusion models. Teams of 3 to 5 will then be formed around the most promising and interesting projects. Make sure to read through the [Projects] (TODO) section on how to propose projects, comment on other participants' project ideas, and create a team.
+Participants can propose ideas for an interesting project involving diffusion models. Teams of 3 to 5 will then be formed around the most promising and interesting projects. Make sure to read through the [Communication](#communication) section on how to propose projects, comment on other participants' project ideas, and create a team.
 
 To help each team successfully finish their project, we will organize talks by leading scientists and engineers from Google, Hugging Face, and the open-source diffusion community. The talks will take place on 17th of April. Make sure to attend the talks to get the most out of your participation! Check out the [Talks](#talks) section to get an overview of the talks, including the speaker and the time of the talk.
 
@@ -36,7 +39,7 @@ Each team is then given **free access to a TPU v4-8 VM** from April 14 to May 1s
 
 At the end of the community sprint, each submission will be evaluated by a jury and the top-3 demos will be awarded a prize. Check out the [How to submit a demo] (TODO) section for more information and suggestions on how to submit your project.
 
-> 💡 Note: Even though we provide an example for performing ControlNet training, participants can propose ideas that do not involve ControlNets at all. But the ideas need to be centered around Diffusion models.
+> 💡 Note: Even though we provide an example for performing ControlNet training, participants can propose ideas that do not involve ControlNets at all. But the ideas need to be centered around diffusion models.
 
 ## Important dates
 
@@ -52,6 +55,7 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 
 All important communication will take place on our Discord server. Join the server using [this link](https://hf.co/join/discord). After you join the server, take the Diffusers role in `#role-assignment` channel and head to `#jax-diffusers-ideas` channel to share your idea as a forum post. To sign up for participation, fill out the [signup form] and we will give you access to two more Discord channels on discussions and technical support, and access to TPUs.
 Important announcements of the Hugging Face, Flax/JAX, and Google Cloud team will be posted in the server.
+
 The Discord server will be the central place for participants to post about their results, share their learning experiences, ask questions and get technical support in various obstacles they encounter.
 
 For issues with Flax/JAX, Diffusers, Datasets or for questions that are specific to your project we will be interacting through public repositories and forums:
@@ -79,14 +83,14 @@ We have invited prominent researchers and engineers from Google, Hugging Face, a
 | Speaker	| Topic	| Time	| Video |
 |---|---|---|---|
 [Emiel Hoogeboom, Google Brain](https://twitter.com/emiel_hoogeboom?lang=en)	| Pixel-Space Diffusion models for High Resolution Images | 4.00pm-4.40pm CEST / 7.00am-7.40am PST| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=iw2WCAGxdQ4) |
-| [Suraj Patil, Hugging Face](https://twitter.com/psuraj28?lang=en)	| Introduction to Diffusers library	|  4.40pm-5.20pm CEST / 7.40am-08.20am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=iw2WCAGxdQ4)
+| [Apolinário Passos, Hugging Face](https://twitter.com/multimodalart?lang=en)	| Introduction to Diffusers library	|  4.40pm-5.20pm CEST / 7.40am-08.20am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=iw2WCAGxdQ4)
 | [Ting Chen, Google Brain](https://twitter.com/tingchenai?lang=en)	| Diffusion++: discrete data and high-dimensional generation |	 5.45pm-6.25pm CEST / 08.45am-09.25am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=iw2WCAGxdQ4) |
 ### **April 14, 2023**
 
 | Speaker	| Topic	| Time	| Video |
 |---|---|---|---|
 | [Tim Salimans, Google Brain](https://twitter.com/timsalimans?lang=en)	| Efficient image and video generation with distilled diffusion models |   4.00pm-4.40pm CEST / 7.00am-7.40am PST| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=6f5chgbKjSg&ab_channel=HuggingFace) |
-| [Huiwen Chang, Google Research](https://scholar.google.com/citations?user=eZQNcvcAAAAJ&hl=en)	| Masked Generative Models: MaskGIT/Muse	|  4.40pm-5.20pm CEST / 7.40am-08.20am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=6f5chgbKjSg&ab_channel=HuggingFace) |
+| [Suraj Patil, Hugging Face](https://twitter.com/psuraj28?lang=en)	| Masked Generative Models: MaskGIT/Muse	|  4.40pm-5.20pm CEST / 7.40am-08.20am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=6f5chgbKjSg&ab_channel=HuggingFace) |
 | [Sabrina Mielke, John Hopkins University](https://twitter.com/sjmielke?lang=en)	| From stateful code to purified JAX: how to build your neural net framework |	 5.20pm-6.00pm CEST / 08.20am-09.00am PST	| [![Youtube](https://www.youtube.com/s/desktop/f506bd45/img/favicon_32.png)](https://www.youtube.com/watch?v=6f5chgbKjSg&ab_channel=HuggingFace) |
 
 ### **April 17, 2023**
@@ -108,6 +112,8 @@ In this section, we will cover how to build your own dataset for ControlNet trai
 #### Mount a disk 
 
 If you need extra space, you can follow [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#prerequisites) to create a persistent disk, attach it to your TPU VM, and create a directory to mount the disk. You can then use this directory to store your dataset.
+
+As a side note, the TPU VM allocated to your team has a 3 TB persistent storage drive attached to it. To learn how to use it, check out [this guide](https://cloud.google.com/tpu/docs/setup-persistent-disk#mount-pd). 
 
 #### Data preprocessing 
 
@@ -206,52 +212,55 @@ This is perhaps the most fun and interesting part of this document as here we sh
 
 > 💡 Note: For this sprint, you are NOT restricted to just training ControlNets. We provide this training script as a reference for you to get started. 
 
-For faster training on TPUs and GPUs you can leverage the flax training example. Follow the instructions above to get the model and dataset before running the script.
+For faster training on TPUs and GPUs you can leverage the Flax training example. Follow the instructions above to get the model and dataset before running the script.
 
 ### Setting up your TPU VM
 
 _Before proceeding with the rest of this section, you must ensure that the
-email address you're using has been added to the `diffusers-jax` project on
+email address you're using has been added to the `hf-flax` project on
 Google Cloud Platform. If it's not the case, please let us know in the Discord server (you can tag `@sayakpaul`, `@merve`, and `@patrickvonplaten`)._
 
 In the following, we will describe how to do so using a standard console, but you should also be able to connect to the TPU VM via IDEs, like Visual Studio Code, etc.
 
-1. You need to install the Google Cloud SDK. Please follow the instructions on cloud.google.com/sdk.
+1. You need to install the [Google Cloud SDK](https://cloud.google.com/sdk). Please follow the instructions on https://cloud.google.com/sdk.
 
-2. Once you've installed the google cloud sdk, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
+2. Once you've installed the Google Cloud SDK, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
   
     ```bash
-    $ gcloud config set account <your-email-adress>
+    gcloud config set account <your-email-adress>
     ```
 
 3. Let's also make sure the correct project is set in case your email is used for multiple gcloud projects:
 
     ```bash
-    $ gcloud config set project diffusers-jax
+    gcloud config set project hf-flax
     ```
 
 4. Next, you will need to authenticate yourself. You can do so by running:
 
     ```bash
-    $ gcloud auth login
+    gcloud auth login
     ```
 
     This should give you a link to a website, where you can authenticate your gmail account.
 
-5. Finally, you can ssh into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you in the second email.
+5. Finally, you can establish an SSH tunnel into the TPU VM! Please run the following command by setting`--zone` to `us-central2-b` and to the TPU name also sent to you via email from the Hugging Face team.
 
     ```bash
-    $ gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
+    gcloud alpha compute tpus tpu-vm ssh <tpu-name> --zone <zone> --project hf-flax
     ```
 
-This should ssh you into the TPU VM!
+This should establish an SSH tunnel into the TPU VM!
+
+> 💡 Note: The TPU VMs are already attached to persistent storage drives (of 3 TB). This will be helpful
+in case your team wants to perform training on a large dataset locally. The disk name of the storage drive should also be present in the email you received. Follow [this section](https://github.com/huggingface/community-events/tree/main/jax-controlnet-sprint#mount-a-disk) for more details.
 
 ### Installing JAX
 
 Let's first create a Python virtual environment:
 
 ```bash
-$ python3 -m venv <your-venv-name>
+python3 -m venv <your-venv-name>
 ```
 
 We can activate the environment by running:
@@ -263,7 +272,7 @@ source ~/<your-venv-name>/bin/activate
 Now, we can install JAX `0.4.5`:
 
 ```bash
-$ pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 ```
 
 To verify that JAX was correctly installed, you can run the following command:
@@ -273,20 +282,20 @@ import jax
 jax.device_count()
 ```
 
-This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM.
+This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [this section](#troubleshoot-your-tpu-vm) for solutions.
 
 Then install Diffusers and the library's training dependencies:
 
 ```bash
-$ pip install git+https://github.com/huggingface/diffusers.git
+pip install git+https://github.com/huggingface/diffusers.git
 ```
 
 Then clone this repository and install the other dependencies:
 
 ```bash
-$ git clone https://github.com/huggingface/community-events
-$ cd community-events/training_scripts
-$ pip install -U -r requirements_flax.txt
+git clone https://github.com/huggingface/community-events
+cd community-events/jax-controlnet-sprint/training_scripts
+pip install -U -r requirements_flax.txt
 ```
 
 If you want to use Weights and Biases logging, you should also install `wandb` now:
@@ -294,30 +303,32 @@ If you want to use Weights and Biases logging, you should also install `wandb` n
 ```bash
 pip install wandb
 ```
+
+> 💡 Note: Weights & Biases is free for students, educators, and academic researchers. All participants of our event are qualified to get an academic Weights & Biases team account. To create your team, you can visit https://wandb.ai/create-team and choose the team type to be "Academic". For more information regarding creation and management of Weights & Biases team, you can checkout https://docs.wandb.ai/guides/app/features/teams.
 ### Running the training script
 
 Now let's download two conditioning images that we will use to run validation during the training in order to track our progress
 
 ```bash
-$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
-$ wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
+wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_1.png
+wget https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/controlnet_training/conditioning_image_2.png
 ```
 
-We encourage you to store or share your model with the community. To use huggingface hub, please login to your Hugging Face account, or ([create one](https://huggingface.co/docs/diffusers/main/en/training/hf.co/join) if you don’t have one already):
+We encourage you to store or share your model with the community. To use Hugging Face hub, please login to your Hugging Face account, or ([create one](https://huggingface.co/docs/diffusers/main/en/training/hf.co/join) if you don’t have one already):
 
 ```bash
-$ huggingface-cli login
+huggingface-cli login
 ```
 
 Make sure you have the `MODEL_DIR`,`OUTPUT_DIR` and `HUB_MODEL_ID` environment variables set. The `OUTPUT_DIR` and `HUB_MODEL_ID` variables specify where to save the model to on the Hub:
 
 ```bash
 export MODEL_DIR="runwayml/stable-diffusion-v1-5"
-export OUTPUT_DIR="control_out"
-export HUB_MODEL_ID="fill-circle-controlnet"
+export OUTPUT_DIR="runs/fill-circle-{timestamp}"
+export HUB_MODEL_ID="controlnet-fill-circle"
 ```
 
-And finally start the training (make sure you're in the `training_scripts` directory)!
+And finally start the training (make sure you're in the `jax-controlnet-sprint/training_scripts` directory)!
 
 ```bash
 python3 train_controlnet_flax.py \
@@ -333,32 +344,36 @@ python3 train_controlnet_flax.py \
  --revision="non-ema" \
  --from_pt \
  --report_to="wandb" \
- --max_train_steps=10000 \
+ --tracker_project_name=$HUB_MODEL_ID \
+ --num_train_epochs=11 \
  --push_to_hub \
  --hub_model_id=$HUB_MODEL_ID
  ```
 
-Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your huggingface account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
+Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your Hugging Face account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
 
-Our training script also provides limited support for streaming large datasets from the Hugging Face Hub. In order to enable streaming, one must also set `--max_train_samples`.  Here is an example command:
+Our training script also provides limited support for streaming large datasets from the Hugging Face Hub. In order to enable streaming, one must also set `--max_train_samples`.  Here is an example command (from [this blog article](https://huggingface.co/blog/train-your-controlnet)):
 
 ```bash
+export MODEL_DIR="runwayml/stable-diffusion-v1-5"
+export OUTPUT_DIR="runs/uncanny-faces-{timestamp}"
+export HUB_MODEL_ID="controlnet-uncanny-faces"
+
 python3 train_controlnet_flax.py \
-  --pretrained_model_name_or_path=$MODEL_DIR \
-  --output_dir=$OUTPUT_DIR \
-  --dataset_name=multimodalart/facesyntheticsspigacaptioned \
-  --streaming \
-  --conditioning_image_column=spiga_seg \
-  --image_column=image \
-  --caption_column=image_caption \
-  --resolution=512 \
-  --max_train_samples 50 \
-  --max_train_steps 5 \
-  --learning_rate=1e-5 \
-  --validation_steps=2 \
-  --train_batch_size=1 \
-  --revision="flax" \
-  --report_to="wandb"
+ --pretrained_model_name_or_path=$MODEL_DIR \
+ --output_dir=$OUTPUT_DIR \
+ --dataset_name=multimodalart/facesyntheticsspigacaptioned \
+ --streaming \
+ --conditioning_image_column=spiga_seg \
+ --image_column=image \
+ --caption_column=image_caption \
+ --resolution=512 \
+ --max_train_samples 100000 \
+ --learning_rate=1e-5 \
+ --train_batch_size=1 \
+ --revision="flax" \
+ --report_to="wandb" \
+ --tracker_project_name=$HUB_MODEL_ID
 ```
 
 Note, however, that the performance of the TPUs might get bottlenecked as streaming with `datasets` is not optimized for images. For ensuring maximum throughput, we encourage you to explore the following options:
@@ -366,6 +381,94 @@ Note, however, that the performance of the TPUs might get bottlenecked as stream
 * [Webdataset](https://webdataset.github.io/webdataset/)
 * [TorchData](https://github.com/pytorch/data)
 * [TensorFlow Datasets](https://www.tensorflow.org/datasets/tfless_tfds)
+
+
+When work with a larger dataset, you may need to run training process for a long time and it’s useful to save regular checkpoints during the process. You can use the following argument to enable intermediate checkpointing:
+
+```bash
+ --checkpointing_steps=500
+```
+This will save the trained model in subfolders of your output_dir. Subfolder names is the number of steps performed so far; for example: a checkpoint saved after 500 training steps would be saved in a subfolder named 500 
+
+You can then start your training from this saved checkpoint with 
+
+```bash
+ --controlnet_model_name_or_path="./control_out/500" 
+```
+
+We support training with the Min-SNR weighting strategy proposed in [Efficient Diffusion Training via Min-SNR Weighting Strategy](https://arxiv.org/abs/2303.09556) which helps to achieve faster convergence by rebalancing the loss. To use it, one needs to set the `--snr_gamma` argument. The recommended value when using it is `5.0`.
+
+We also support gradient accumulation - it is a technique that lets you use a bigger batch size than your machine would normally be able to fit into memory. You can use `gradient_accumulation_steps` argument to set gradient accumulation steps. The ControlNet author recommends using gradient accumulation to achieve better convergence. Read more [here](https://github.com/lllyasviel/ControlNet/blob/main/docs/train.md#more-consideration-sudden-converge-phenomenon-and-gradient-accumulation).
+
+You can **profile your code** with:
+
+```bash
+ --profile_steps==5
+```
+
+Refer to the [JAX documentation on profiling](https://jax.readthedocs.io/en/latest/profiling.html). To inspect the profile trace, you'll have to install and start Tensorboard with the profile plugin:
+
+```bash
+pip install tensorflow tensorboard-plugin-profile
+tensorboard --logdir runs/fill-circle-100steps-20230411_165612/
+```
+
+
+The profile can then be inspected at http://localhost:6006/#profile
+
+Sometimes you'll get version conflicts (error messages like `Duplicate plugins for name projector`), which means that you have to uninstall and reinstall all versions of Tensorflow/Tensorboard (e.g. with `pip uninstall tensorflow tf-nightly tensorboard tb-nightly tensorboard-plugin-profile && pip install tf-nightly tbp-nightly tensorboard-plugin-profile`).
+
+Note that the debugging functionality of the Tensorboard `profile` plugin is still under active development. Not all views are fully functional, and for example the `trace_viewer` cuts off events after 1M (which can result in all your device traces getting lost if you for example profile the compilation step by accident).
+
+### Troubleshoot your TPU VM
+
+**VERY IMPORTANT** - Only one process can access the TPU cores at a time. This means that if multiple team members are trying to connect to the TPU cores, you will get errors such as:
+
+```
+libtpu.so already in used by another process. Not attempting to load libtpu.so in this process.
+```
+
+We recommend every team member create her/his own virtual environment, but only one person should run the heavy training processes. Also, please take turns when setting up the TPUv4-8 so that everybody can verify that JAX is correctly installed.
+
+If your team members are not currently using the TPU but you still get this error message. You should kill the process that is using the TPU with 
+
+```
+kill -9 PID
+```
+
+you will need to replace the term “PID” with the PID of the process that uses TPU. In most cases, this information is included in the error message. For example, if you get 
+
+```
+The TPU is already in use by a process with pid 1378725. Not attempting to load libtpu.so in this process.
+```
+
+you can do
+
+```
+kill -9 1378725
+```
+
+You can also use the below command to find processes using each of the TPU chips (e.g. `/dev/accel0` is one of the TPU chips)
+
+```
+use sudo lsof -w /dev/accel0
+```
+
+To kill all the processes using `/dev/accel0` 
+
+```
+sudo lsof -t /dev/accel0 | xargs kill -9
+```
+
+If Python is not able to detect your TPU device (i.e. when you do `jax.device_count()` and it outputs `0`), it might be because you have no rights to access the tpu logs, or you have a dangling tpu lock file. Run these commands usually fix the issue
+
+```
+sudo rm -f /tmp/libtpu_lockfile
+```
+
+```
+sudo chmod o+w /tmp/tpu_logs/
+```
 
 ## How to Make a Submission
 
@@ -548,3 +651,4 @@ tags:
 We will host our models and Spaces under [this organization](https://huggingface.co/keras-dreambooth). You can carry your models and Spaces on the settings tab under `Rename or transfer this model` and select `keras-dreambooth` from the dropdown. 
 
 If you don't see `keras-dreambooth` in the dropdown, it's likely that you aren't a member of the organization. Use [this link](https://huggingface.co/organizations/keras-dreambooth/share/bfDDnByLbvPRYypHNUoZJgBgbgtTEYYgVl) to request to join the organization.
+
