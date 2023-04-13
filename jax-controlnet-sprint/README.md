@@ -451,7 +451,7 @@ You can further customize your interface by passing `title`, `description` and 
 title = "ControlNet on Canny Filter"
 description = "This is a demo on ControlNet based on canny filter."
 # you need to pass your examples according to your inputs
-# each inner list is one example
+# each inner list is one example, each element in the list corresponding to a component in the `inputs`.
 examples = [["a cat with cake texture", "low quality", "cat_image.png"]]
 gr.Interface(fn = infer, inputs = ["text", "text", "image"], outputs = "image",
             title = title, description = description, examples = examples, theme='gradio/soft').launch()
