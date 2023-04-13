@@ -445,7 +445,7 @@ def infer(prompt, negative_prompt, image):
 # you need to pass inputs and outputs according to inference function
 gr.Interface(fn = infer, inputs = ["text", "text", "image"], outputs = "image").launch()
 ```
-You can further customize your interface by passing `title`, `description` and `examples`.
+You can customize your interface by passing `title`, `description` and `examples` to the `Interface` function.
 
 ```python
 title = "ControlNet on Canny Filter"
