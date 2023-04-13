@@ -278,7 +278,7 @@ import jax
 jax.device_count()
 ```
 
-This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [TroubleShoot your TPU VM](#troubleshoot-your-tpu-vm) for solutions.
+This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [this section](#troubleshoot-your-tpu-vm) for solutions.
 
 Then install Diffusers and the library's training dependencies:
 
