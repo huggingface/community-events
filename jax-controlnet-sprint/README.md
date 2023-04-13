@@ -24,6 +24,10 @@ Don't forget to fill out the [signup form]!
     - [Installing JAX](#installing-jax)
     - [Running the training script](#running-the-training-script)
     - [TroubleShoot your TPU VM](#troubleshoot-your-tpu-vm)
+- [How to Make a Submission](#how-to-make-a-submission)
+    - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
+- [Creating our Space](#creating-our-space)
+    - [Writing our Application](#writing-our-application)
 
 ## Organization 
 
@@ -378,6 +382,7 @@ Note, however, that the performance of the TPUs might get bottlenecked as stream
 * [TorchData](https://github.com/pytorch/data)
 * [TensorFlow Datasets](https://www.tensorflow.org/datasets/tfless_tfds)
 
+
 When work with a larger dataset, you may need to run training process for a long time and it’s useful to save regular checkpoints during the process. You can use the following argument to enable intermediate checkpointing:
 
 ```bash
@@ -464,3 +469,186 @@ sudo rm -f /tmp/libtpu_lockfile
 ```
 sudo chmod o+w /tmp/tpu_logs/
 ```
+
+## How to Make a Submission
+
+To make a full submission, you need to have the following on Hugging Face Hub:
+- Model repository with model weights and model card,
+- (Optional) Dataset repository with dataset card, 
+- A Hugging Face Space that lets others interact with your model.
+
+### Pushing model weights and the model card to Hub
+
+**If you are using the training script (`train_controlnet_flax.py`) provided in this directory**
+
+Enabling `push_to_hub` argument in the training arguments will:
+- Create a model repository locally, and remotely on Hugging Face Hub,
+- Create a model card and write it to the local model repository,
+- Save your model to the local model repository,
+- Push the local repository to Hugging Face Hub.
+
+Your automatically generated model card will look like below 👇 
+![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/blob/main/jax_model_card.png).
+
+You can edit the model card to be more informative. Model cards that are more informative than the others will carry more weight during evaluation.
+
+**If you have trained a custom model and not used the script**
+
+You need to authenticate yourself with `huggingface-cli login` as instructed above. If you are using one of the available model classes from `diffusers`, save your model with `save_pretrained` method of your model. 
+
+```python
+model.save_pretrained("path_to_your_model_repository")
+```
+
+After saving your model to a folder, you can simply use below script to push your model to the Hub 👇 
+
+```python
+from huggingface_hub import create_repo, upload_folder
+
+create_repo("username/my-awesome-model")
+upload_folder(
+    folder_path="path_to_your_model_repository",
+    repo_id="username/my-awesome-model"
+)
+```
+
+This will push your model to Hub. After pushing your model to Hub, you need to create the model card yourself. 
+You can use graphical interface to edit the model card. 
+![Edit Model Card](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/edit_model_card.png)
+
+Every model card consists of two sections, metadata and free text. You can edit metadata from the sections in graphical UI. If you have saved your model using `save_pretrained`, you do not need to provide `pipeline_tag` and `library_name`. If not, provide `pipeline_tag`, `library_name` and dataset if it exists on Hugging Face Hub. Aside from these, you need to add the `jax-diffusers-event` to `tags` section.
+```
+---
+license: apache-2.0
+library_name: diffusers
+tags:
+- jax-diffusers-event
+datasets:
+- red_caps
+pipeline_tag: text-to-image
+---
+```
+![Edit Metadata](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/edit_metadata.png)
+
+### Creating our Space
+
+#### Writing our Application
+We will use [Gradio](https://gradio.app/) to build our applications. Gradio has two main APIs: `Interface` and `Blocks`. `Interface` is a high-level API that lets you create an interface with few lines of code, and `Blocks` is a lower-level API that gives you more flexibility over interfaces you can build. The code should be included in a file called `app.py`.
+
+Let's try to create a ControlNet app as an example. The `Interface` API simply works like below 👇 
+
+```python
+import gradio as gr
+
+# inference function takes prompt, negative prompt and image
+def infer(prompt, negative_prompt, image):
+    # implement your inference function here
+    return output_image
+
+# you need to pass inputs and outputs according to inference function
+gr.Interface(fn = infer, inputs = ["text", "text", "image"], outputs = "image").launch()
+```
+You can customize your interface by passing `title`, `description` and `examples` to the `Interface` function.
+
+```python
+title = "ControlNet on Canny Filter"
+description = "This is a demo on ControlNet based on canny filter."
+# you need to pass your examples according to your inputs
+# each inner list is one example, each element in the list corresponding to a component in the `inputs`.
+examples = [["a cat with cake texture", "low quality", "cat_image.png"]]
+gr.Interface(fn = infer, inputs = ["text", "text", "image"], outputs = "image",
+            title = title, description = description, examples = examples, theme='gradio/soft').launch()
+```
+Your interface will look like below 👇 
+![ControlNet](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/gradio_controlnet.png)
+
+With Blocks, you can add markdown, tabs, components under columns and rows and more. Assume we have two ControlNets and we want to include them in one Space. We will have them under different tabs under one demo like below 👇 
+
+```python
+import gradio as gr
+
+def infer_segmentation(prompt, negative_prompt, image):
+    # your inference function for segmentation control 
+    return im
+
+def infer_canny(prompt, negative_prompt, image):
+    # your inference function for canny control 
+    return im
+
+with gr.Blocks(theme='gradio/soft') as demo:
+    gr.Markdown("## Stable Diffusion with Different Controls")
+    gr.Markdown("In this app, you can find different ControlNets with different filters. ")
+
+
+    with gr.Tab("ControlNet on Canny Filter "):
+        prompt_input_canny = gr.Textbox(label="Prompt")
+        negative_prompt_canny = gr.Textbox(label="Negative Prompt")
+        canny_input = gr.Image(label="Input Image")
+        canny_output = gr.Image(label="Output Image")
+        submit_btn = gr.Button(value = "Submit")
+        canny_inputs = [prompt_input_canny, negative_prompt_canny, canny_input]
+        submit_btn.click(fn=infer_canny, inputs=canny_inputs, outputs=[canny_output])
+        
+    with gr.Tab("ControlNet with Semantic Segmentation"):
+        prompt_input_seg = gr.Textbox(label="Prompt")
+        negative_prompt_seg = gr.Textbox(label="Negative Prompt")
+        seg_input = gr.Image(label="Image")
+        seg_output = gr.Image(label="Output Image")
+        submit_btn = gr.Button(value = "Submit")
+        seg_inputs = [prompt_input_seg, negative_prompt_seg, seg_input]
+        submit_btn.click(fn=infer_segmentation, inputs=seg_inputs, outputs=[seg_output])
+
+demo.launch()
+```
+
+Above demo will look like below 👇 
+![Gradio Blocks](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/gradio_controlnet_blocks.png)
+
+
+#### Creating our Space
+After our application is written, we can create a Hugging Face Space to host our app. You can go to [huggingface.co](http://huggingface.co), click on your profile on top right and select “New Space”.
+
+![New Space](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/new_space.png)
+
+
+We can name our Space, pick a license and select Space SDK as “Gradio”. 
+
+![Space Configuration](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
+
+After creating the Space, you can either use the instructions below to clone the repository locally, add your files and push, or use the graphical interface to create the files and write the code in the browser.
+
+![Spaces Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/repository_landing.png)
+
+To upload your application file, pick “Add File” and drag and drop your file.
+
+![New Space Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/add_file.png)
+
+Lastly, we have to create a file called `requirements.txt` and add requirements of our project. Make sure to install below versions of jax, diffusers and other dependencies like below. 
+
+```
+-f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+jax[cuda11_cudnn805]
+jaxlib
+git+https://github.com/huggingface/diffusers@main
+opencv-python
+transformers
+flax
+```
+
+We will give you GPU grant so your application can run on GPU.
+
+We have a leaderboard hosted [here](https://huggingface.co/spaces/jax-diffusers-event/leaderboard) and we will be distributing prizes from this leaderboard. To make your Space show up on the leaderboard, simply edit `README.md` of your Space to have the tag `jax-diffusers-event` under tags like below 👇 
+```
+---
+title: Canny Coyo1m
+emoji: 💜 
+...
+tags:
+- jax-diffusers-event
+---
+```
+
+We will host our models and Spaces under [this organization](https://huggingface.co/keras-dreambooth). You can carry your models and Spaces on the settings tab under `Rename or transfer this model` and select `keras-dreambooth` from the dropdown. 
+
+If you don't see `keras-dreambooth` in the dropdown, it's likely that you aren't a member of the organization. Use [this link](https://huggingface.co/organizations/keras-dreambooth/share/bfDDnByLbvPRYypHNUoZJgBgbgtTEYYgVl) to request to join the organization.
+

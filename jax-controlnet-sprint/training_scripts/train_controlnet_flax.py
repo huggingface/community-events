@@ -176,6 +176,7 @@ tags:
 - text-to-image
 - diffusers
 - controlnet
+- jax-diffusers-event
 inference: true
 ---
     """
