@@ -385,7 +385,7 @@ Enabling `push_to_hub` argument in the training arguments will:
 - Push the local repository to Hugging Face Hub.
 
 Your automatically generated model card will look like below 👇 
-![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/blob/main/jax_model_card.png)
+![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/blob/main/jax_model_card.png).
 
 You can edit the model card to be more informative. Model cards that are more informative than the others will carry more weight during evaluation.
 
