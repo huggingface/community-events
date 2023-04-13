@@ -512,7 +512,7 @@ We can name our Space, pick a license and select Space SDK as “Gradio”.
 
 ![Space Configuration](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/space_config.png)
 
-After creating the Space, you can use either the instructions below to clone the repository locally, adding your files and push, OR, graphical interface to create the files and write the code in the browser.
+After creating the Space, you can either use the instructions below to clone the repository locally, add your files and push, or use the graphical interface to create the files and write the code in the browser.
 
 ![Spaces Landing](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/repository_landing.png)
 
