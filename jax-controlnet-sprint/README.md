@@ -251,6 +251,8 @@ In the following, we will describe how to do so using a standard console, but yo
     ```
 
 This should establish an SSH tunnel into the TPU VM!
+    
+> 💡 Note: You are NOT supposed to have access to the Google Cloud console. Also, you might not get an invitation link to join the `hf-flax` project. But you should still be able to access the TPU VM following the above steps.     
 
 > 💡 Note: The TPU VMs are already attached to persistent storage drives (of 3 TB). This will be helpful
 in case your team wants to perform training on a large dataset locally. The disk name of the storage drive should also be present in the email you received. Follow [this section](https://github.com/huggingface/community-events/tree/main/jax-controlnet-sprint#mount-a-disk) for more details.
