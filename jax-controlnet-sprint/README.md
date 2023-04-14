@@ -51,7 +51,7 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 - **01.05.** Shutdown access to TPUs. 
 - **08.05.**: Project presentations and determining the prize winners.
 
-Note: We will be accepting applications throughout the sprint.
+> 💡 Note: We will be accepting applications throughout the sprint.
 
 ## Communication
 
