@@ -45,11 +45,13 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 
 - **29.03.** Official announcement of the community week. Make sure to fill out the [signup form].
 - **31.03.** Start forming groups in #jax-diffusers-ideas channel in Discord. 
-- **10.04.** Receiving acceptance e-mails, starting to collect data.
+- **10.04.** Data collection.
 - **13.04. - 14.04. - [17.04.](https://www.youtube.com/watch?v=SOj2sxgvFe0)** Kick-off event with talks on Youtube. 
 - **14.04. - 17.04.** Start providing access to TPUs. 
 - **01.05.** Shutdown access to TPUs. 
 - **08.05.**: Project presentations and determining the prize winners.
+
+Note: We will be accepting applications throughout the sprint.
 
 ## Communication
 
