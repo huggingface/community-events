@@ -226,7 +226,7 @@ Google Cloud Platform. If it's not the case, please let us know in the Discord s
 
 In the following, we will describe how to do so using a standard console, but you should also be able to connect to the TPU VM via IDEs, like Visual Studio Code, etc.
 
-1. You need to install the [Google Cloud SDK](https://cloud.google.com/sdk). Please follow the instructions on https://cloud.google.com/sdk.
+1. You need to install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install). Please follow the instructions on https://cloud.google.com/sdk.
 
 2. Once you've installed the Google Cloud SDK, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
   
