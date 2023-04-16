@@ -275,18 +275,10 @@ We can activate the environment by running:
 source ~/<your-venv-name>/bin/activate
 ```
 
-Then install Diffusers and the library's training dependencies:
+Now, we can install JAX `0.4.5`:
 
 ```bash
-pip install git+https://github.com/huggingface/diffusers.git
-```
-
-Then clone this repository and install JAX, Flax and the other dependencies:
-
-```bash
-git clone https://github.com/huggingface/community-events
-cd community-events/jax-controlnet-sprint/training_scripts
-pip install -U -r requirements_flax.txt
+pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
 ```
 
 To verify that JAX was correctly installed, you can run the following command:
@@ -297,6 +289,20 @@ jax.device_count()
 ```
 
 This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [this section](#troubleshoot-your-tpu-vm) for solutions.
+
+Then install Diffusers and the library's training dependencies:
+
+```bash
+pip install git+https://github.com/huggingface/diffusers.git
+```
+
+Then clone this repository and install the other dependencies:
+
+```bash
+git clone https://github.com/huggingface/community-events
+cd community-events/jax-controlnet-sprint/training_scripts
+pip install -U -r requirements_flax.txt
+```
 
 If you want to use Weights and Biases logging, you should also install `wandb` now:
 

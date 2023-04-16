@@ -1,15 +1,11 @@
--f https://storage.googleapis.com/jax-releases/libtpu_releases.html
-jax[tpu]==0.4.5
-flax==0.6.7
-transformers
-chex
+transformers>=4.25.1
+chex==0.1.6
 datasets
-flax
+flax==0.6.7
 optax
-orbax
+orbax==0.1.4
+torch
+torchvision
 ftfy
 tensorboard
 Jinja2
---extra-index-url https://download.pytorch.org/whl/cpu
-torch
-torchvision
