@@ -7,8 +7,9 @@ datasets
 flax
 optax
 orbax
-torch
-torchvision
 ftfy
 tensorboard
 Jinja2
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
