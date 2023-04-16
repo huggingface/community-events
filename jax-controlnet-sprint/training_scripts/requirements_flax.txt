@@ -1,7 +1,9 @@
 transformers>=4.25.1
+chex==0.1.6
 datasets
 flax==0.6.7
 optax
+orbax==0.1.4
 torch
 torchvision
 ftfy
