@@ -1,9 +1,12 @@
-transformers>=4.25.1
-chex==0.1.6
-datasets
+-f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+jax[tpu]==0.4.5
 flax==0.6.7
+transformers
+chex
+datasets
+flax
 optax
-orbax==0.1.4
+orbax
 torch
 torchvision
 ftfy
