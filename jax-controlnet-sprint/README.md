@@ -457,7 +457,7 @@ kill -9 1378725
 You can also use the below command to find processes using each of the TPU chips (e.g. `/dev/accel0` is one of the TPU chips)
 
 ```
-use sudo lsof -w /dev/accel0
+sudo lsof -w /dev/accel0
 ```
 
 To kill all the processes using `/dev/accel0` 
