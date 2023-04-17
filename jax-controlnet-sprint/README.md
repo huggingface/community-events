@@ -27,7 +27,6 @@ Don't forget to fill out the [signup form]!
 - [How to Make a Submission](#how-to-make-a-submission)
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
 - [Creating our Space](#creating-our-space)
-    - [Writing our Application](#writing-our-application)
 - [FAQ](#faq)
     - [How to Use VSCode with TPU VM?](#how-to-use-vscode-with-tpu-vm)
     - [How to Test Your Code Locally?](#how-to-test-your-code-locally)
@@ -535,7 +534,9 @@ pipeline_tag: text-to-image
 
 ### Creating our Space
 
-#### Writing our Application
+<h4> Writing our Application </h4>
+
+    
 We will use [Gradio](https://gradio.app/) to build our applications. Gradio has two main APIs: `Interface` and `Blocks`. `Interface` is a high-level API that lets you create an interface with few lines of code, and `Blocks` is a lower-level API that gives you more flexibility over interfaces you can build. The code should be included in a file called `app.py`.
 
 Let's try to create a ControlNet app as an example. The `Interface` API simply works like below 👇 
