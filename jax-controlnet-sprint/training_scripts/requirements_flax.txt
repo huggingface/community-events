@@ -4,7 +4,6 @@ flax==0.6.7
 transformers
 chex
 datasets
-flax
 optax
 orbax
 ftfy
