@@ -28,6 +28,9 @@ Don't forget to fill out the [signup form]!
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
 - [Creating our Space](#creating-our-space)
     - [Writing our Application](#writing-our-application)
+- [FAQ](#faq)
+    - [How to Use VSCode with TPU VM?](#how-to-use-vscode-with-tpu-vm)
+    - [How to Test Your Code Locally?](#how-to-test-your-code-locally)
 
 ## Organization 
 
@@ -648,5 +651,23 @@ tags:
 ---
 ```
 
+## FAQ 
+
+In this section, We are collecting answers to frequently asked questions from our discord channel. Contributions welcome!
+
+### How to Use VSCode with TPU VM?
+
+You can follow this [general guide](https://medium.com/@ivanzhd/vscode-sftp-connection-to-compute-engine-on-google-cloud-platform-gcloud-9312797d56eb) on how to use vscode remote to connect to gcloud VMs. Once it's set up, you can develop on the TPU VM using VSCode.
+
+To get your external IP, use this command:
+```
+gcloud compute tpus tpu-vm describe <node_name> --zone=<zone>
+```
+
+It should be listed under 'accessConfig' -> 'externalIp'
+
+### How to Test Your Code Locally?
+
+Since team members are sharing the TPU VM, it might be practical to write and test your code locally on a CPU while your teammates are running the training process on the VM. To run local testing, it is important to set the `xla_force_host_platform_device_count` flag to `4`. Read more on the [documentation](https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html#aside-hosts-and-devices-in-jax)
 
 
