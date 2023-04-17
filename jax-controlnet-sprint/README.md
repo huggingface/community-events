@@ -657,7 +657,7 @@ In this section, We are collecting answers to frequently asked questions from ou
 
 ### How to Use VSCode with TPU VM?
 
-You can follow this [general guide](https://medium.com/@ivanzhd/vscode-sftp-connection-to-compute-engine-on-google-cloud-platform-gcloud-9312797d56eb) on how to use vscode remote to connect to gcloud VMs. Once it's set up, you can develop on the TPU VM using VSCode.
+You can follow this [general guide](https://medium.com/@ivanzhd/vscode-sftp-connection-to-compute-engine-on-google-cloud-platform-gcloud-9312797d56eb) on how to use VSCode remote to connect to Google Cloud VMs. Once it's set up, you can develop on the TPU VM using VSCode.
 
 To get your external IP, use this command:
 ```
