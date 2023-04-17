@@ -668,4 +668,4 @@ It should be listed under 'accessConfig' -> 'externalIp'
 
 ### How to Test Your Code Locally?
 
-Since team members are sharing the TPU VM, it might be practical to write and test your code locally on a CPU while your teammates are running the training process on the VM. To run local testing, it is important to set the `xla_force_host_platform_device_count` flag to `4`. Read more on the [documentation](https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html#aside-hosts-and-devices-in-jax)
+Since team members are sharing the TPU VM, it might be practical to write and test your code locally on a CPU while your teammates are running the training process on the VM. To run local testing, it is important to set the `xla_force_host_platform_device_count` flag to `4`. Read more on the [documentation](https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html#aside-hosts-and-devices-in-jax).
