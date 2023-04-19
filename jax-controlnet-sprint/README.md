@@ -660,9 +660,13 @@ tags:
 For this sprint we will have many prizes. We will pick the first ten projects from [this leaderboard](https://huggingface.co/spaces/jax-diffusers-event/leaderboard), so you should tag your Space for the leaderboard to make your submission complete, as instructed in above section. The projects are ranked by likes, so we will amplify the visibility of all projects for people to cast their votes by leaving a like on the Space. We will pick the first ten projects from the ranking, and the jury will cast their votes to determine the first three places. These projects will be highlighted by both Google and Hugging Face. Elaborately made interfaces will likely increase the chance of winning prizes. 
 
 Prizes are as follows and are given to each team member 👇 
+    
 **First Place**: A voucher of $150 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year, Natural Language Processing with Transformers book
+    
 **Second Place**: A voucher of $125 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year
+    
 **Third Place**: A voucher of $100 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year
+    
 The first ten projects on the leaderboard (regardless of jury decision) will win a merch set exclusively made for this sprint by Hugging Face, and an separate JAX merch set from Google. 
 
 
