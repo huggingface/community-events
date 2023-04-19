@@ -352,6 +352,8 @@ python3 train_controlnet_flax.py \
  --hub_model_id=$HUB_MODEL_ID
  ```
 
+Note that `--from_pt` argument will convert your pytorch checkpoint into flax. However, it will only work with checkpoints in diffusers format. If your `MODEL_DIR` does not contain checkpoints in diffusers format, you cannot use the `--from_pt` argument. You can convert your `ckpt` or `safetensors` checkpoints into diffusers format using [this script](https://github.com/huggingface/diffusers/blob/main/scripts/convert_original_stable_diffusion_to_diffusers.py). 
+
 Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your Hugging Face account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
 
 Our training script also provides limited support for streaming large datasets from the Hugging Face Hub. In order to enable streaming, one must also set `--max_train_samples`.  Here is an example command (from [this blog article](https://huggingface.co/blog/train-your-controlnet)):
