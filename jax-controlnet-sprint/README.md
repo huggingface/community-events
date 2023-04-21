@@ -475,7 +475,9 @@ sudo rm -f /tmp/libtpu_lockfile
 sudo chmod o+w /tmp/tpu_logs/
 ```
 
-## How to Make a Submission
+<div id="how-to-make-a-submission">
+<h2> How to Make a Submission </h2>
+</div>
 
 To make a full submission, you need to have the following on Hugging Face Hub:
 - Model repository with model weights and model card,
@@ -493,7 +495,7 @@ Enabling `push_to_hub` argument in the training arguments will:
 - Push the local repository to Hugging Face Hub.
 
 Your automatically generated model card will look like below 👇 
-![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/blob/main/jax_model_card.png).
+![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/jax_model_card.png).
 
 You can edit the model card to be more informative. Model cards that are more informative than the others will carry more weight during evaluation.
 
