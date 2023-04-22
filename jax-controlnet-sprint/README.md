@@ -659,7 +659,7 @@ tags:
 
 ## Prizes
 
-For this sprint we will have many prizes. We will pick the first ten projects from [this leaderboard](https://huggingface.co/spaces/jax-diffusers-event/leaderboard), so you should tag your Space for the leaderboard to make your submission complete, as instructed in above section. The projects are ranked by likes, so we will amplify the visibility of all projects for people to cast their votes by leaving a like on the Space. We will pick the first ten projects from the ranking, and the jury will cast their votes to determine the first three places. These projects will be highlighted by both Google and Hugging Face. Elaborately made interfaces will likely increase the chance of winning prizes. 
+For this sprint we will have many prizes. We will pick the first ten projects from [this leaderboard](https://huggingface.co/spaces/jax-diffusers-event/leaderboard), so you should tag your Space for the leaderboard to make your submission complete, as instructed in above section. The projects are ranked by likes, so we will amplify the visibility of all projects for people to cast their votes by leaving a like on the Space. We will pick the first ten projects from the ranking, and the jury will cast their votes to determine the first three places. These projects will be highlighted by both Google and Hugging Face. Elaborately made interfaces as well as projects with open-sourced codebases and models will likely increase the chance of winning prizes. 
 
 Prizes are as follows and are given to each team member 👇 
     
