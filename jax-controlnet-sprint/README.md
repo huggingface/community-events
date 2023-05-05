@@ -54,7 +54,7 @@ At the end of the community sprint, each submission will be evaluated by a jury 
 - **13.04. - 14.04. - [17.04.](https://www.youtube.com/watch?v=SOj2sxgvFe0)** Kick-off event with talks on Youtube. 
 - **14.04. - 17.04.** Start providing access to TPUs. 
 - **01.05.** Shutdown access to TPUs. 
-- **08.05.**: Project presentations and determining the prize winners.
+- **08.05.**: Announcement of the top 10 projects and prizes.
 
 > 💡 Note: We will be accepting applications throughout the sprint.
 
