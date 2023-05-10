@@ -28,9 +28,11 @@ Don't forget to fill out the [signup form]!
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
 - [Creating our Space](#creating-our-space)
 - [Prizes](#prizes)
+- [Jury](#jury)
 - [FAQ](#faq)
     - [How to Use VSCode with TPU VM?](#how-to-use-vscode-with-tpu-vm)
     - [How to Test Your Code Locally?](#how-to-test-your-code-locally)
+- [Sprint winners](#sprint-winners)
 
 ## Organization 
 
@@ -670,6 +672,15 @@ Prizes are as follows and are given to each team member 👇
 **Third Place**: A voucher of $100 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year
     
 The first ten projects on the leaderboard (regardless of jury decision) will win a merch set exclusively made for this sprint by Hugging Face, and an separate JAX merch set from Google. 
+    
+## Jury
+    
+Our jury panel for this sprint included:
+    
+1. Robin Rombach, Stability AI
+2. Huiwen Chang, Google Research
+3. Jun-Yan Zhu, Carnegie Mellon University
+4. Merve Noyan, Hugging Face
 
 
 ## FAQ 
@@ -690,3 +701,14 @@ It should be listed under 'accessConfig' -> 'externalIp'
 ### How to Test Your Code Locally?
 
 Since team members are sharing the TPU VM, it might be practical to write and test your code locally on a CPU while your teammates are running the training process on the VM. To run local testing, it is important to set the `xla_force_host_platform_device_count` flag to `4`. Read more on the [documentation](https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html#aside-hosts-and-devices-in-jax).
+    
+## Sprint winners
+    
+Top 10 projects (based on the likes on their demo applications) are available on this [leaderboard](https://huggingface.co/spaces/jax-diffusers-event/leaderboard). We tooks this leaderboard to our [jury](#jury) to judge the top 10 projects based on several factors such as open-source model checkpoints, datasets, and codebases, completeness of the model and dataset cards, etc. As a result, following three projects emerged as the winners:
+    
+1. [ControlNet for Interior Design](https://huggingface.co/spaces/controlnet-interior-design/controlnet-seg)
+2. [ControlNet for Adjusting Brightness](https://huggingface.co/spaces/ioclab/brightness-controlnet)
+3. [Stable Diffusion with Hand Control](https://huggingface.co/spaces/vllab/controlnet-hands)
+
+    
+    
