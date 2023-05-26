@@ -7,8 +7,11 @@
 Get ready to unlock your creativity using AI tools in game development.
 
 📅 July 7 to 9
+
 🤝 Open to all skill levels
+
 💸 Participation fee: Free
+
 📍 Where?: Online
 
 Claim your spot in the Game Jam! Sign up here 👉  https://itch.io/jam/open-source-ai-game-jam
