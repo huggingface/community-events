@@ -7,7 +7,8 @@ We're constantly finding ways to democratise the use of ML across modalities and
 
 | **Event Name**                                                          | **Dates**       | **Status**                                                                                                   |
 |-------------------------------------------------------------------------|-----------------|--------------------------------------------------------------------------------------------------------------|
-| [Whisper Fine Tuning Event](/whisper-fine-tuning-event)               | Dec 5th - 19th, 2022  | [Registrations open](https://discuss.huggingface.co/t/open-to-the-community-whisper-fine-tuning-event/26681) |
+| [Open Source AI Game Jam 🎮](/open-source-ai-game-jam)               | July 7th - 9th, 2023  | [Register here](https://itch.io/jam/open-source-ai-game-jam) |
+| [Whisper Fine Tuning Event](/whisper-fine-tuning-event)               | Dec 5th - 19th, 2022  | Finished |
 | [Computer Vision Study Group](/computer-vision-study-group)             | Ongoing         | Monthly                                                                                                      |
 | [ML for Audio Study Group](https://github.com/Vaibhavs10/ml-with-audio) | Ongoing         | Monthly                                                                                                      |
 | [Gradio Blocks](/gradio-blocks)                                         | May 16th - 31st, 2022 | Finished                                                                                                     |
