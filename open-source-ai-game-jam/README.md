@@ -1,4 +1,4 @@
-# Welcome to the first [Open Source AI Game Jam] 🥳
+# Welcome to the first [Open Source AI Game Jam](https://itch.io/jam/open-source-ai-game-jam) 🥳
 
 ![](https://img.itch.zone/aW1hZ2UyL2phbS8zMzExNDMvMTIyNDYzNzYucG5n/original/lXt9Rf.png)
 
