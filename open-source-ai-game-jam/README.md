@@ -125,7 +125,7 @@ Our Discord Server is the **central place to create teams, exchange with other t
 
 We built different channels:
 
-<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/channels.png" alt="Channels"/>
+<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/discord-channels.png" alt="Channels"/>
 
 <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/looking-for-team.png" alt="Channels"/>
 
