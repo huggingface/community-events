@@ -127,9 +127,12 @@ We built different channels:
 
 <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/discord-channels.png" alt="Channels"/>
 
+## You're looking for a team?
+
 <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/looking-for-team.png" alt="Channels"/>
 
-<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/ask-for-help.png" alt="Channels"/>
+## You have some questions? 
+<img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/questions.png" alt="Channels"/>
 
 ## Organizers 🧑‍🤝‍🧑
 
