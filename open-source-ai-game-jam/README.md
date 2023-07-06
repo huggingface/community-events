@@ -42,7 +42,7 @@ When the game jam starts here’s what you need to do:
 
 6️⃣ You **search for a team or teammates**? Ask on **#GameJam-Looking-For-Team**
 
-7️⃣ You have questions? Ask on **Ask on #GameJam-Help,** we’ll be there to respond 🤗
+7️⃣ You have questions? Ask on **Ask on #GameJam-Room,** we’ll be there to respond 🤗
 
 8️⃣ When you have your team or you want to work alone, it’s time to start to make your game. **Keep Discord open because we’ll give update from time to time** 🤗
 
