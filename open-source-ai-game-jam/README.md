@@ -82,7 +82,7 @@ Here some examples of AI tools you can use (again remember that you need to use 
 Here's some helpful tutorials:
 - How to install the Unity Hugging Face API: https://huggingface.co/blog/unity-api
 - AI Speech Recognition in Unity: https://huggingface.co/blog/unity-asr
-- [ADD Doodle]
+- Making ML-powered web games with Transformers.js: https://huggingface.co/blog/ml-web-games
 
 ## Some Game Examples 🕹️
 
@@ -110,7 +110,7 @@ You can play it here 👉 https://danielk0703.itch.io/ship-jam
 
 Play it here 👉 https://huggingface.co/spaces/Xenova/doodle-dash
 
-Learn to make your own with this tutorial 👉
+Learn to make your own with this tutorial 👉 https://huggingface.co/blog/ml-web-games
 
 <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/example4.png" alt="Example4"/>
 
