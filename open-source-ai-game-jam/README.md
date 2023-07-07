@@ -83,6 +83,7 @@ Here's some helpful tutorials:
 - How to install the Unity Hugging Face API: https://huggingface.co/blog/unity-api
 - AI Speech Recognition in Unity: https://huggingface.co/blog/unity-asr
 - Making ML-powered web games with Transformers.js: https://huggingface.co/blog/ml-web-games
+- Building a smart Robot AI using Hugging Face 🤗 and Unity: https://thomassimonini.substack.com/p/building-a-smart-robot-ai-using-hugging
 
 ## Some Game Examples 🕹️
 
@@ -97,6 +98,7 @@ Here we give some Game Examples which use AI tools:
 2. **Action Game**
     
     You can play it here 👉 https://huggingface.co/spaces/ThomasSimonini/SmartRobot
+    Tutorial 👉 Building a smart Robot AI using Hugging Face 🤗 and Unity
     
 <img src="https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/events/open-source-game-jam/example2.png" alt="Example2"/>
     
