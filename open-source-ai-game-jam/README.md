@@ -24,7 +24,7 @@ When the game jam starts here’s what you need to do:
 
 🔢 If it’s not already done, don’t forget to **sign up to the Game Jam to be able to summit your game** 👉 https://itch.io/jam/open-source-ai-game-jam
 
-2️⃣ Watch the video below that will give you the Game Jam Theme **(the video will be posted on Friday 5th of July at 5:00 UTC)**.
+2️⃣ Watch the video below that will give you the Game Jam Theme **(the video will be posted on Friday 7th of July at 5:00 UTC)**.
 
 **The Theme Announcement** 👉 https://youtu.be/k0MvSAwoM8k
 
