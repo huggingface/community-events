@@ -406,7 +406,8 @@ In this repo, we have provided some example scripts you can use to train your ow
 | ----------- | ----------- |
 | [DCGAN](pytorch/dcgan)  | [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434)  |
 | [pix2pix](pytorch/pix2pix) | [Image-to-Image Translation with Conditional Adversarial Networks](https://arxiv.org/abs/1611.07004) |
-| [CycleGAN](pytorch/cyclegan)  | [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593)
+| [CycleGAN](pytorch/cyclegan)  | [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593) |
+| [SN-GAN](pytorch/sngan)      | [Spectral Normalization for Generative Adversarial Networks](https://arxiv.org/abs/1802.05957) |
 
 ## Datasets to add
 
