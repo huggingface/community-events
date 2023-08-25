@@ -860,7 +860,7 @@ class LightweightGAN(nn.Module, HugGANModelHubMixin):
             proxies,
             resume_download,
             local_files_only,
-            use_auth_token=None,
+            token,
             map_location="cpu",
             strict=False,
             **model_kwargs,
@@ -883,7 +883,7 @@ class LightweightGAN(nn.Module, HugGANModelHubMixin):
                 force_download=force_download,
                 proxies=proxies,
                 resume_download=resume_download,
-                use_auth_token=use_auth_token,
+                token=token,
                 local_files_only=local_files_only,
             )
 
