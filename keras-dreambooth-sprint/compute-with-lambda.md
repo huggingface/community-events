@@ -120,25 +120,27 @@ As a next step, we need to install necessary dependencies for CUDA Support to wo
 ```bash
 conda install nb_conda_kernels
 ipython kernel install --user --name=my_env
-conda install -c conda-forge cudatoolkit=11.2.2 cudnn=8.1.0
+conda install -c conda-forge cudatoolkit=11.8.0
+python3 -m pip install nvidia-cudnn-cu11==8.6.0.163
 ```
 Next you need to setup XLA to the correct CUDA library path with following command:
  ```bash
 export XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
  ```
  ** Note: you need to set this every time you close and open the terminal via SSH tunnel. If you do not do this, the `fit` method will fail. Please read through the error logs to see where to find the missing library and set the above path accordingly.
 
 Now, we also must install Tensorflow inside our virtual environment. It is recommend, doing so with pip:
 
  ```bash
-python -m pip install tensorflow
+python -m pip install tensorflow==2.12.*
  ```
  To confirm the installed version, and the success of setting up our drivers in the conda environment:
  ```bash
  python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU')); print(tf.__version__)"
  ```
-It should return True, and display an array with one physical device. The version should be equal to atleast 2.11.
+It should return True, and display an array with one physical device. The version should be equal to atleast 2.12.
 
 We may now install the dependendencies necessary for the jupyter notebook:
  ```bash
@@ -166,7 +168,7 @@ Now check for python path aswell:
 ```
 It should point to: `/home/ubuntu/miniconda3/envs/my_env/bin/python`
 
-Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU. The version should be equal to or greater than 2.11 to support the correct version of keras_cv.
+Running below line in the notebook makes sure that we have installed the version of TensorFlow that supports GPU, and that TensorFlow can detect the GPUs. If everything goes right, it should return `True` and a list that consists of a GPU. The version should be equal to or greater than 2.11 to support the correct version of keras_cv. In our example, it should print 2.12.
 ```python
 import tensorflow as tf
 print(tf.test.is_built_with_cuda())
